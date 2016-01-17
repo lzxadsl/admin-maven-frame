@@ -15,7 +15,7 @@ import com.admin.basic.service.impl.BaseService;
  * @version 1.0
  * @date 2015-9-18 上午10:11:48
  */
-@Service
+@Service("userService")
 public class UserService extends BaseService<User, Integer> implements IUserService {
 
 	/**

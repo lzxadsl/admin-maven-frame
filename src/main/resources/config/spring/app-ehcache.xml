@@ -15,20 +15,20 @@
 	
 	<!-- 支持缓存注解,使用ehcache注解 
     <ehcache:annotation-driven cache-manager="ehCacheManager" /> -->
-    <!-- 支持缓存注解,使用spring注解 -->
+    <!-- 支持缓存注解,使用spring注解 
     <cache:annotation-driven cache-manager="cacheManager"/> 
-    
+    -->
     <!-- spring对ehcache的缓存工厂支持 -->
 	<bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 	    <property name="configLocation" value="classpath:ehcache.xml" />
 	    <property name="shared" value="false" />
 	</bean>
 	
-	<!-- 默认是cacheManager,该bean主要是定义给spring注解使用 -->  
+	<!-- 默认是cacheManager,该bean主要是定义给spring注解使用 
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">    
         <property name="cacheManager"  ref="ehCacheManager"/>    
     </bean>
-    
+    -->  
  	<!-- shiro对ehcache的缓存管理直接使用spring的缓存工厂 -->
 	<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> 
 	    <property name="cacheManager" ref="ehCacheManager" />
@@ -43,7 +43,7 @@
 	</bean>
 	 
 	<!-- 配置一个缓存拦截器对象，处理具体的缓存业务 -->
-	<bean id="methodCacheInterceptor" class="com.frame.system.interceptor.MethodCacheInterceptor">
+	<bean id="methodCacheInterceptor" class="com.admin.system.interceptor.MethodCacheInterceptor">
 	    <property name="cache" ref="simpleMethodCache"/>
 	</bean>
 	 

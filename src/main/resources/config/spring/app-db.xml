@@ -53,7 +53,7 @@
 	</bean>
 	<!-- spring与mybatis整合配置，扫描mybatis映射接口类，生成 的bean与接口名称一致（只是首字母小写） -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
-	    <property name="basePackage" value="com.frame."/>  
+	    <property name="basePackage" value="com.admin."/>  
 	    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>  
 	</bean> 
 	 
