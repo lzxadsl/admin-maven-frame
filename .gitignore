@@ -16,7 +16,7 @@ Thumbs.db
 *.svn
 *~
 #/.classpath
-#/.gitignore
+/.gitignore
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
