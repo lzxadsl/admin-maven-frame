@@ -10,7 +10,7 @@
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 	<!-- 自定义校验策略 -->
-	<bean id="shiroCredentials" class="com.frame.shiro.realm.LimitRetryHashedMatcher">
+	<bean id="shiroCredentials" class="com.admin.shiro.realm.LimitRetryHashedMatcher">
 		<property name="hashAlgorithmName" value="md5"/>
 		<!-- 散列迭代次数，需要和生成密码时的意义 -->
 		<property name="hashIterations" value="2"/>
@@ -18,7 +18,7 @@
 		<property name="storedCredentialsHexEncoded" value="true"/>
 	</bean>
 	<!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->  
-	<bean id="myRealm" class="com.frame.shiro.realm.AuthorityRealm"> 
+	<bean id="myRealm" class="com.admin.shiro.realm.AuthorityRealm"> 
 		<property name="credentialsMatcher" ref="shiroCredentials"/>
 		<!-- 使用我们配置好多缓存策略 -->
 		<property name="cachingEnabled" value="true"/>  
@@ -36,7 +36,7 @@
 	    <property name="cacheManager" ref="shiroCacheManager" />
 	</bean>  
 	<!-- 自定义url过滤接口 -->
-	<bean id="chainDefinitionSectionMetaSource" class="com.frame.shiro.power.ChainDefinitionSectionMetaSource">  
+	<bean id="chainDefinitionSectionMetaSource" class="com.admin.shiro.power.ChainDefinitionSectionMetaSource">  
 	    <property name="filterChainDefinitions">  
 	        <value>  
 	             /forword/basic/*.htm=anon  

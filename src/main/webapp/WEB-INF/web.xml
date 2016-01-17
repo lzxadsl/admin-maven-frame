@@ -114,7 +114,7 @@
     <!-- 自定义的filter,在用户登录成功之后进行处理 
     <filter>
 	    <filter-name>authority</filter-name>
-	    <filter-class>com.frame.authority.filter.AuthorityFilter</filter-class>
+	    <filter-class>com.admin.authority.filter.AuthorityFilter</filter-class>
 	</filter>
 	<filter-mapping>
 	    <filter-name>authority</filter-name>
@@ -217,7 +217,7 @@
 	</servlet-mapping> -->
 	<!-- end XFire 配置 -->
 	<listener>
-		<listener-class>com.frame.system.listener.ServletListener</listener-class>
+		<listener-class>com.admin.system.listener.ServletListener</listener-class>
     </listener>
     <error-page> 
 		<error-code>404</error-code>

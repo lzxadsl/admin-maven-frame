@@ -11,7 +11,7 @@
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
 	<!-- 要调用的工作类 -->
-	<bean id="userQuartz" class="com.frame.authority.quartz.UserQuartz"></bean>
+	<bean id="userQuartz" class="com.admin.authority.quartz.UserQuartz"></bean>
 	<!-- 定义调用对象和调用对象的方法 -->
 	<bean id="jobUserQuartz"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

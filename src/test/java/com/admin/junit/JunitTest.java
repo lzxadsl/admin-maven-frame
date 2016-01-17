@@ -8,4 +8,6 @@ package com.admin.junit;
  */
 public class JunitTest {
 
+	public static void main(String[] args) {
+	}
 }

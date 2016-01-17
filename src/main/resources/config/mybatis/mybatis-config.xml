@@ -16,10 +16,10 @@
     	<property name="pageSqlId" value=".*Page$" />  
     </properties>  -->   
     <typeAliases>
-    	<package name="com.frame"/>
+    	<package name="com.admin"/>
     </typeAliases>
     <plugins>  
-    	<plugin interceptor="com.frame.basic.interceptor.PageInterceptor"></plugin>  
+    	<plugin interceptor="com.admin.basic.interceptor.PageInterceptor"></plugin>  
 	</plugins>
 </configuration>
 

@@ -18,8 +18,4 @@
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-	<bean id="testBean" class="com.frame.test.service.impl.TestBeanService">
-		<property name="dSource" ref="dataSource" /> 
-		<property name="username" value="lzx" /> 
-	</bean>
 </beans>
