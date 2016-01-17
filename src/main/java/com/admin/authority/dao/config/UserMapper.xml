@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frame.authority.dao.IUserDao">
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/> -->
+	<resultMap type="com.frame.authority.model.User" id="powerMapper">
+		<id property="id" column="id"/>
+	    <result property="username" column="username"/>
+	    <result property="password" column="password"/>
+	    <result property="salt" column="salt"/>
+	    <collection property="roleSet" column="role_id" ofType="com.frame.authority.model.Role">
+	    	<id property="id" column="role_id"/>
+	    	<result property="name" column="role_name"/>
+	    	<collection property="permissionSet" column="permission_id" ofType="com.frame.authority.model.Permission">
+				<id property="id" column="permission_id"/>
+				<result property="name" column="permission_name"/>
+			</collection>
+	    </collection>
+	</resultMap>
+	<select id="selectList" resultType="User" parameterType="map">  
+        SELECT 
+			*
+ 		FROM sys_user where 1=1 ${where}
+	</select> 
+	
+	<select id="selectPageList" resultType="User">  
+        SELECT 
+			*
+ 		FROM sys_user  
+	</select> 
+	
+	<select id="get" parameterType="string" resultType="User">
+	    select * from sys_user where id = #{id}
+	</select>
+	
+	<select id="selectUserByName" parameterType="string" resultMap="powerMapper">
+	    select 
+	    	a.id,
+	    	a.username,
+	    	a.password,
+	    	a.salt,
+	    	c.id as role_id,
+	    	c.name as role_name,
+	    	e.id as permission_id,
+	    	e.name as permission_name
+	    from sys_user a 
+	    left join sys_user_role b on a.id = b.user_id
+	    left join sys_role c on b.role_id = c.id
+	    left join sys_role_permission d on d.role_id = c.id
+	    left join sys_permission e on e.id = d.permission_id 
+	    where a.username = #{username}
+	</select>
+	
+	<update id="update">
+	    update sys_user 
+		    set username = #{username}
+		where id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="User" keyProperty="id">
+	    insert into sys_user(
+	    	username,password
+	    )  values(
+	    	#{username},#{password}
+	    )
+	    
+		<selectKey keyProperty="id" resultType="String" order="AFTER">  
+	        select max(id) from sys_user
+	    </selectKey> 
+	</insert>
+	
+</mapper>	

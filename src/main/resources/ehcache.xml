@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		 xsi:noNamespaceSchemaLocation="ehcache.xsd">
+    
+    <diskStore path="java.io.tmpdir"/>
+    <defaultCache 
+	    maxElementsInMemory="10000" 
+	    eternal="false" 
+	    timeToIdleSeconds="10" 
+	    timeToLiveSeconds="30" 
+	    overflowToDisk="false"
+	    memoryStoreEvictionPolicy="LFU"/>
+
+	<!-- 
+	            配置自定义缓存
+        maxElementsInMemory：缓存中允许创建的最大对象数
+        eternal：缓存中对象是否为永久的，如果是，超时设置将被忽略，对象从不过期。
+        timeToIdleSeconds：缓存数据的钝化时间，也就是在一个元素消亡之前，
+                    	两次访问时间的最大时间间隔值，这只能在元素不是永久驻留时有效，
+                    	如果该值是 0 就意味着元素可以停顿无穷长的时间
+                    	（前一次获取跟下一次获取时间大于等于这个时接下去将都获取不到）。
+        timeToLiveSeconds：缓存数据的生存时间，也就是一个元素从构建到消亡的最大时间间隔值，
+                   	     这只能在元素不是永久驻留时有效，如果该值是0就意味着元素可以停顿无穷长的时间。
+        overflowToDisk：内存不足时，是否启用磁盘缓存。
+        memoryStoreEvictionPolicy：缓存满了之后的淘汰算法，默认的策略是LRU。
+        磁盘缓存大小默认是没有限制的，不过可通过maxElementsOnDisk来指定
+        当磁盘缓存达到maxElementsOnDisk指定的值时，Ehcache会清理磁盘中的缓存使用默认策略是LFU（使用频率最低）
+    -->
+
+	<cache name="defaultCache"
+        maxElementsInMemory="10000"
+        eternal="false"
+        overflowToDisk="true"
+        timeToIdleSeconds="1800"
+        timeToLiveSeconds="3600"
+        memoryStoreEvictionPolicy="LFU">
+        <!-- 自定义监听，继承CacheEventListenerFactory 
+		<cacheEventListenerFactory class="ehcache.test.ListinClass"/>
+		 -->
+    </cache>
+	
+	<cache name="authorizationCache"  
+           maxEntriesLocalHeap="2000"  
+           eternal="false"  
+           timeToIdleSeconds="3600"  
+           timeToLiveSeconds="0"  
+           overflowToDisk="false"  
+           statistics="true">  
+    </cache>
+    <cache name="authenticationCache"  
+           maxEntriesLocalHeap="2000"  
+           eternal="false"  
+           timeToIdleSeconds="3600"  
+           timeToLiveSeconds="0"  
+           overflowToDisk="false"  
+           statistics="true">  
+    </cache>
+</ehcache>

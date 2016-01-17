@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 
+	<typeAliases>
+		<typeAlias type="com.lzx.user.model.User" alias="User"/>
+	</typeAliases>
+	<mappers>  
+      <mapper resource="com/lzx/user/mapper/config/UserMapper.xml" />  
+    </mappers> --> 
+    
+    <!-- 分页插件中使用的参数，如果没有配置，默认的数据库是PostgreSQL，pageSqlId 是 .*Page$-->
+    <!-- 
+    <properties>  
+    	<property name="dialect" value="PostgreSQL" />  
+    	<property name="pageSqlId" value=".*Page$" />  
+    </properties>  -->   
+    <typeAliases>
+    	<package name="com.frame"/>
+    </typeAliases>
+    <plugins>  
+    	<plugin interceptor="com.frame.basic.interceptor.PageInterceptor"></plugin>  
+	</plugins>
+</configuration>
+

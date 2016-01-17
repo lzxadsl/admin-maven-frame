@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="admin-maven-frame"
+  id="myeclipse.1452918617943"
+  context-root="/admin-maven-frame"
+  j2ee-spec="6.0"
+  archive="admin-maven-frame.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
