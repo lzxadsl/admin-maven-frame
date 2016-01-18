@@ -100,10 +100,12 @@
 	</bean> 
 
     
+    <!-- 拦截器
     <mvc:interceptors>
 	    <bean class="com.admin.system.interceptor.WebInterceptor"></bean>
-        <!-- <bean class="com.admin.system.interceptor.WebInterceptor1"></bean> -->
-    </mvc:interceptors>
+        <bean class="com.admin.system.interceptor.WebInterceptor1"></bean>
+    </mvc:interceptors> 
+    -->
     
     <!-- jasperreport 配置 
 	<bean id="jasperReportsViewResolver" class="org.springframework.web.servlet.view.jasperreports.JasperReportsViewResolver">  
