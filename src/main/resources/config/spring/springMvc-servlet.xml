@@ -7,17 +7,20 @@
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:mvc="http://www.springframework.org/schema/mvc" 
+    xmlns:task="http://www.springframework.org/schema/task"
     xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
     xsi:schemaLocation="http://www.springframework.org/schema/beans   
-    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context
-    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/context/spring-context.xsd
     http://www.springframework.org/schema/aop 
-    http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+    http://www.springframework.org/schema/aop/spring-aop.xsd
 	http://www.springframework.org/schema/util 
-	http://www.springframework.org/schema/util/spring-util-3.1.xsd
+	http://www.springframework.org/schema/util/spring-util.xsd
     http://www.springframework.org/schema/mvc
-    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/task 
+    http://www.springframework.org/schema/task/spring-task.xsd
     http://code.alibabatech.com/schema/dubbo 
     http://code.alibabatech.com/schema/dubbo/dubbo.xsd">  
      <!--加载配置文件，controller中的方法就可以直接使用  -->
@@ -43,21 +46,44 @@
 	<!-- ①：对web包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->  
     <context:component-scan base-package="com.admin." /> 
     
+	<!-- Executor -->
+    <task:executor id="executor" pool-size="10"/>
+    <!-- 任务调度器 -->
+    <task:scheduler id="scheduler" pool-size="10"/>
+
+    <task:annotation-driven scheduler="scheduler" executor="executor"/>
+
+    <mvc:annotation-driven>
+        <!-- 异步支持： 设置默认超时时间 和 异步执行器 -->
+        <mvc:async-support default-timeout="30000" task-executor="executor">
+            <!-- 测试MyCallableController时开启即可 -->
+           <!-- <mvc:callable-interceptors>
+                &lt;!&ndash; 设计很糟糕，没有如mvc:mapping灵活，比如包含、排除 还需要自己搞定。。。。 &ndash;&gt;
+                <bean class="com.sishuok.chapter3.web.interceptor.MyCallableInterceptor"/>
+            </mvc:callable-interceptors>
+            <mvc:deferred-result-interceptors>
+                <bean class="com.sishuok.chapter3.web.interceptor.MyDeferredResultInterceptor"/>
+            </mvc:deferred-result-interceptors>-->
+        </mvc:async-support>
+    </mvc:annotation-driven>
+
     <!-- ②：启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->  
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
     <!-- 转换成json对象配置 -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"  
-        p:ignoreDefaultModelOnRedirect="true" >  
+        p:ignoreDefaultModelOnRedirect="true" >
             <property name="messageConverters">  
                 <list>  
-                    <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"> 
+                	<!-- spring4.x 使用的是MappingJackson2HttpMessageConverter -->
+                    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"> 
                 		<property name="supportedMediaTypes">    
 					        <list>    
 					            <value>application/json;charset=UTF-8</value>    
 					            <value>text/json;charset=UTF-8</value>    
 					       </list>    
 					    </property>
+					    
                 	</bean>
                 </list>  
             </property>  

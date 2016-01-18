@@ -13,22 +13,22 @@
     http://www.springframework.org/schema/cache   
     http://www.springframework.org/schema/cache/spring-cache.xsd">
 	
-	<!-- 支持缓存注解,使用ehcache注解 
-    <ehcache:annotation-driven cache-manager="ehCacheManager" /> -->
-    <!-- 支持缓存注解,使用spring注解 
-    <cache:annotation-driven cache-manager="cacheManager"/> 
-    -->
+	<!-- 支持缓存注解,使用ehcache注解 -->
+    <ehcache:annotation-driven cache-manager="ehCacheManager" /> 
+    <!-- 支持缓存注解,使用spring注解-->
+    <cache:annotation-driven cache-manager="springCacheManager"/> 
+    
     <!-- spring对ehcache的缓存工厂支持 -->
 	<bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 	    <property name="configLocation" value="classpath:ehcache.xml" />
-	    <property name="shared" value="false" />
+	    <property name="shared" value="true" />
 	</bean>
 	
-	<!-- 默认是cacheManager,该bean主要是定义给spring注解使用 
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">    
+	<!-- 默认是cacheManager,该bean主要是定义给spring注解使用 --> 
+    <bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">    
         <property name="cacheManager"  ref="ehCacheManager"/>    
     </bean>
-    -->  
+     
  	<!-- shiro对ehcache的缓存管理直接使用spring的缓存工厂 -->
 	<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> 
 	    <property name="cacheManager" ref="ehCacheManager" />
@@ -61,7 +61,7 @@
 	    <!-- .*表示前面的前缀(包括包名) 表示print方法-->
 	    <property name="patterns">
 	        <list>
-	            <value>com.admin.authority.service.impl.*Service*\.*get.*</value>
+	            <!-- <value>com.admin.authority.service.impl.*Service*\.*get.*</value> -->
 	            <value>com.admin.basic.service.impl.*Service*\.*list.*</value>
 	        </list>
 	    </property>

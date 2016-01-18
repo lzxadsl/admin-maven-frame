@@ -29,7 +29,7 @@
  		FROM sys_user  
 	</select> 
 	
-	<select id="get" parameterType="string" resultType="User">
+	<select id="get" parameterType="int" resultType="User">
 	    select * from sys_user where id = #{id}
 	</select>
 	
