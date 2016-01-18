@@ -107,7 +107,7 @@
 		<artifactId>mybatis-spring</artifactId>
 		<version>1.2.2</version>
 	</dependency>
-	<!-- activiti 
+	<!-- activiti -->
   	<dependency>
   		<groupId>org.activiti</groupId>
       	<artifactId>activiti-engine</artifactId>
@@ -117,7 +117,7 @@
       <groupId>org.activiti</groupId>
       <artifactId>activiti-spring</artifactId>
       <version>${activiti-version}</version>
-    </dependency>-->
+    </dependency>
     <!-- shiro -->
     <!-- <dependency>
 		<groupId>org.apache.shiro</groupId>

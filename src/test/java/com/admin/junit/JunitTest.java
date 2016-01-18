@@ -28,7 +28,6 @@ public class JunitTest {
 		//userService.getUserByName("lzx");
 		User user = userService.get(1);
 		System.out.println(user.getUsername());
-		
 	}
 
 }
