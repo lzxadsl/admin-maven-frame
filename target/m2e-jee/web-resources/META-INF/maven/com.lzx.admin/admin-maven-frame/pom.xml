@@ -120,6 +120,11 @@
     </dependency>
     <!-- 整合页面设计器所需包 -->
     <dependency>
+		<groupId>org.activiti</groupId>
+		<artifactId>activiti-bpmn-layout</artifactId>
+		<version>${activiti-version}</version>
+	</dependency>
+    <dependency>
     	<groupId>org.activiti</groupId>
     	<artifactId>activiti-diagram-rest</artifactId>
     	<version>${activiti-version}</version>
