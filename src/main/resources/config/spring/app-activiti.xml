@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"   
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xmlns:tx="http://www.springframework.org/schema/tx"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+       xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans.xsd  
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context.xsd  
+       http://www.springframework.org/schema/tx      
+       http://www.springframework.org/schema/tx/spring-tx.xsd"> 
+	<!-- 流程引擎配置 -->	      
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">  
+		<property name="dataSource" ref="dataSource" />  
+		<property name="transactionManager" ref="transactionManager" />  
+		<!-- 表不存在时自动创建 -->
+		<property name="databaseSchemaUpdate" value="false" />  
+		<!-- 
+		<property name="mailServerHost" value="localhost" />  
+		<property name="mailServerPort" value="5025" />  
+		<property name="jpaHandleTransaction" value="true" />  
+		<property name="jpaCloseEntityManager" value="true" />  
+		--> 
+		<!-- 是否启动定时任务 -->
+		<property name="jobExecutorActivate" value="false" /> 
+		<property name="enableDatabaseEventLogging" value="true" /> 
+		<property name="activityFontName" value="宋体" />
+    	<property name="labelFontName" value="宋体" />
+	</bean>  
+	
+	<!-- 加载activiti流程引擎，核心 -->  
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">  
+		<property name="processEngineConfiguration" ref="processEngineConfiguration" />  
+	</bean>  
+	<!-- 负责流程定义和部署相关的对象 -->
+	<bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />  
+	<!-- 执行管理，包括启动、推进、删除流程等 -->
+	<bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService" />  
+	<!-- 任务管理 -->
+	<bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />  
+	<bean id="formService" factory-bean="processEngine" factory-method="getFormService" />
+	<!-- 历史管理 -->
+	<bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />  
+	<bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />  
+	<bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService" />  
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+
+	<!--加入Spring Activiti-Modeler的运行配置
+    <context:component-scan base-package="com.admin.bpm.rest.diagram"/>
+	<context:component-scan base-package="com.redxun.bpm.rest.editor"/>
+	-->
+</beans>
