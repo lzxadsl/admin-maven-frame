@@ -14,7 +14,7 @@ import com.admin.authority.service.IUserService;
  * 
  * @author lzx
  * @version 1.0
- * @create_date 下午6:45:45
+ * @date 下午6:45:45
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:config/spring/app-*.xml")

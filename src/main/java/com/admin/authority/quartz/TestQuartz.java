@@ -13,7 +13,7 @@ import com.admin.authority.service.IUserService;
  * 事务交叉访问死锁测试
  * @author lzx
  * @version 1.0
- * @create_date 下午9:07:43
+ * @date 下午9:07:43
  */
 @Service
 public class TestQuartz {

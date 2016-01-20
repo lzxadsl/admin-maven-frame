@@ -39,9 +39,9 @@
 	<bean id="chainDefinitionSectionMetaSource" class="com.admin.shiro.power.ChainDefinitionSectionMetaSource">  
 	    <property name="filterChainDefinitions">  
 	        <value>  
-	             /forword/basic/*.htm=anon  
-	             /shiro/*.htm=anon
-	             /shiro/main.htm=authc
+	             /service/forword/basic/*=anon  
+	             /service/shiro/*=anon
+	             /service/shiro/main.htm=authc
 	        </value>  
 	    </property> 
 	</bean> 
@@ -52,11 +52,11 @@
 	    <!-- Shiro的核心安全接口,这个属性是必须的 -->  
 	    <property name="securityManager" ref="securityManager"/>  
 	    <!-- 要求登录时的链接(可根据项目的URL进行替换),非必须的属性,默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->  
-	    <property name="loginUrl" value="/shiro/login.htm"/>  
+	    <property name="loginUrl" value="/service/shiro/login.htm"/>  
 	    <!-- 登录成功后要跳转的连接(本例中此属性用不到,因为登录成功后的处理逻辑在LoginController里硬编码为main.jsp了) -->  
 	    <!-- <property name="successUrl" value="/system/main"/> -->  
 	    <!-- 用户访问未对其授权的资源时,所显示的连接(没有权限) -->  
-	    <property name="unauthorizedUrl" value="/shiro/login.htm"/>  
+	    <property name="unauthorizedUrl" value="/service/shiro/login.htm"/>  
 	    <!-- Shiro连接约束配置,即过滤链的定义 -->  
 	    <!-- 此处可配合我的这篇文章来理解各个过滤连的作用http://blog.csdn.net/jadyer/article/details/12172839 -->  
 	    <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->  

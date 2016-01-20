@@ -56,7 +56,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<ul class="dropDown-menu radius box-shadow">
 				<li><a href="#">个人信息</a></li>
 				<li><a href="#">切换账户</a></li>
-				<li><a href="shiro/logout.htm">退出</a></li>
+				<li><a href="service/shiro/logout.htm">退出</a></li>
 			</ul>
 		</li>
 		<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
@@ -76,10 +76,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<input runat="server" id="divScrollValue" type="hidden" value="" />
 	<div class="menu_dropdown bk_2">
 		<dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe616;</i> 资讯管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe616;</i> 工作流管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a _href="article-list.html" data-title="资讯管理" href="javascript:void(0)">资讯管理</a></li>
+					<li><a _href="service/bpm/model/list.htm" data-title="模板管理" href="javascript:void(0)">模板管理</a></li>
+					<li><a _href="article-list.html" data-title="流程定义" href="javascript:void(0)">流程定义</a></li>
+					<li><a _href="article-list.html" data-title="流程部署" href="javascript:void(0)">流程部署</a></li>
 				</ul>
 			</dd>
 		</dl>

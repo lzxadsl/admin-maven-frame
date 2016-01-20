@@ -8,6 +8,7 @@ import java.util.zip.ZipInputStream;
 
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.impl.persistence.entity.ByteArrayEntity;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.Model;
@@ -66,6 +67,7 @@ public class ActivitiTest {
 		Model model = repositoryService.getModel("1");
 		System.out.println(model.getDeploymentId());
 		repositoryService.getModelEditorSource("1");
+		ByteArrayEntity entity = 
 	}
 	@Test
 	public void addModel(){

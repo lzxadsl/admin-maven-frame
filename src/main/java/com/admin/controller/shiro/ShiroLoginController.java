@@ -69,7 +69,7 @@ public class ShiroLoginController {
 		if(errors.hasErrors()){
             return showLoginForm(model,login);
         }else{
-            return "redirect:/index/index.htm";
+            return "redirect:/service/index/index.htm";
         }
 	}
 	/**
@@ -81,6 +81,6 @@ public class ShiroLoginController {
 	@RequestMapping("/logout.htm")
     public String logout(){
         SecurityUtils.getSubject().logout();
-        return "redirect:/shiro/login.htm";
+        return "redirect:/service/shiro/login.htm";
     }
 }

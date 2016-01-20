@@ -4,7 +4,7 @@ package com.admin.basic.utils;
  * 字符串处理工具类
  * @author lzx
  * @version 1.0
- * @create_date 下午3:00:38
+ * @date 下午3:00:38
  */
 public class StringUtils {
 

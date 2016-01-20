@@ -39,12 +39,14 @@
     <!-- 开启spring aop扫描 -->
     <aop:aspectj-autoproxy/>
 	<!-- MVC转换 --> 
-    <mvc:annotation-driven/>
+    <!-- mvc:annotation-driven/> -->
 	<mvc:default-servlet-handler/>
 	<!-- <dubbo:annotation package="com.admin." /> -->
 	
 	<!-- ①：对web包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->  
-    <context:component-scan base-package="com.admin." /> 
+    <context:component-scan base-package="com.admin.controller." /> 
+    <!-- 查找工作流目录 -->
+    <context:component-scan base-package="com.admin.bpm." /> 
     
 	<!-- Executor -->
     <task:executor id="executor" pool-size="10"/>
@@ -87,7 +89,7 @@
                 	</bean>
                 </list>  
             </property>  
-    </bean> 
+    </bean>
     
     <!--  ③：对模型视图名称的解析，即在模型视图名称添加前后缀 -->  
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >  

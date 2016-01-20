@@ -36,7 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="header"></div>
 <div class="loginWraper">
   <div class="loginBox">
-    <form:form id="loginform" class="form form-horizontal" action="shiro/doLogin.htm" modelAttribute="loginCommand" method="post">
+    <form:form id="loginform" class="form form-horizontal" action="service/shiro/doLogin.htm" modelAttribute="loginCommand" method="post">
       <div class="row cl">
         <label class="form-label col-3"><i class="Hui-iconfont">&#xe60d;</i></label>
         <div class="formControls col-8">

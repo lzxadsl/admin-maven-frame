@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * 订单
  * @author lizhixian
  * @version 1.0
- * @create_date 2015-9-11 上午10:55:21
+ * @date 2015-9-11 上午10:55:21
  */
 public class OrderForm {
 
