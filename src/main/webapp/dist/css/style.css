@@ -1,3 +1,35 @@
 @charset "utf-8";
 /* 你自己的样式 */
+/*自定义样式命名规则，前缀必须是sys_*/
+
+/*左右间距15像素，居中*/
+.sys_margin_auto_15{margin:auto 15px;}
+/*操作按钮底部样式*/
+.sys-btn-bar {
+    border-bottom: 1px dotted #ccc;
+    padding: 0px 0px 10px 0px;
+    margin-bottom: 10px;
+}
+.sys-left{text-align: left}
+.sys-center{text-align: center}
+.sys-right{text-align: right}
+
+/*左右内间距*/
+.sys-padding-horizontal-10{padding:0px 10px;}
+/*上下内间距*/
+.sys-padding-horizontal-10{padding:10px 0px;}
+.sys-padding-0{padding:0;}
+
+/*左右间距*/
+.sys-margin-horizontal-10{margin:0px 10px;}
+/*上下间距*/
+.sys-margin-vertical-10{margin:10px 0px;}
+.sys-margin-0{margin:0;}
+
+/*调整面包屑样式*/
+.sys-breadcrumb{
+	padding: 8px 15px;
+    margin-bottom: 0px;
+}
+
 

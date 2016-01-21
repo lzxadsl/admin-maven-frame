@@ -32,13 +32,57 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  	<!-- 搜索选项 -->
-    <div class="g-panel hr-btm">
+  	<!-- 面包屑 -->
+  	<ol class="breadcrumb sys-breadcrumb">
+	  <li><a href="#"><span class="glyphicon glyphicon-home"></span>首页</a></li>
+	  <li><a href="#">工作流管理</a></li>
+	  <li class="active">模板管理</li>
+	</ol>
+	<div>
+	    <div class="panel">
+		    <div class="panel-body">
+		    	<!-- 搜索项 -->
+		        <div class="form-horizontal sys-padding-0">
+		            <div class="form-group col-sm-6">
+	                    <label class="col-sm-3 control-label right" for="ds_host">流程名称：</label>
+	                    <div class="col-sm-9">
+	                        <input class="form-control" id="ds_host" type="text" placeholder="192.168.1.161"/>
+	                    </div>
+	                </div>
+	                <div class="form-group col-sm-6">
+	                    <label class="col-sm-3 control-label" for="ds_host">关键字：</label>
+	                    <div class="col-sm-9">
+	                        <input class="form-control" id="ds_host" type="text" placeholder="192.168.1.161"/>
+	                    </div>
+	                </div>
+	                <div class="form-group col-sm-12 sys-center">
+	                    <button class="btn btn-success sys-margin-horizontal-10">
+	                        <i class="glyphicon glyphicon-search"></i> 查  询
+	                    </button>
+	                    <button class="btn btn-success sys-margin-horizontal-10">
+	                        <i class="glyphicon glyphicon-refresh"></i> 重  置
+	                    </button>
+	                </div>
+		        </div>
+			    <!-- 功能按钮 -->
+			    <div class="col-sm-12 sys-btn-bar">
+			    	<a href="#" class="btn btn-info">
+	                    <span class="glyphicon glyphicon-plus"></span> 新 增
+	                </a>
+	                <a href="#" class="btn btn-info">
+	                    <span class="glyphicon glyphicon-pencil"></span> 修 改
+	                </a>
+	                <a href="#" class="btn btn-info">
+	                    <span class="glyphicon glyphicon-trash"></span> 删 除
+	                </a>
+			    </div>
+			    <!-- 表格 -->
+			    <div class="col-sm-12 sys-padding-0">
+			        <table class="table table-striped table-hover" id="model_table"></table>
+			    </div>
+		    </div>
+		</div>
     
-    </div>
-    <!-- 表格 -->
-    <div class="g-panel">
-        <table class="table table-striped table-hover" id="model_table"></table>
     </div>
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
