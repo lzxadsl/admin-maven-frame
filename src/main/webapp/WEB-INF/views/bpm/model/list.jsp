@@ -18,7 +18,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--[if lt IE 9]>
 	<script type="text/javascript" src="dist/lib/html5.js"></script>
 	<script type="text/javascript" src="dist/lib/respond.min.js"></script>
-	<script type="text/javascript" src="dist/lib/PIE_IE678.js"></script>
+	<script type="text/javascript" src="dist/lib/PIE-2.0beta1/PIE_IE678.js"></script>
 	<![endif]-->
 	<link href="dist/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<link href="dist/lib/bootstrap/extend/table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />

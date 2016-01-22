@@ -18,7 +18,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--[if lt IE 9]>
 	<script type="text/javascript" src="dist/lib/html5.js"></script>
 	<script type="text/javascript" src="dist/lib/respond.min.js"></script>
-	<script type="text/javascript" src="dist/lib/PIE_IE678.js"></script>
+	<script type="text/javascript" src="dist/lib/PIE-2.0beta1/PIE_IE678.js"></script>
 	<![endif]-->
 	<link href="dist/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<link href="dist/lib/bootstrap/extend/table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
@@ -38,7 +38,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			   <div class="form-group col-sm-6">
 			      <label for="name" class="col-sm-3 control-label">流程名称：</label>
 			      <div class="col-sm-9">
-			         <input type="text" class="form-control" id="name" name="name" placeholder="请输入流程名称">
+			         <input type="text" class="form-control" id="name" name="name" datatype="*2-16" nullmsg="用户名不能为空" placeholder="请输入流程名称">
 			      </div>
 			   </div>
 			   <div class="form-group col-sm-6">
@@ -55,8 +55,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			   </div>
 			   <div class="form-group col-sm-12">
 			      <div class="col-sm-offset-2 col-sm-10">
-			         <button class="btn btn-info">创 建</button>
-			         <button class="btn btn-info">取 消</button>
+			         <button class="btn btn-info" id="create">创 建</button>
+			         <button class="btn btn-info" onclick="$.layer_close()">取 消</button>
 			      </div>
 			   </div>
 			</form>
@@ -65,8 +65,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
+  <script type="text/javascript" src="dist/lib/Validform/5.3.2/Validform.min.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
-
+	$(function(){
+		$("form").Validform({
+		tiptype:2,
+		callback:function(form){
+			form[0].submit();
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.$('.btn-refresh').click();
+			parent.layer.close(index);
+		}
+	});
+	});
   </script>
 </html>
