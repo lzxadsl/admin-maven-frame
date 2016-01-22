@@ -158,8 +158,8 @@ public class ACTReModelController {
 	 * @date 2015-11-12 上午10:00:35
 	 * @return 编辑页面元素
 	 */
-	@RequestMapping(value = "editWin")
-	public String editWin(){
-		return "admin/model/editWin";
+	@RequestMapping(value = "add.htm")
+	public String add(){
+		return "bpm/model/add";
 	}
 }

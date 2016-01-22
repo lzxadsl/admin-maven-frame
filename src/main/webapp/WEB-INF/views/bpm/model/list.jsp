@@ -26,7 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--[if IE 6]>
 	<script>alert('请升级浏览器版本');</script>
 	<![endif]-->
-	<title>流程模版列表</title>
+	<title>流程模型列表</title>
 	<meta name="keywords" content="后台管理系统模版，功能齐全">
 	<meta name="description" content="工作流后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
   </head>
@@ -36,7 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   	<ol class="breadcrumb sys-breadcrumb">
 	  <li><a href="#"><span class="glyphicon glyphicon-home"></span>首页</a></li>
 	  <li><a href="#">工作流管理</a></li>
-	  <li class="active">模板管理</li>
+	  <li class="active">模型管理</li>
 	</ol>
 	<div>
 	    <div class="panel">
@@ -66,14 +66,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		        </div>
 			    <!-- 功能按钮 -->
 			    <div class="col-sm-12 sys-btn-bar">
-			    	<a href="#" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-plus"></span> 新 增
+			    	<a href="javascript:void(0)" id="new_model" class="btn btn-info">
+	                    <span class="glyphicon glyphicon-plus"></span> 创建模型
 	                </a>
 	                <a href="#" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-pencil"></span> 修 改
+	                    <span class="glyphicon glyphicon-pencil"></span> 编辑模型
 	                </a>
 	                <a href="#" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-trash"></span> 删 除
+	                    <span class="glyphicon glyphicon-trash"></span> 删除模型
 	                </a>
 			    </div>
 			    <!-- 表格 -->
@@ -88,6 +88,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
+  <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript">
   	$(function(){
   		$('#model_table').bootstrapTable({
@@ -125,6 +126,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        	return '无符合条件的记录';
 	        }
 		});
+  		
+  		$('#new_model').click(function(){
+  			$.layer_show('创建模型','service/bpm/model/add.htm',600,510);
+  		});
   	});
   </script>
 </html>

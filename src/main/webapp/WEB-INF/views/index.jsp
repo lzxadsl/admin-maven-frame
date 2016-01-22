@@ -79,7 +79,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<dt><i class="Hui-iconfont">&#xe616;</i> 工作流管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a _href="service/bpm/model/list.htm" data-title="模板管理" href="javascript:void(0)">模板管理</a></li>
+					<li><a _href="service/bpm/model/list.htm" data-title="模型管理" href="javascript:void(0)">模板管理</a></li>
 					<li><a _href="article-list.html" data-title="流程定义" href="javascript:void(0)">流程定义</a></li>
 					<li><a _href="article-list.html" data-title="流程部署" href="javascript:void(0)">流程部署</a></li>
 				</ul>
