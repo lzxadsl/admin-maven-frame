@@ -179,8 +179,44 @@ $(function(){
 
 /*-----------------------------表单提交插件begin----------------------------------*/
 (function(){
-	$.fn.submitForm = function(options){
-		
+	$.fn.ajaxSubmitForm = function(options){
+		var $this = this;
+		options = $.extend({},$.fn.ajaxSubmitForm.defaults,
+                typeof options === 'object' && options);
+    	if(options.url){
+    		var formData = {};
+    		if(options.paramType.toUpperCase() == 'STRING'){
+    			formData[options.paramField] = $.serializeForm($this,true);
+    		}else{
+    			formData = $.serializeForm($this);
+    		}
+    		options.onBeforeSubmit.call(this,formData);
+        	$.ajax({
+        		url:options.url,
+        		type:options.method,
+        		data: formData,
+        		dataType:'json',
+        		success: function(jsonLst) {
+        			options.onSubmitSuccess.call(this,jsonLst);
+    			},
+    			error: function(xhr, textStatus, errorThrown){
+    				options.onSubmitError.call(this,xhr, textStatus, errorThrown);
+    				alert('表单提交失败');
+    		    }
+        	});
+    	}else{
+    		alert('URL 无效');
+    	}
+	};
+	//默认配额制项
+	$.fn.ajaxSubmitForm.defaults = {
+			url:'',
+			method:'post',
+			paramType:'object',//提交的参数类型，默认是json对象，如果是string，则提交的数据是json字符串
+			paramField:'params',//提交数据为json字符串时，提交到后台的参数名
+			onBeforeSubmit:function(data){},//表单数据
+			onSubmitSuccess:function(ret){},//ret是提交成功后的返回值
+			onSubmitError:function(xhr, textStatus, errorThrown){}
 	};
 })(jQuery);
 /*-----------------------------表单提交插件end------------------------------------*/

@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
 	<div class="panel">
 		<div class="panel-body">
-			<form class="form-horizontal" role="form">
+			<form class="form-horizontal" role="form" action="service/test">
 			   <div class="form-group">
 			      <label for="name" class="col-sm-3 control-label">流程名称：</label>
 			      <div class="col-sm-9">
@@ -73,10 +73,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript">
 	$(function(){
 		$("form").customValidform({
-			callback:function(form){
+			ajaxPost:true,
+			btnSubmit:"#create",
+			beforeSubmit:function(form){
+				
+			},
+			callback:function(data){
+				console.log(data);
 				//form[0].submit();
 				//window.top.creatIframe('','流程设计');
-				console.log($.serializeForm(form[0]));
+				//console.log($.serializeForm(form[0]));
 				//var index = parent.layer.getFrameIndex(window.name);
 				//parent.layer.close(index);
 			}
