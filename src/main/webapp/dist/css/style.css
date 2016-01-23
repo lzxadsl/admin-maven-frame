@@ -14,6 +14,73 @@
 .sys-center{text-align: center}
 .sys-right{text-align: right}
 
+/*----------------------表单验证样式----------------*/
+.Validform_checktip{
+	margin-left:8px;
+	line-height:20px;
+	height:20px;
+	overflow:hidden;
+	color:#999;
+	font-size:12px;
+}
+.Validform_right{
+	color:#71b83d;
+	padding-left:20px;
+	background:url(../../images/right.png) no-repeat left center;
+}
+.Validform_wrong{
+	color:red;
+	padding-left:20px;
+	white-space:nowrap;
+	background:url(../../images/error.png) no-repeat left center;
+}
+.Validform_loading{
+	padding-left:20px;
+	background:url(../../images/onLoad.gif) no-repeat left center;
+}
+.Validform_error{
+	background-color:#ffe7e7;
+}
+
+.Validform_info{
+	border:1px solid #ccc; 
+	padding:2px 20px 2px 5px; 
+	color:#666; 
+	position:absolute;
+	display:none;
+	line-height:20px;
+	background-color:#fff;
+}
+.Validform_dec {
+    bottom: -8px;
+    display: block;
+    height: 8px;
+    overflow: hidden;
+    position: absolute;
+    left: 10px;
+    width: 17px;
+}
+.Validform_dec s {
+    font-family: simsun;
+    font-size: 16px;
+    height: 19px;
+    left: 0;
+    line-height: 21px;
+    position: absolute;
+    text-decoration: none;
+    top: -9px;
+    width: 17px;
+}
+.Validform_dec .dec1 {
+    color: #ccc;
+}
+.Validform_dec .dec2 {
+    color: #fff;
+    top: -10px;
+}
+/*---------------------------表单验证样式end-------------------------*/
+
+
 /*左右内间距*/
 .sys-padding-horizontal-10{padding:0px 10px;}
 /*上下内间距*/

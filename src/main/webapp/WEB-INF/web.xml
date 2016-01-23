@@ -6,7 +6,7 @@
 	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
   <display-name></display-name>	
   <welcome-file-list>
-    <welcome-file>/shiro/login.htm</welcome-file>
+    <welcome-file>/service/shiro/login.htm</welcome-file>
   </welcome-file-list>
   <!-- 
    	<context-param>

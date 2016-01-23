@@ -67,7 +67,6 @@ public class ActivitiTest {
 		Model model = repositoryService.getModel("1");
 		System.out.println(model.getDeploymentId());
 		repositoryService.getModelEditorSource("1");
-		ByteArrayEntity entity = 
 	}
 	@Test
 	public void addModel(){

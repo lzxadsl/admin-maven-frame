@@ -3,9 +3,10 @@
  * @author 李智贤
  * @data 2015-09-10
  */
-
+$(function(){
+	$('input[type="text"]').attr('autocomplete','off');
+});
 (function($){
-	
 	$.extend({
 		getBrowserMsg:function(){
 			/**
@@ -19,7 +20,7 @@
 			(s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
 			(s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
 			(s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
-			return Sys
+			return Sys;
 		},
 		setCookie:function(name, value){//设置cookies 
 		    //设置名称为name,值为value的Cookie
@@ -41,6 +42,34 @@
 		    var exp = new Date(); 
 		    exp.setTime(exp.getTime() - 10000);//为了删除指定名称的cookie，可以将其过期时间设定为一个过去的时间 
 		    document.cookie = name + "=''; expires=" + exp.toGMTString(); 
+		},
+		/**
+		 * 序列化表单
+		 * @param form 表单对象
+		 * @param returnString 返回的数据类型，默认是json对象,为true时返回的是一个json字符串
+		 */
+		serializeForm:function(form,returnString){//根据表单对象获取表单数据 ,返回类型为json对象
+			var serializeObj = {}; 
+			if(!(form instanceof jQuery)){
+				form = $(form);
+			}
+			var array = form.serializeArray(); 
+			$(array).each(function(){ 
+				if(serializeObj[this.name]){ 
+					if($.isArray(serializeObj[this.name])){ 
+						serializeObj[this.name].push(this.value); 
+					}else{ 
+						serializeObj[this.name]=[serializeObj[this.name],this.value]; 
+					} 
+				}else{ 
+					serializeObj[this.name]=this.value; 
+				} 
+			}); 
+			//返回json字符串
+			if(returnString){
+				return JSON.stringify(serializeObj);
+			}
+			return serializeObj; 
 		},
 		/*弹出层*/
 		/*
@@ -82,6 +111,79 @@
 	});
 	
 })(jQuery);
+
+/**
+ * 自定义表单验证提示效果，让提示信息滑入显示,
+ * 依赖于Validform5+以上版本
+ * Validform API:http://validform.rjboy.cn/document.html
+ * */
+(function($){
+	/**
+	 * @param config 使用跟Validform的配置即可
+	 * @param args 为false时，该功能不起作用
+	 * */
+	$.fn.customValidform = function(options,args){
+		//tiptype可用的值有：1、2、3、4和function函数，默认tiptype为1。 3、4是5.2.1版本新增
+		options = options || {tiptype:2};
+		this.each(function () {
+			var _this = $(this);
+			if(args != false){
+				options['tiptype'] = function(msg,o,cssctl){
+					//msg：提示信息;
+					//o:{obj:*,type:*,curform:*}, obj指向的是当前验证的表单元素（或表单对象），type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, curform为当前form对象;
+					//cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
+					
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						var objtip = o.obj.parent().find(".Validform_checktip");
+						if(objtip.length==0){
+							var html = '<div class="Validform_info">'
+											+'<span class="Validform_checktip Validform_wrong" style="margin-left:0;">'+msg+'</span>'
+											+'<span class="Validform_dec">'
+												+'<s class="dec1">◆</s>'
+												+'<s class="dec2">◆</s>'
+											+'</span>'
+										+'</div>';
+							o.obj.parent().append(html);
+							objtip = o.obj.parent().find(".Validform_checktip");
+						}
+						cssctl(objtip,o.type);
+						var infoObj=o.obj.parent().find(".Validform_info");
+						if(o.type==2){
+							infoObj.fadeOut(200);
+						}else{
+							if(infoObj.is(":visible")){return;}
+							
+							var left=o.obj.offset().left;
+								//top=o.obj.offset().top;
+							
+							var top = o.obj.outerHeight(),
+								left = o.obj.outerWidth();
+					    	var browserV = $.getBrowserMsg();
+					    	if(browserV.ie != undefined && parseFloat(browserV.ie) > 8){
+					    		top = o.obj.height();
+					    	}
+							infoObj.css({
+								left:left/2,
+								top:-top
+							}).show().animate({
+								//top:top-5	
+							},200);
+						}
+					}	
+				};
+			}
+			_this.Validform(options);
+		});
+	};
+})(jQuery);
+
+/*-----------------------------表单提交插件begin----------------------------------*/
+(function(){
+	$.fn.submitForm = function(options){
+		
+	};
+})(jQuery);
+/*-----------------------------表单提交插件end------------------------------------*/
 
 /*placeholder兼容性处理*/
 (function(window, document, $) {
