@@ -87,8 +87,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
-  <script type="text/javascript" src="dist/js/admin-frame.js"></script>
+  <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
   	$(function(){
   		$('#model_table').bootstrapTable({
@@ -103,10 +104,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    queryParamsType: 'limit', 
 		    queryParams: function (params){
 				//获取查询条件
-				
 				return params;
 			},
 			columns: [
+				{field:"id",title:"流程ID",checkbox:true},
 				{field:"name",title:"流程名称",align:"center",valign:"middle",sortable:"true"},
 				{field:"key",title:"关键字",align:"center",valign:"middle",sortable:"true"},
 				{field:"createTime",title:"创建时间",align:"center",valign:"middle",sortable:"true"},

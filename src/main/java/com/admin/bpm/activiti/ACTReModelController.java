@@ -108,7 +108,7 @@ public class ACTReModelController {
 	 * @param response 浏览器对象
 	 * @return 返回创建结果
 	 */
-	@RequestMapping(value = "create")
+	@RequestMapping(value = "create.do")
 	public @ResponseBody Map<String, String> create(@RequestParam("name") String name,@RequestParam("key") String key,@RequestParam("description") String description,
 			HttpServletRequest request,HttpServletResponse response){
 			Map<String, String> rdata = new HashMap<String, String>();
@@ -147,7 +147,7 @@ public class ACTReModelController {
 	 * @param id 模型id
 	 * @return 删除结果
 	 */
-	@RequestMapping(value = "delete")
+	@RequestMapping(value = "delete.do")
 	public @ResponseBody String delete(@RequestParam("id") String id){
 		repositoryService.deleteModel(id);
 		return "200";

@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body>
 	<div class="panel">
 		<div class="panel-body">
-			<form class="form-horizontal" role="form" action="service/test">
+			<form class="form-horizontal" role="form" >
 			   <div class="form-group">
 			      <label for="name" class="col-sm-3 control-label">流程名称：</label>
 			      <div class="col-sm-9">
@@ -44,7 +44,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			   <div class="form-group">
 			      <label for="key" class="col-sm-3 control-label">关键字：</label>
 			      <div class="col-sm-9">
-			         <input type="text" class="form-control" id="key" name="key" placeholder="流程的唯一标识">
+			         <input type="text" class="form-control" id="key" name="key" datatype="*2-16" nullmsg="关键字不能为空" placeholder="流程的唯一标识">
 			      </div>
 			   </div>
 			   <div class="form-group">
@@ -57,7 +57,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			   <div class="form-group">
 			   	  <div class="col-sm-3"></div>
 			      <div class="col-sm-9">
-			         <button class="btn btn-info" id="create">创 建</button>
+			         <button class="btn btn-info" type="button" id="create">创 建</button>
 			         <button class="btn btn-info" onclick="$.layer_close()">取 消</button>
 			      </div>
 			   </div>
@@ -67,26 +67,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</div>
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
-  <script type="text/javascript" src="dist/lib/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="dist/lib/Validform/5.3.2/Validform.min.js"></script>
+  <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
 	$(function(){
 		$("form").customValidform({
-			ajaxPost:true,
-			btnSubmit:"#create",
-			beforeSubmit:function(form){
-				
-			},
-			callback:function(data){
-				console.log(data);
-				//form[0].submit();
-				//window.top.creatIframe('','流程设计');
-				//console.log($.serializeForm(form[0]));
-				//var index = parent.layer.getFrameIndex(window.name);
-				//parent.layer.close(index);
-			}
+    		btnSubmit:'#create',
+    		showAllError:true,
+    		beforeSubmit:function(form){
+    			form.ajaxSubmitForm({
+		    		url:'service/bpm/model/create.do',
+		    		onSubmitSuccess:function(data){
+		    			if(data.status=='200'){
+		    				window.top.creatIframe('process-editor/modeler.html?modelId='+data.modelId,'流程设计');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+		    			}else{
+		    				layer.alert('保存失败！', {icon: 5});
+		    			}
+		    		},
+		    		onSubmitError:function(xhr, textStatus, errorThrown){
+		    			layer.alert('保存失败！', {icon: 5});
+		    		}
+		    	});
+				return false;
+    		}
 		});
+		
 	});
+	
+	
   </script>
 </html>

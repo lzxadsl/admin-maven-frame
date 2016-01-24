@@ -125,98 +125,127 @@ $(function(){
 	$.fn.customValidform = function(options,args){
 		//tiptype可用的值有：1、2、3、4和function函数，默认tiptype为1。 3、4是5.2.1版本新增
 		options = options || {tiptype:2};
-		this.each(function () {
-			var _this = $(this);
-			if(args != false){
-				options['tiptype'] = function(msg,o,cssctl){
-					//msg：提示信息;
-					//o:{obj:*,type:*,curform:*}, obj指向的是当前验证的表单元素（或表单对象），type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, curform为当前form对象;
-					//cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
-					
-					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
-						var objtip = o.obj.parent().find(".Validform_checktip");
-						if(objtip.length==0){
-							var html = '<div class="Validform_info">'
-											+'<span class="Validform_checktip Validform_wrong" style="margin-left:0;">'+msg+'</span>'
-											+'<span class="Validform_dec">'
-												+'<s class="dec1">◆</s>'
-												+'<s class="dec2">◆</s>'
-											+'</span>'
-										+'</div>';
-							o.obj.parent().append(html);
-							objtip = o.obj.parent().find(".Validform_checktip");
-						}
-						cssctl(objtip,o.type);
-						var infoObj=o.obj.parent().find(".Validform_info");
-						if(o.type==2){
-							infoObj.fadeOut(200);
-						}else{
-							if(infoObj.is(":visible")){return;}
-							
-							var left=o.obj.offset().left;
-								//top=o.obj.offset().top;
-							
-							var top = o.obj.outerHeight(),
-								left = o.obj.outerWidth();
-					    	var browserV = $.getBrowserMsg();
-					    	if(browserV.ie != undefined && parseFloat(browserV.ie) > 8){
-					    		top = o.obj.height();
-					    	}
-							infoObj.css({
-								left:left/2,
-								top:-top
-							}).show().animate({
-								//top:top-5	
-							},200);
-						}
-					}	
-				};
-			}
-			_this.Validform(options);
-		});
+		var result = {};
+		var _this = $(this);
+		if(args != false){
+			options['tiptype'] = function(msg,o,cssctl){
+				//msg：提示信息;
+				//o:{obj:*,type:*,curform:*}, obj指向的是当前验证的表单元素（或表单对象），type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, curform为当前form对象;
+				//cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
+				//var isPass = true;//是否验证通过
+				if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+					var objtip = o.obj.parent().find(".Validform_checktip");
+					if(objtip.length==0){
+						var html = '<div class="Validform_info">'
+										+'<span class="Validform_checktip Validform_wrong" style="margin-left:0;">'+msg+'</span>'
+										+'<span class="Validform_dec">'
+											+'<s class="dec1">◆</s>'
+											+'<s class="dec2">◆</s>'
+										+'</span>'
+									+'</div>';
+						o.obj.parent().append(html);
+						objtip = o.obj.parent().find(".Validform_checktip");
+					}
+					cssctl(objtip,o.type);
+					var infoObj=o.obj.parent().find(".Validform_info");
+					if(o.type==2){
+						infoObj.fadeOut(200);
+					}else{
+						//isPass = false;
+						if(infoObj.is(":visible")){return;}
+						var left=o.obj.offset().left;
+							//top=o.obj.offset().top;
+						var top = o.obj.outerHeight(),
+							left = o.obj.outerWidth();
+				    	var browserV = $.getBrowserMsg();
+				    	if(browserV.ie != undefined && parseFloat(browserV.ie) > 8){
+				    		top = o.obj.height();
+				    	}
+						infoObj.css({
+							left:left/2,
+							top:-top
+						}).show().animate({
+							//top:top-5	
+						},200);
+					}
+					//options['isPass'] = isPass;
+				}	
+			};
+		}
+		result = _this.Validform(options);
+		return result;
 	};
 })(jQuery);
 
 /*-----------------------------表单提交插件begin----------------------------------*/
+/*依赖layout做弹出提示*/
 (function(){
 	$.fn.ajaxSubmitForm = function(options){
 		var $this = this;
+		if(!($this instanceof jQuery)){$this = $($this);}
+		if($this.attr('action'))options['url'] = $this.attr('action');
 		options = $.extend({},$.fn.ajaxSubmitForm.defaults,
                 typeof options === 'object' && options);
     	if(options.url){
     		var formData = {};
+    		//提交参数类型为json字符串
     		if(options.paramType.toUpperCase() == 'STRING'){
     			formData[options.paramField] = $.serializeForm($this,true);
-    		}else{
+    		}else{//提交参数类型为json对象
     			formData = $.serializeForm($this);
     		}
-    		options.onBeforeSubmit.call(this,formData);
-        	$.ajax({
-        		url:options.url,
-        		type:options.method,
-        		data: formData,
-        		dataType:'json',
-        		success: function(jsonLst) {
-        			options.onSubmitSuccess.call(this,jsonLst);
-    			},
-    			error: function(xhr, textStatus, errorThrown){
-    				options.onSubmitError.call(this,xhr, textStatus, errorThrown);
-    				alert('表单提交失败');
-    		    }
-        	});
+    		
+    		if(options.confirm){
+    			layer.open({
+				    content: options.tipMsg,
+				    btn: options.btn,
+				    shadeClose: false,
+				    title:options.title,
+				    yes: function(index, layero){
+				    	layer.close(index);
+				    	submitServer(options,formData);
+				    },cancel: function(index){
+				    	options.onCancel.call(this,index);
+				    }
+    			});
+    		}else{
+    			submitServer(options,formData);
+    		}
+        	
     	}else{
-    		alert('URL 无效');
+    		layer.alert('URL 无效', {icon: 5});
     	}
 	};
+	//提交请求
+	function submitServer(options,formData){
+		options.onBeforeSubmit.call(this,formData);
+		$.ajax({
+    		url:options.url,
+    		type:options.method,
+    		data: formData,
+    		dataType:'json',
+    		success: function(jsonLst) {
+    			options.onSubmitSuccess.call(this,jsonLst);
+			},
+			error: function(xhr, textStatus, errorThrown){
+				options.onSubmitError.call(this,xhr, textStatus, errorThrown);
+		    }
+    	});
+	}
 	//默认配额制项
 	$.fn.ajaxSubmitForm.defaults = {
 			url:'',
-			method:'post',
+			method:'get',
 			paramType:'object',//提交的参数类型，默认是json对象，如果是string，则提交的数据是json字符串
 			paramField:'params',//提交数据为json字符串时，提交到后台的参数名
+			confirm:true,//提交前是否弹出提示，默认是
+			tipMsg:'确定提交保存？',
+			btn: ['确认', '取消'],
+			title:'提示',
 			onBeforeSubmit:function(data){},//表单数据
 			onSubmitSuccess:function(ret){},//ret是提交成功后的返回值
-			onSubmitError:function(xhr, textStatus, errorThrown){}
+			onSubmitError:function(xhr, textStatus, errorThrown){},
+			onCancel:function(index){}//取消保存操作
 	};
 })(jQuery);
 /*-----------------------------表单提交插件end------------------------------------*/

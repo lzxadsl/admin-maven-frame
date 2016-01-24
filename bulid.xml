@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="smvc" default="welcome">
+	<!-- properties from key value -->
+	<property name="workflow.diagrams" value="resources/diagrams" />
+	<property name="workflow.deployments" value="resources/deployments" />
+
+	<!-- 流程定义：每个模块的路径 -->
+	<property name="wd.leave" value="${workflow.diagrams}/leave" />
+	
+	<!-- 流程定义：每个模块的路径 -->
+	<property name="wd.borrow" value="${workflow.diagrams}/borrow" />
+
+	<!-- 请假流程定义打包 -->
+	<target name="workflow.package.leave">
+		<echo>打包流程定义</echo>
+		<copy file="${wd.leave}/leave.bpmn" tofile="${wd.leave}/leave.bpmn20.xml" />
+		<zip destfile="${workflow.deployments}/leave.zip" basedir="${wd.leave}" update="true" includes="*.xml,*.png" />
+		<delete file="${wd.leave}/leave.bpmn20.xml" />
+	</target> 
+	
+	<!-- 借款程定义打包 -->
+	<target name="workflow.package.borrow">
+		<echo>打包流程定义</echo>
+		<copy file="${wd.borrow}/borrow.bpmn" tofile="${wd.borrow}/borrow.bpmn20.xml" />
+		<zip destfile="${workflow.deployments}/borrow.zip" basedir="${wd.borrow}" update="true" includes="*.xml,*.png" />
+		<delete file="${wd.borrow}/borrow.bpmn20.xml" />
+	</target> 
+
+	<!-- 流程定义打包 
+	<target name="workflow.package.all" depends="workflow.package.leave">
+	</target>
+	-->
+	
+</project>
