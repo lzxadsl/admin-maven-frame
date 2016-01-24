@@ -250,6 +250,69 @@ $(function(){
 })(jQuery);
 /*-----------------------------表单提交插件end------------------------------------*/
 
+/**
+ * 查询条件，自动获取、重置
+ * @author lizhixian
+ * @version 1.0
+ * @create_date 2015-09-23
+ */
+(function($){
+	$.fn.extend({
+		/**
+		 * 输出序列化表单查询属性和值{key1:value1,key2:value2}
+		 */
+		getSearchParams:function(params){
+			var id = $(this).attr('id');
+			params = params || {};
+			$('#'+id+' [name]').each(function(index, element) {
+				var name = element.name.substring(element.name);
+				var value = $(element).val();
+				if(value){
+					params[name] = value;
+				}
+		    });	
+			return params;
+		},
+		/**
+		 * 重置查询条件,$('#id').reSet(false)
+		 * @param includeHidden 为false时，不重置隐藏域，反之则重置
+		 */
+		reSet:function(includeHidden){
+			return this.each(function() {
+		        $('input,select,textarea', this).clearInputs(includeHidden);   //this表示设置上下文环境，有多个表单时只作用调用的表单
+		    });
+		},
+		clearInputs:function(includeHidden) {
+		    var re = /^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i; // 'hidden' is not in this list
+		    return this.each(function() {
+		        var t = this.type, tag = this.tagName.toLowerCase();
+		        if (re.test(t) || tag == 'textarea') {
+		            this.value = '';
+		        }
+		        else if (t == 'checkbox' || t == 'radio') {
+		            this.checked = false;
+		        }
+		        else if (tag == 'select') {
+		            this.selectedIndex = -1;
+		        } 
+		        else if (t == "file") {
+		            if (/MSIE/.test(navigator.userAgent)) {
+		                 $(this).replaceWith($(this).clone(true));
+		            } else {
+		                 $(this).val('');
+		            }
+		       }
+		        else if (includeHidden) {
+		            if ((includeHidden === true && /hidden/.test(t)) ||
+		                 (typeof includeHidden == 'string' && $(this).is(includeHidden)) ) {
+		                this.value = '';
+		            }
+		        }
+		    });
+		}
+	});
+})(jQuery);
+
 /*placeholder兼容性处理*/
 (function(window, document, $) {
 	var isInputSupported = 'placeholder' in document.createElement('input');
@@ -408,3 +471,31 @@ $(function(){
 		} catch (exception) {}
 	}
 }(this, document, jQuery));
+/*-----日期格式化-----*/
+Date.prototype.format = function(format) {
+    var o = {
+        "M+": this.getMonth() + 1,
+        // month
+        "d+": this.getDate(),
+        // day
+        "h+": this.getHours(),
+        // hour
+        "m+": this.getMinutes(),
+        // minute
+        "s+": this.getSeconds(),
+        // second
+        "q+": Math.floor((this.getMonth() + 3) / 3),
+        // quarter
+        "S": this.getMilliseconds()
+        // millisecond
+    };
+    if (/(y+)/.test(format) || /(Y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return format;
+};

@@ -13,7 +13,11 @@
 .sys-left{text-align: left}
 .sys-center{text-align: center}
 .sys-right{text-align: right}
-
+/*----表格样式----*/
+.bootstrap-table thead th {
+    background-color: #f5fafe;
+}
+.t
 /*----------------------表单验证样式----------------*/
 .Validform_checktip{
 	margin-left:8px;

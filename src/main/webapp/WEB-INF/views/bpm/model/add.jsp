@@ -88,7 +88,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    			}
 		    		},
 		    		onSubmitError:function(xhr, textStatus, errorThrown){
-		    			layer.alert('保存失败！', {icon: 5});
+		    			layer.alert('出错啦！', {icon: 5});
 		    		}
 		    	});
 				return false;

@@ -42,24 +42,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    <div class="panel">
 		    <div class="panel-body">
 		    	<!-- 搜索项 -->
-		        <div class="form-horizontal sys-padding-0">
+		        <div class="form-horizontal sys-padding-0" id="serachForm">
 		            <div class="form-group col-sm-6">
-	                    <label class="col-sm-3 control-label right" for="ds_host">流程名称：</label>
+	                    <label class="col-sm-3 control-label right" for="name">流程名称：</label>
 	                    <div class="col-sm-9">
-	                        <input class="form-control" id="ds_host" type="text" placeholder="192.168.1.161"/>
+	                        <input class="form-control" id="name" name="name" type="text"/>
 	                    </div>
 	                </div>
 	                <div class="form-group col-sm-6">
-	                    <label class="col-sm-3 control-label" for="ds_host">关键字：</label>
+	                    <label class="col-sm-3 control-label" for="key">关键字：</label>
 	                    <div class="col-sm-9">
-	                        <input class="form-control" id="ds_host" type="text" placeholder="192.168.1.161"/>
+	                        <input class="form-control" id="key" name="key" type="text"/>
 	                    </div>
 	                </div>
 	                <div class="form-group col-sm-12 sys-center">
-	                    <button class="btn btn-success sys-margin-horizontal-10">
+	                    <button type="button" class="btn btn-success sys-margin-horizontal-10" id="search_btn">
 	                        <i class="glyphicon glyphicon-search"></i> 查  询
 	                    </button>
-	                    <button class="btn btn-success sys-margin-horizontal-10">
+	                    <button type="button" class="btn btn-success sys-margin-horizontal-10" id="reset_btn">
 	                        <i class="glyphicon glyphicon-refresh"></i> 重  置
 	                    </button>
 	                </div>
@@ -104,19 +104,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    queryParamsType: 'limit', 
 		    queryParams: function (params){
 				//获取查询条件
+				$('#serachForm').getSearchParams(params);
 				return params;
 			},
 			columns: [
-				{field:"id",title:"流程ID",checkbox:true},
+				{field:'',title:'复选框',width:50,checkbox:true},
 				{field:"name",title:"流程名称",align:"center",valign:"middle",sortable:"true"},
 				{field:"key",title:"关键字",align:"center",valign:"middle",sortable:"true"},
-				{field:"createTime",title:"创建时间",align:"center",valign:"middle",sortable:"true"},
+				{field:"createTime",title:"创建时间",align:"center",valign:"middle",sortable:"true",
+					formatter:function(value){
+						return (new Date(value)).format("yyyy-MM-dd hh:mm:ss");     
+					}
+				},
 				{field:"version",title:"版本",align:"center"},
 				{field:"category",title:"分类",align:"center"},
 				{field:"detail",title:"操作",align:"center",sortable:"true",
 					formatter:function(value,row,rowIndex){
-						//var strHtml = '<a href="javascript:void(0);" onclick="removeRow('+rowIndex+')">删除</a>';
-						return value;
+						var strHtml = '<a href="process-editor/modeler.html?modelId='+row.id+'" target="_blank">编辑</a>&nbsp;|&nbsp;'
+									 +'<a href="javascript:void(0);" onclick="removeModel('+row.id+')">删除</a>';
+						return strHtml;
 					}
 				}
 				
@@ -128,9 +134,48 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        }
 		});
   		
+  		//查询
+		$('#search_btn').click(function(){
+			$('#model_table').bootstrapTable('refresh');
+		});
+		//重置查询条件
+		$('#reset_btn').click(function(){
+			$('#serachForm').reSet(false);
+		});
+	
   		$('#new_model').click(function(){
   			$.layer_show('创建模型','service/bpm/model/add.htm',600,510);
   		});
   	});
+  	function removeModel(id){
+  		layer.open({
+		    content: '确定删除？',
+		    btn:['确认', '取消'],
+		    shadeClose: false,
+		    title:'提示',
+		    yes: function(index, layero){
+		    	layer.close(index);
+		    	$.ajax({
+		    		url:'service/bpm/model/delete.do',
+		    		type:'get',
+		    		data:{id:id},
+		    		dataType:'json',
+		    		success: function(ret) {
+		    			if(ret == '200'){
+		    				layer.alert('删除成功！', {icon: 6});
+		    				$('#model_table').bootstrapTable('refresh');
+		    			}else{
+		    				layer.alert('删除失败！', {icon: 5});
+		    			}
+					},
+					error: function(xhr, textStatus, errorThrown){
+						layer.alert('出错啦！', {icon: 5});
+				    }
+		    	});
+		    },cancel: function(index){
+		    	
+		    }
+	 	});
+  	}
   </script>
 </html>

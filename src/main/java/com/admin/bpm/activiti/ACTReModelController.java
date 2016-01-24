@@ -15,6 +15,7 @@ import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Model;
+import org.activiti.engine.repository.ModelQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,13 +54,21 @@ public class ACTReModelController {
 	 * @return
 	 */
 	@RequestMapping(value = "ajaxList.json")
-	public @ResponseBody Map<String, Object> ajaxList(ModelMap model, PageData pageData){
+	public @ResponseBody Map<String, Object> ajaxList(ModelMap model,String name,String key,PageData pageData){
 		Map<String, Object> data = new HashMap<String, Object>();
 		int s = pageData.getOffset();
 		int e = pageData.getLimit();
-		List<Model> listModel = repositoryService.createModelQuery().listPage(s, e);
+		ModelQuery query = repositoryService.createModelQuery();
+		if(StringUtils.isNotEmpty(name)){
+			query.modelName(name);
+		}
+		if(StringUtils.isNotEmpty(key)){
+			query.modelKey(key);
+		}
+		
+		List<Model> listModel = query.orderByCreateTime().desc().listPage(s, e);
 		data.put("rows", listModel);
-		data.put("total",pageData.getTotalSize());
+		data.put("total",query.count());
 		return data;
 	}
 	
