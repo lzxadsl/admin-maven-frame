@@ -3,7 +3,10 @@ package com.admin.bpm.activiti;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,9 +37,9 @@ public class ACTReProcessDefinitionController {
 	@Autowired
 	private RuntimeService runtimeService;
 	
-	@RequestMapping("query")
+	@RequestMapping("list.htm")
 	public String query(){
-		return "admin/processDefination/query";
+		return "bpm/processDefination/list";
 	}
 	
 	/**流程定义
@@ -45,10 +49,11 @@ public class ACTReProcessDefinitionController {
 	 * @param pageData
 	 * @return
 	 */
-	@RequestMapping(value = "ajaxList",produces = "application/json")
+	@RequestMapping(value = "ajaxList.json",produces = "application/json")
 	public @ResponseBody Map<String, Object> ajaxList(ModelMap model, PageData pageData){
 		Map<String, Object> data = new HashMap<String, Object>();
-		List<ProcessDefinition>  listProDef = repositoryService.createProcessDefinitionQuery().list();
+		ProcessDefinitionQuery procDefinQuery = repositoryService.createProcessDefinitionQuery();
+		List<ProcessDefinition>  listProDef = procDefinQuery.orderByDeploymentId().desc().list();
 		List<Map<String, Object>> listPro = new ArrayList<Map<String,Object>>();
 		for (ProcessDefinition processDefinition : listProDef) {
 			Map<String, Object> itm = new HashMap<String, Object>();
@@ -63,7 +68,7 @@ public class ACTReProcessDefinitionController {
 			listPro.add(itm);
 		}
 		data.put("rows", listPro);
-		data.put("total", "99");
+		data.put("total", procDefinQuery.count());
 		return data;
 	}
 	
@@ -76,7 +81,7 @@ public class ACTReProcessDefinitionController {
 	 * @param request 请求对象
 	 * @param response 返回浏览器响应对象
 	 */
-	@RequestMapping(value = "processResource")
+	@RequestMapping(value = "processResource.htm")
 	public void processResource(int type,String deploymentId,
 			String resourceName,
 			HttpServletRequest request,HttpServletResponse response){
@@ -130,12 +135,40 @@ public class ACTReProcessDefinitionController {
 	 * @param key 关键字
 	 * @return 删除后列表
 	 */
-	@RequestMapping(value = "delete")
-	public String delete(String deploymentId){
-		repositoryService.deleteDeployment(deploymentId, true);
-		return "admin/processDefination/query";
+	@RequestMapping(value = "delete.do")
+	public @ResponseBody String delete(String deploymentId){
+		String status = "200";
+		try {
+			repositoryService.deleteDeployment(deploymentId, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = "500";
+		}
+		return status;
 	}
 	
+	/**
+	 * 流程挂起
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-1-25 下午5:09:28
+	 * @param processDefinitionId 流程定义ID
+	 * @param suspendProcessInstances 是否同时挂起该流程下的实例
+	 * @param suspensionDate 挂起生效日期
+	 * @return status
+	 */
+	public @ResponseBody String suspendProcess(String processDefinitionId,boolean suspendProcessInstances,String date){
+		String status = "200";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date suspensionDate = sdf.parse(date);
+			repositoryService.suspendProcessDefinitionById(processDefinitionId, suspendProcessInstances, suspensionDate);
+		} catch (ParseException e) {
+			status = "500";
+			e.printStackTrace();
+		}
+		return status;
+	}
 	/**启动流程审批
 	 * @author LiZhiXian
 	 * @date 2015-11-14 上午11:50:09

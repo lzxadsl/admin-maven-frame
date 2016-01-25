@@ -26,7 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--[if IE 6]>
 	<script>alert('请升级浏览器版本');</script>
 	<![endif]-->
-	<title>流程模型列表</title>
+	<title>已部署流程定义列表</title>
 	<meta name="keywords" content="后台管理系统模版，功能齐全">
 	<meta name="description" content="工作流后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
   </head>
@@ -36,7 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   	<ol class="breadcrumb sys-breadcrumb">
 	  <li><a href="#"><span class="glyphicon glyphicon-home"></span>首页</a></li>
 	  <li><a href="#">工作流管理</a></li>
-	  <li class="active">模型管理</li>
+	  <li class="active">流程定义</li>
 	</ol>
 	<div>
 	    <div class="panel">
@@ -67,16 +67,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    <!-- 功能按钮 -->
 			    <div class="col-sm-12 sys-btn-bar">
 			    	<a href="javascript:void(0)" id="new_model" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-plus"></span> 创建模型
+	                    <span class="glyphicon glyphicon-plus"></span> 挂 起
 	                </a>
-	                <%--
 	                <a href="#" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-pencil"></span> 编辑模型
 	                </a>
 	                <a href="#" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-trash"></span> 删除模型
 	                </a>
-			    	--%>
 			    </div>
 			    <!-- 表格 -->
 			    <div class="col-sm-12 sys-padding-0">
@@ -95,7 +93,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript">
   	$(function(){
   		$('#model_table').bootstrapTable({
-			url:'service/bpm/model/ajaxList.json',
+			url:'service/bpm/processDefinition/ajaxList.json',
 			striped: true,
 	        clickToSelect: true,
 	        pagination: true,
@@ -113,20 +111,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				{field:'',title:'复选框',width:50,checkbox:true},
 				{field:"name",title:"流程名称",align:"center",valign:"middle",sortable:"true"},
 				{field:"key",title:"关键字",align:"center",valign:"middle",sortable:"true"},
-				{field:"createTime",title:"创建时间",align:"center",valign:"middle",sortable:"true",
+				{field:"sourceName",title:"文件名",align:"center",valign:"middle",sortable:"true",
 					formatter:function(value){
-						return (new Date(value)).format("yyyy-MM-dd hh:mm:ss");     
+						return value;     
 					}
 				},
 				{field:"version",title:"版本",align:"center"},
 				{field:"category",title:"分类",align:"center"},
 				{field:"detail",title:"操作",align:"center",sortable:"true",
 					formatter:function(value,row,rowIndex){
-						var strHtml = '<a href="javascript:void(0);" onclick="editModel('+row.id+')">编辑</a>&nbsp;|&nbsp;';
-						if(row.editorSourceExtraValueId != null){
-							strHtml += '<a href="javascript:void(0);" onclick="deployModel('+row.id+')">部署</a>&nbsp;|&nbsp;';
-						}
-						strHtml +='<a href="javascript:void(0);" onclick="removeModel('+row.id+')">删除</a>';
+						var strHtml = '<a href="process-editor/modeler.html?modelId='+row.id+'" target="_blank">启动流程</a>&nbsp;|&nbsp;'
+										+'<a href="javascript:void(0);" onclick="showResource('+row.deploymentId+',\''+row.diagramResourceName+'\')">流程图片</a>&nbsp;|&nbsp;'			 
+										+'<a href="javascript:void(0);" onclick="removeDeploye('+row.deploymentId+')">删除</a>';
 						return strHtml;
 					}
 				}
@@ -152,12 +148,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			$.layer_show('创建模型','service/bpm/model/add.htm',600,510);
   		});
   	});
-  	//编辑
-  	function editModel(id){
-  		window.top.creatIframe('process-editor/modeler.html?modelId='+id,'流程设计');
+  	//查看流程图片
+  	function showResource(deploymentId,sourceName){
+  		var win = $.layer_show('流程图','service/bpm/processDefinition/processResource.htm?type=0&deploymentId='+deploymentId+'&resourceName='+sourceName,800,610);
+  		layer.full(win);
   	}
   	//部署模型
-  	function deployModel(id){
+  	function deployModel(){
   		layer.open({
 		    content: '确定要部署？',
 		    btn:['确认', '取消'],
@@ -165,7 +162,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    title:'提示',
 		    yes: function(index, layero){
 		    	layer.close(index);
-		    	var tipMsg = layer.msg('正在部署，请稍等...', {icon: 16,shade:[0.1,'#000'],time:0,offset:'250px'});
 		    	$.ajax({
 		    		url:'service/bpm/model/deployment.do',
 		    		type:'get',
@@ -178,11 +174,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    			}else{
 		    				layer.alert('部署失败！', {icon: 5});
 		    			}
-		    			layer.close(tipMsg);
 					},
 					error: function(xhr, textStatus, errorThrown){
 						layer.alert('部署出错啦！', {icon: 5});
-						layer.close(tipMsg);
 				    }
 		    	});
 		    },cancel: function(index){
@@ -191,7 +185,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	 	});
   	}
   	//删除模型
-  	function removeModel(id){
+  	function removeDeploye(deploymentId){
   		layer.open({
 		    content: '确定要删除？',
 		    btn:['确认', '取消'],
@@ -199,11 +193,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    title:'提示',
 		    yes: function(index, layero){
 		    	layer.close(index);
-		    	var tipMsg = layer.msg('正在删除，请稍等...', {icon: 16,shade:[0.1,'#000'],time:0,offset:'250px'});
 		    	$.ajax({
-		    		url:'service/bpm/model/delete.do',
+		    		url:'service/bpm/processDefinition/delete.do',
 		    		type:'get',
-		    		data:{id:id},
+		    		data:{deploymentId:deploymentId},
 		    		dataType:'json',
 		    		success: function(ret) {
 		    			if(ret == '200'){
@@ -212,7 +205,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    			}else{
 		    				layer.alert('删除失败！', {icon: 5});
 		    			}
-		    			layer.close(tipMsg);
 					},
 					error: function(xhr, textStatus, errorThrown){
 						layer.alert('删除出错啦！', {icon: 5});

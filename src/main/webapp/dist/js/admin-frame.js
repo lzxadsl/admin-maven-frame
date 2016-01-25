@@ -93,7 +93,7 @@ $(function(){
 			if (h == null || h == '') {
 				h=($(window).height() - 50);
 			};
-			layer.open({
+			return layer.open({
 				type: 2,
 				area: [w+'px', h +'px'],
 				fix: false, //不固定
@@ -197,7 +197,7 @@ $(function(){
     		
     		if(options.confirm){
     			layer.open({
-				    content: options.tipMsg,
+				    content: options.confirmMsg,
 				    btn: options.btn,
 				    shadeClose: false,
 				    title:options.title,
@@ -218,6 +218,7 @@ $(function(){
 	};
 	//提交请求
 	function submitServer(options,formData){
+		var tipMsg = layer.msg(options.waitMsg, {icon: 16,shade:[0.1,'#000'],time:0});
 		options.onBeforeSubmit.call(this,formData);
 		$.ajax({
     		url:options.url,
@@ -226,9 +227,11 @@ $(function(){
     		dataType:'json',
     		success: function(jsonLst) {
     			options.onSubmitSuccess.call(this,jsonLst);
+    			layer.close(tipMsg);
 			},
 			error: function(xhr, textStatus, errorThrown){
 				options.onSubmitError.call(this,xhr, textStatus, errorThrown);
+				layer.close(tipMsg);
 		    }
     	});
 	}
@@ -239,7 +242,8 @@ $(function(){
 			paramType:'object',//提交的参数类型，默认是json对象，如果是string，则提交的数据是json字符串
 			paramField:'params',//提交数据为json字符串时，提交到后台的参数名
 			confirm:true,//提交前是否弹出提示，默认是
-			tipMsg:'确定提交保存？',
+			confirmMsg:'确定提交保存？',
+			waitMsg:'正在保存，请稍等...',
 			btn: ['确认', '取消'],
 			title:'提示',
 			onBeforeSubmit:function(data){},//表单数据

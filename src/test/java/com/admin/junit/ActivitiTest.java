@@ -3,6 +3,8 @@ package com.admin.junit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.ZipInputStream;
 
@@ -99,5 +101,28 @@ public class ActivitiTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+	}
+	
+	@Test
+	public void suspendProcess(){
+		String date = "2016-1-25 05:18:42";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date suspensionDate = sdf.parse(date);
+			repositoryService.suspendProcessDefinitionById("leave_process:2:15004",false,suspensionDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void activateProcess(){
+		String date = "2016-1-25 05:26:42";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date suspensionDate = sdf.parse(date);
+			repositoryService.activateProcessDefinitionById("leave_process:2:15004",false,suspensionDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 }

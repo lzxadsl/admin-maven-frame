@@ -76,19 +76,20 @@ public class ACTReModelController {
 	 * @author LiZhiXian
 	 * @date 2015-11-10 下午5:47:05
 	 * @param id 流程模板的ID
-	 * @return 部署后的流程列表
+	 * @return status
 	 */
-	@RequestMapping(value = "deployment")
-	public String deployment(String id){
+	@RequestMapping(value = "deployment.do")
+	public @ResponseBody String deployment(String id){
 		Model modelData = repositoryService.getModel(id);
 		ObjectNode modelNode = null;
+		String status = "200";
 		try {
 			modelNode = (ObjectNode) new ObjectMapper().readTree(repositoryService.getModelEditorSource(modelData.getId()));
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
+			status = "500";
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			status = "500";
 			e.printStackTrace();
 		} 
 		byte[] bpmnBytes = null;            
@@ -101,10 +102,10 @@ public class ACTReModelController {
 					.addString(processName, bpmnString)
 					.deploy();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			status = "500";
 			e.printStackTrace();
 		}  
-		return "admin/model/query";
+		return status;
 	}
 	
 	/**新建模型
