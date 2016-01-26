@@ -55,6 +55,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                    </div>
 	                    <div class="col-sm-1"></div>
 	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label right" for="state">状态：</label>
+	                    <div class="col-sm-3">
+	                    	<select class="form-control" id="state" name="state" defaultIndex=0> 
+						      <option value="" selected>--全部--</option> 
+						      <option value="suspended">挂起</option> 
+						      <option value="active">活动</option> 
+						    </select>
+	                    </div>
+	                	<div class="col-sm-7"></div>
+	                </div>
 	                <div class="form-group sys-center">
 	                    <button type="button" class="btn btn-success sys-margin-horizontal-10" id="search_btn">
 	                        <i class="glyphicon glyphicon-search"></i> 查  询
@@ -66,11 +77,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		        </div>
 			    <!-- 功能按钮 -->
 			    <div class="col-sm-12 sys-btn-bar">
-			    	<a href="javascript:void(0)" id="new_model" class="btn btn-info">
+			    	<a href="javascript:void(0)" id="suspend" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-plus"></span> 挂 起
 	                </a>
-	                <a href="#" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-pencil"></span> 编辑模型
+	                <a href="#" class="btn btn-info" id="active">
+	                    <span class="glyphicon glyphicon-pencil"></span> 激 活
 	                </a>
 	                <a href="#" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-trash"></span> 删除模型
@@ -78,21 +89,49 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    </div>
 			    <!-- 表格 -->
 			    <div class="col-sm-12 sys-padding-0">
-			        <table class="table table-striped table-hover" id="model_table"></table>
+			        <table class="table table-striped table-hover" id="procDef_table"></table>
 			    </div>
 		    </div>
 		</div>
-    
+		<!-- 激活、挂起信息项 -->
+    	<div style="display:none;padding:10px;width:400px;" class="container" id="layerContent">
+    		<div class="form-group">
+    			<label for="name">何时挂起此流程状态？</label>
+    		</div>
+    		<div class="form-group">
+			   <label class="checkbox-inline">
+			      <input type="radio" id="nowCheckbox" name="radioVal" checked="checked" value="now"> 现在
+			   </label>
+			</div>
+			<div class="form-group">
+				<label class="checkbox-inline">
+			      <input type="radio" id="setCheckbox" name="radioVal" value="set"> 设定时间
+			    </label>
+			    <label class="checkbox-inline">
+			    	<input type="date" class="form-control" id="dateTime" name="suspensionDate" value="">
+			    </label>
+			</div>
+			<div class="form-group">
+				<label class="checkbox-inline">
+			      <input type="checkbox" id="suspendProcessInstances" name="suspendProcessInstances" value="true"> 同时挂起和此流程定义相关的流程实例
+			    </label>
+			</div>
+		   	<div class="form-group">
+		   		<button type="button" id="submit" class="btn btn-info">提 交</button>
+		   		<button type="button" class="btn btn-info" onclick="$.layer_close()">取 消</button>
+	        </div>
+    	</div>
     </div>
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
+  <script type="text/javascript" src="dist/lib/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
   	$(function(){
-  		$('#model_table').bootstrapTable({
+  		$('#procDef_table').bootstrapTable({
 			url:'service/bpm/processDefinition/ajaxList.json',
 			striped: true,
 	        clickToSelect: true,
@@ -118,6 +157,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				},
 				{field:"version",title:"版本",align:"center"},
 				{field:"category",title:"分类",align:"center"},
+				{field:"isSuspended",title:"状态",align:"center",
+					formatter:function(value,row,rowIndex){
+						var status = '<span class="label label-success" style="padding: .4em .6em .3em;">活动</span>';
+						if(value)status = '<span class="label label-danger" style="padding: .4em .6em .3em;">挂起</span>';
+						return status;
+					}	
+				},
 				{field:"detail",title:"操作",align:"center",sortable:"true",
 					formatter:function(value,row,rowIndex){
 						var strHtml = '<a href="process-editor/modeler.html?modelId='+row.id+'" target="_blank">启动流程</a>&nbsp;|&nbsp;'
@@ -143,15 +189,83 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		$('#reset_btn').click(function(){
 			$('#serachForm').reSet(false);
 		});
-	
-  		$('#new_model').click(function(){
-  			$.layer_show('创建模型','service/bpm/model/add.htm',600,510);
+		//挂起
+		$('#suspend').click(function(){
+			modifyState('挂起');
+		});
+		//激活
+		$('#active').click(function(){
+			modifyState('激活');
+		});
+		//弹出框页面元素事件
+		$('input[name="radioVal"]').change(function(){
+  			var value = $(this).val();
+  			if(value == 'set'){
+  				$('#dateTime').val($.dateUtil.getCurrentDate(false));
+  			}else{
+  				$('#dateTime').val('');
+  			}
+  		});
+  		$('#dateTime').click(function(){
+  			$('input[name="radioVal"]:eq(1)').attr('checked','checked');
+  			$(this).val($.dateUtil.getCurrentDate(false));
+  		});
+  		//提交
+  		$('#submit').click(function(){
+  	  		layer.open({
+  			    content: '确定要'+state+'？',
+  			    btn:['确认', '取消'],
+  			    shadeClose: false,
+  			    title:'提示',
+  			    yes: function(index, layero){
+  			    	layer.close(index);
+  			    	$.ajax({
+  			    		url:url,
+  			    		type:'get',
+  			    		data:{id:id},
+  			    		dataType:'json',
+  			    		success: function(ret) {
+  			    			if(ret == '200'){
+  			    				layer.alert(state+'成功！', {icon: 6});
+  			    				$('#model_table').bootstrapTable('refresh');
+  			    			}else{
+  			    				layer.alert(state+'失败！', {icon: 5});
+  			    			}
+  						},
+  						error: function(xhr, textStatus, errorThrown){
+  							layer.alert(state+'出错啦！', {icon: 5});
+  					    }
+  			    	});
+  			    },cancel: function(index){
+  			    	
+  			    }
+  		 	});
   		});
   	});
   	//查看流程图片
   	function showResource(deploymentId,sourceName){
   		var win = $.layer_show('流程图','service/bpm/processDefinition/processResource.htm?type=0&deploymentId='+deploymentId+'&resourceName='+sourceName,800,610);
   		layer.full(win);
+  	}
+  	//修改流程状态
+  	function modifyState(state){
+  		var rows = $('#procDef_table').bootstrapTable('getSelections');
+		if(rows.length < 1){
+			layer.alert('请选择要'+state+'的项！',{title:'提示'});
+			return;
+		}
+		var url = '';
+  		if(state == '挂起'){
+  			url = 'bpm/processDefinition/suspendProcess.do';
+  		}else if(state == '激活'){
+  			url = 'bpm/processDefinition/activateProcess.do';
+  		}
+  		layer.open({
+  		    type: 1,
+  		    title:state+'流程',
+  		    area: ['420px', '280px'], //宽高
+  		    content: $('#layerContent')
+  		});
   	}
   	//部署模型
   	function deployModel(){

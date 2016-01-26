@@ -173,15 +173,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    		dataType:'json',
 		    		success: function(ret) {
 		    			if(ret == '200'){
-		    				layer.alert('部署成功！', {icon: 6});
+		    				layer.alert('部署成功！', {icon: 6,title:'提示'});
 		    				$('#model_table').bootstrapTable('refresh');
 		    			}else{
-		    				layer.alert('部署失败！', {icon: 5});
+		    				layer.alert('部署失败！', {icon: 5,title:'提示'});
 		    			}
 		    			layer.close(tipMsg);
 					},
 					error: function(xhr, textStatus, errorThrown){
-						layer.alert('部署出错啦！', {icon: 5});
+						layer.alert('部署出错啦！', {icon: 5,title:'提示'});
 						layer.close(tipMsg);
 				    }
 		    	});

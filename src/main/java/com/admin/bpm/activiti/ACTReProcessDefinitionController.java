@@ -17,6 +17,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -50,10 +51,23 @@ public class ACTReProcessDefinitionController {
 	 * @return
 	 */
 	@RequestMapping(value = "ajaxList.json",produces = "application/json")
-	public @ResponseBody Map<String, Object> ajaxList(ModelMap model, PageData pageData){
+	public @ResponseBody Map<String, Object> ajaxList(String state, String name,String key,PageData pageData){
 		Map<String, Object> data = new HashMap<String, Object>();
 		ProcessDefinitionQuery procDefinQuery = repositoryService.createProcessDefinitionQuery();
+		if(StringUtils.isNotEmpty(name)) {
+			procDefinQuery.processDefinitionName(name);
+		}
+		if(StringUtils.isNotEmpty(key)) {
+			procDefinQuery.processDefinitionName(key);
+		}
+		if(StringUtils.isNotEmpty(state)){
+			if("suspended".equals(state))
+				procDefinQuery.suspended();
+			else if("active".equals(state))
+				procDefinQuery.active();
+		}
 		List<ProcessDefinition>  listProDef = procDefinQuery.orderByDeploymentId().desc().list();
+		
 		List<Map<String, Object>> listPro = new ArrayList<Map<String,Object>>();
 		for (ProcessDefinition processDefinition : listProDef) {
 			Map<String, Object> itm = new HashMap<String, Object>();
@@ -65,6 +79,7 @@ public class ACTReProcessDefinitionController {
 			itm.put("sourceName", processDefinition.getResourceName());
 			itm.put("diagramResourceName", processDefinition.getDiagramResourceName());
 			itm.put("deploymentId", processDefinition.getDeploymentId());
+			itm.put("isSuspended", processDefinition.isSuspended());
 			listPro.add(itm);
 		}
 		data.put("rows", listPro);
@@ -148,20 +163,24 @@ public class ACTReProcessDefinitionController {
 	}
 	
 	/**
-	 * 流程挂起
+	 * 挂起流程
 	 * @author LiZhiXian
 	 * @version 1.0
 	 * @date 2016-1-25 下午5:09:28
 	 * @param processDefinitionId 流程定义ID
 	 * @param suspendProcessInstances 是否同时挂起该流程下的实例
-	 * @param suspensionDate 挂起生效日期
+	 * @param suspensionDate 挂起生效日期,为空立即生效
 	 * @return status
 	 */
+	@RequestMapping("suspendProcess.do")
 	public @ResponseBody String suspendProcess(String processDefinitionId,boolean suspendProcessInstances,String date){
 		String status = "200";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			Date suspensionDate = sdf.parse(date);
+			Date suspensionDate = null;
+			if(StringUtils.isNotEmpty(date)){
+				sdf.parse(date);
+			}
 			repositoryService.suspendProcessDefinitionById(processDefinitionId, suspendProcessInstances, suspensionDate);
 		} catch (ParseException e) {
 			status = "500";
@@ -169,6 +188,33 @@ public class ACTReProcessDefinitionController {
 		}
 		return status;
 	}
+	/**
+	 * 激活流程
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-1-25 下午5:09:28
+	 * @param processDefinitionId 流程定义ID
+	 * @param suspendProcessInstances 是否同时激活该流程下的实例
+	 * @param suspensionDate 激活生效日期,为空立即生效
+	 * @return status
+	 */
+	@RequestMapping("activateProcess.do")
+	public @ResponseBody String activateProcess(String processDefinitionId,boolean suspendProcessInstances,String date){
+		String status = "200";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date suspensionDate = null;
+			if(StringUtils.isNotEmpty(date)){
+				sdf.parse(date);
+			}
+			repositoryService.suspendProcessDefinitionById(processDefinitionId, suspendProcessInstances, suspensionDate);
+		} catch (ParseException e) {
+			status = "500";
+			e.printStackTrace();
+		}
+		return status;
+	}
+	
 	/**启动流程审批
 	 * @author LiZhiXian
 	 * @date 2015-11-14 上午11:50:09

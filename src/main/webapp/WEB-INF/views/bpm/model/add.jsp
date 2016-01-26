@@ -84,11 +84,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							var index = parent.layer.getFrameIndex(window.name);
 							parent.layer.close(index);
 		    			}else{
-		    				layer.alert('保存失败！', {icon: 5});
+		    				layer.alert('保存失败！', {icon: 5,title:'提示'});
 		    			}
 		    		},
 		    		onSubmitError:function(xhr, textStatus, errorThrown){
-		    			layer.alert('出错啦！', {icon: 5});
+		    			layer.alert('出错啦！', {icon: 5,title:'提示'});
 		    		}
 		    	});
 				return false;

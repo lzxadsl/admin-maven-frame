@@ -297,7 +297,8 @@ $(function(){
 		            this.checked = false;
 		        }
 		        else if (tag == 'select') {
-		            this.selectedIndex = -1;
+		        	//重置后根据defaultIndex属性来设置重置后的选项
+		            this.selectedIndex = $(this).attr('defaultIndex')?$(this).attr('defaultIndex'):-1;
 		        } 
 		        else if (t == "file") {
 		            if (/MSIE/.test(navigator.userAgent)) {
@@ -475,6 +476,144 @@ $(function(){
 		} catch (exception) {}
 	}
 }(this, document, jQuery));
+
+/*------------------日期公共方法--------------------*/
+(function($){
+	var dateUtil = {
+		/**
+		 * 获取指定月的最后一天
+		 * @param strData 日期 字符串类型
+		 * @return 日期字符串
+		 */
+		getCurrentMonthLast:function (strData){
+			 var date=new Date(strData.replace(/-/g,"/"));
+			 var currentMonth=date.getMonth();
+			 var nextMonth=++currentMonth;
+			 var nextMonthFirstDay=new Date(date.getFullYear(),nextMonth,1);
+			 var oneDay=1000*60*60*24;
+			 var newDate = new Date(nextMonthFirstDay-oneDay);
+			 var year = newDate.getFullYear();
+			 var month = newDate.getMonth()+1;
+			 var day = newDate.getDate();
+			 return  year + '-' + (month < 10 ? '0'+month : month) +'-'+ (day < 10 ? '0'+day : day); 
+		},
+
+		/**
+		 * 获取时间段
+		 * @param date 指定日期,格式：2015-01-01
+		 * @param n 不进行赋值则获取当前日期，格式 'm:-2',表示获取指定日期到向前2个月的时间段,d 获取日时间段、y 获取年时间段
+		 * @return 字符串数组
+		 */
+		getDateSection:function(date,n){
+		    var arr = date.split('-');
+		    n = n || 'd:+0';
+		    //转换成日期对象
+			var dateObj = new Date(parseInt(arr[0], 10),parseInt(arr[1], 10) - 1, parseInt(arr[2], 10));
+			var nType = n.split(':')[0];
+		    var num = parseInt(n.split(':')[1],10);
+		    var dateSection = [];//时间段数组
+		    var absNum = Math.abs(num);//取绝对值
+		    switch(nType){
+		    	case 'd' :
+		    	    if(num < 0){//直接设置成num天前日期
+		    	    	dateObj.setDate(dateObj.getDate() - absNum);
+		    	    }
+		    		for(var i = 0; i < absNum; i++){
+		    			dateObj.setDate(dateObj.getDate() + 1);
+		    			var month = dateObj.getMonth()+1;
+		    			dateSection.push(dateObj.getFullYear() + '-' + (month < 10 ? '0'+month : month) + '-' + (dateObj.getDate() < 10 ? '0'+dateObj.getDate() : dateObj.getDate()));
+		    		}
+		    	break;
+		    	case 'm' : 
+		    		dateObj.setDate(1);//因为每个月最后一天不一样，所以统一设置成一号来进行计算
+		    		if(num < 0){//直接设置成num月前日期
+		    			dateObj.setMonth(dateObj.getMonth() - absNum);
+		    		}
+		    		for(var i = 0; i < absNum; i++){
+		    			dateObj.setMonth(dateObj.getMonth() + 1);
+		    			var month = dateObj.getMonth()+1;
+		    			dateSection.push(dateObj.getFullYear() + '-' + (month < 10 ? '0'+month : month));
+		    		}
+		    	break;
+		    	case 'y' :
+		    	    if(num < 0){//直接设置成num年前日期
+		    			dateObj.setFullYear(dateObj.getFullYear() - absNum);
+		    		} 
+		    		var year = dateObj.getFullYear()+1;
+		    		for(var i = 0; i < absNum; i++){
+		    			dateSection.push(''+year++);//转成字符串
+		    		}
+		    	break;
+		    	default :'';
+		    }
+		    return dateSection;
+		},
+
+		/**
+		 * 获取当前日期 
+		 * @param isMonth true返回年月 false 返回年月日
+		 * @param n 不进行赋值则获取当前日期，格式 'm:+/-2',表示当前日期+/-2个月,d +/-天 、 m +/-月 、 y +/-年
+		 * @return 日期字符串
+		 */
+		getCurrentDate:function(isMonth,n){
+		    var mydate = new Date();
+		    n = n || 'd:+0';
+		    var nType = n.split(':')[0];
+		    var num = parseInt(n.split(':')[1],10);
+		    switch(nType){
+		    	case 'd' : mydate.setDate(mydate.getDate() + num); break;
+		    	case 'm' : mydate.setMonth(mydate.getMonth() + num); break;
+		    	case 'y' : mydate.setFullYear(mydate.getFullYear() + num); break;
+		    	default :'';
+		    }
+			var year = mydate.getFullYear();
+			var month = mydate.getMonth()+1;
+			var day = mydate.getDate();
+			var retDate = '';
+			if(isMonth){
+				retDate = year + '-' + (month < 10 ? "0"+month : month);
+			}
+			else{
+				retDate = year + '-' + (month < 10 ? "0"+month : month) + '-' + (day < 10 ? '0'+day : day);
+			}
+			return retDate;
+		},
+
+		/**
+		 * 获取指定日期的
+		 * @param isMonth true返回年月 false 返回年月日
+		 * @param date 指定日期
+		 * @param n 不进行赋值则获取当前日期，格式 'm:+/-2',表示当前日期+/-2个月,d +/-天 、 m +/-月 、 y +/-年
+		 * @return 日期字符串
+		 */
+		getPointDate:function(isMonth,date,n){
+		    var mydate = new Date(date);
+		    n = n || 'd:+0';
+		    var nType = n.split(':')[0];
+		    var num = parseInt(n.split(':')[1],10);
+		    switch(nType){
+		    	case 'd' : mydate.setDate(mydate.getDate() + num); break;
+		    	case 'm' : mydate.setMonth(mydate.getMonth() + num); break;
+		    	case 'y' : mydate.setFullYear(mydate.getFullYear() + num); break;
+		    	default :'';
+		    }
+			var year = mydate.getFullYear();
+			var month = mydate.getMonth()+1;
+			var day = mydate.getDate();
+			var retDate = '';
+			if(isMonth){
+				retDate = year + '-' + (month < 10 ? "0"+month : month);
+			}
+			else{
+				retDate = year + '-' + (month < 10 ? "0"+month : month) + '-' + (day < 10 ? '0'+day : day);
+			}
+			return retDate;
+		}
+	};
+	$.extend({
+		dateUtil:dateUtil
+	});
+})(jQuery);
 /*-----日期格式化-----*/
 Date.prototype.format = function(format) {
     var o = {
@@ -503,3 +642,5 @@ Date.prototype.format = function(format) {
     }
     return format;
 };
+
+/*-----------------------------------日期公共方法end-------------------------------------*/
