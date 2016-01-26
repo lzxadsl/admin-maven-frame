@@ -118,7 +118,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 		   	<div class="form-group">
 		   		<button type="button" id="submit" class="btn btn-info">提 交</button>
-		   		<button type="button" class="btn btn-info" onclick="$.layer_close()">取 消</button>
+		   		<button type="button" id="cancel" class="btn btn-info">取 消</button>
 	        </div>
     	</div>
     </div>
@@ -210,8 +210,37 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			$('input[name="radioVal"]:eq(1)').attr('checked','checked');
   			$(this).val($.dateUtil.getCurrentDate(false));
   		});
+  	});
+  	//查看流程图片
+  	function showResource(deploymentId,sourceName){
+  		var win = $.layer_show('流程图','service/bpm/processDefinition/processResource.htm?type=0&deploymentId='+deploymentId+'&resourceName='+sourceName,800,610);
+  		layer.full(win);
+  	}
+  	//修改流程状态
+  	function modifyState(state){
+  		var rows = $('#procDef_table').bootstrapTable('getSelections');
+		if(rows.length < 1){
+			layer.alert('请选择要'+state+'的项！',{title:'提示'});
+			return;
+		}
+		
+  		var win = layer.open({
+  		    type: 1,
+  		    title:state+'流程',
+  		    area: ['420px', '280px'], //宽高
+  		    content: $('#layerContent')
+  		});
+  		$('#cancel').click(function(){
+			layer.close(win);
+		});
   		//提交
   		$('#submit').click(function(){
+  			var url = '';
+  	  		if(state == '挂起'){
+  	  			url = 'bpm/processDefinition/suspendProcess.do';
+  	  		}else if(state == '激活'){
+  	  			url = 'bpm/processDefinition/activateProcess.do';
+  	  		}
   	  		layer.open({
   			    content: '确定要'+state+'？',
   			    btn:['确认', '取消'],
@@ -240,31 +269,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			    	
   			    }
   		 	});
-  		});
-  	});
-  	//查看流程图片
-  	function showResource(deploymentId,sourceName){
-  		var win = $.layer_show('流程图','service/bpm/processDefinition/processResource.htm?type=0&deploymentId='+deploymentId+'&resourceName='+sourceName,800,610);
-  		layer.full(win);
-  	}
-  	//修改流程状态
-  	function modifyState(state){
-  		var rows = $('#procDef_table').bootstrapTable('getSelections');
-		if(rows.length < 1){
-			layer.alert('请选择要'+state+'的项！',{title:'提示'});
-			return;
-		}
-		var url = '';
-  		if(state == '挂起'){
-  			url = 'bpm/processDefinition/suspendProcess.do';
-  		}else if(state == '激活'){
-  			url = 'bpm/processDefinition/activateProcess.do';
-  		}
-  		layer.open({
-  		    type: 1,
-  		    title:state+'流程',
-  		    area: ['420px', '280px'], //宽高
-  		    content: $('#layerContent')
   		});
   	}
   	//部署模型
