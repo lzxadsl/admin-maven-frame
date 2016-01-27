@@ -78,13 +78,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    <!-- 功能按钮 -->
 			    <div class="col-sm-12 sys-btn-bar">
 			    	<a href="javascript:void(0)" id="suspend" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-plus"></span> 挂 起
+	                    <span class="glyphicon glyphicon-remove-sign"></span> 挂 起
 	                </a>
-	                <a href="#" class="btn btn-info" id="active">
-	                    <span class="glyphicon glyphicon-pencil"></span> 激 活
+	                <a href="javascript:void(0)" class="btn btn-info" id="active">
+	                    <span class="glyphicon glyphicon-ok-sign"></span> 激 活
 	                </a>
-	                <a href="#" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-trash"></span> 删除模型
+	                <a href="javascript:void(0)" class="btn btn-info" id="import">
+	                    <span class="glyphicon glyphicon-open"></span> 导 入
 	                </a>
 			    </div>
 			    <!-- 表格 -->
@@ -96,7 +96,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<!-- 激活、挂起信息项 -->
     	<div style="display:none;padding:10px;width:400px;" class="container" id="layerContent">
     		<div class="form-group">
-    			<label for="name">何时挂起此流程状态？</label>
+    			<span for="name" id="text1">何时{state}此流程状态？</span>
     		</div>
     		<div class="form-group">
 			   <label class="checkbox-inline">
@@ -108,17 +108,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			      <input type="radio" id="setCheckbox" name="radioVal" value="set"> 设定时间
 			    </label>
 			    <label class="checkbox-inline">
-			    	<input type="date" class="form-control" id="dateTime" name="suspensionDate" value="">
+			    	<input type="date" class="form-control" id="suspensionDate" name="suspensionDate" value="">
 			    </label>
 			</div>
 			<div class="form-group">
 				<label class="checkbox-inline">
-			      <input type="checkbox" id="suspendProcessInstances" name="suspendProcessInstances" value="true"> 同时挂起和此流程定义相关的流程实例
+			      <input type="checkbox" id="suspendProcessInstances" name="suspendProcessInstances" value="true"> 
+			      <span id="text2">同时{state}和此流程定义相关的流程实例</span>
 			    </label>
 			</div>
 		   	<div class="form-group">
 		   		<button type="button" id="submit" class="btn btn-info">提 交</button>
 		   		<button type="button" id="cancel" class="btn btn-info">取 消</button>
+	        </div>
+    	</div>
+    	<!-- 文件上传 -->
+    	<div style="display:none;padding:10px;width:400px;" class="container" id="layerImport">
+    		<div class="form-group">
+    			<span for="name">请选择包含图片和 (.bpmn20.xml或.bpmn)的zip或bar文件。</span>
+    		</div>
+    		<div id="dlgFile" style="margin:5px;">
+			  <div id="fileQueue"></div>
+			  <input type="file" name="uploadify" id="uploadify" />
+			</div>
+			<div class="form-group">
+		   		<button type="button" id="uploadBtn" class="btn btn-info"><span class="glyphicon glyphicon-cloud"></span> 上 传</button>
+		   		<button type="button" id="upcancel"  class="btn btn-info"><span class="glyphicon glyphicon-remove-circle"></span> 取 消</button>
 	        </div>
     	</div>
     </div>
@@ -128,6 +143,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="dist/lib/uploadify/jquery.uploadify.min.js"></script> 
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
   	$(function(){
@@ -183,7 +199,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		
   		//查询
 		$('#search_btn').click(function(){
-			$('#model_table').bootstrapTable('refresh');
+			$('#procDef_table').bootstrapTable('refresh');
 		});
 		//重置查询条件
 		$('#reset_btn').click(function(){
@@ -191,24 +207,67 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		});
 		//挂起
 		$('#suspend').click(function(){
-			modifyState('挂起');
+			$('#text1').html($('#text1').html().replace(/{state}/g,'挂起'));
+			$('#text2').html($('#text2').html().replace(/{state}/g,'挂起'));
+			modifyState('挂起',true);
 		});
 		//激活
 		$('#active').click(function(){
-			modifyState('激活');
+			$('#text1').html($('#text1').html().replace(/{state}/g,'激活'));
+			$('#text2').html($('#text2').html().replace(/{state}/g,'激活'));
+			modifyState('激活',false);
 		});
 		//弹出框页面元素事件
 		$('input[name="radioVal"]').change(function(){
   			var value = $(this).val();
   			if(value == 'set'){
-  				$('#dateTime').val($.dateUtil.getCurrentDate(false));
+  				$('#suspensionDate').val($.dateUtil.getCurrentDate(false));
   			}else{
-  				$('#dateTime').val('');
+  				$('#suspensionDate').val('');
   			}
   		});
-  		$('#dateTime').click(function(){
+		//日期点击事件
+  		$('#suspensionDate').click(function(){
   			$('input[name="radioVal"]:eq(1)').attr('checked','checked');
   			$(this).val($.dateUtil.getCurrentDate(false));
+  		});
+  		
+		//导入
+  		$('#import').click(function(){
+  			var uploadwin = layer.open({
+  	  		    type: 1,
+  	  		    title:'流程定义导入',
+  	  		    area: ['420px', '280px'], //宽高
+  	  		    content: $('#layerImport')
+  	  		});
+  			$('#uploadify').uploadify({
+			    'swf': 'dist/lib/uploadify/uploadify.swf', 
+			    'cancelImg': 'dist/lib/uploadify/uploadify-cancel.png',
+			    'uploader': '<%=path%>/service/bpm/processDefinition/uploadProcDef.do',
+			  	'queueID': 'fileQueue',
+			  	'fileSizeLimit':'10MB',
+			  	'fileTypeDesc':'请选择图片文件',
+			  	'buttonText':'选择文件', 
+			  	'fileTypeExts':'*.zip;*.bar;',
+			  	'auto': false,
+			  	onUploadSuccess:function(file, data, response){
+				  	if(data == '200'){
+				  		layer.alert('导入成功！', {icon: 1});
+	    				layer.close(uploadwin);
+	    				$('#procDef_table').bootstrapTable('refresh');
+				  	}else{
+	    				layer.alert('导入失败！', {icon: 2});
+	    			}
+			    }
+		    });
+  			//上传
+  			$('#uploadBtn').click(function(){
+				$('#uploadify').uploadify("upload");
+		  	});
+  			//取消
+  			$('#upcancel').click(function(){
+  				layer.close(uploadwin);
+  			});
   		});
   	});
   	//查看流程图片
@@ -216,17 +275,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		var win = $.layer_show('流程图','service/bpm/processDefinition/processResource.htm?type=0&deploymentId='+deploymentId+'&resourceName='+sourceName,800,610);
   		layer.full(win);
   	}
-  	//修改流程状态
-  	function modifyState(state){
+  	//修改流程状态,isSuspended true 为已经被挂起
+  	function modifyState(state,isSuspended){
   		var rows = $('#procDef_table').bootstrapTable('getSelections');
-		if(rows.length < 1){
-			layer.alert('请选择要'+state+'的项！',{title:'提示'});
+  		
+		if(rows.length != 1){
+			layer.alert('请选择一项要'+state+'的流程！',{title:'提示',icon:2});
 			return;
 		}
 		
+		if(rows[0].isSuspended == isSuspended){
+			layer.alert('当前已经是【'+state+'】状态！',{title:'提示',icon:2});
+			return;
+		}
+		//设置初始值
+		$('#suspensionDate').val('');
+		$('input[name="radioVal"]:eq(0)').attr('checked','checked');
+		$('#suspendProcessInstances').attr('checked',true);
+		
   		var win = layer.open({
   		    type: 1,
-  		    title:state+'流程',
+  		    title:state+'流程定义',
   		    area: ['420px', '280px'], //宽高
   		    content: $('#layerContent')
   		});
@@ -235,34 +304,35 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		});
   		//提交
   		$('#submit').click(function(){
-  			var url = '';
-  	  		if(state == '挂起'){
-  	  			url = 'bpm/processDefinition/suspendProcess.do';
-  	  		}else if(state == '激活'){
-  	  			url = 'bpm/processDefinition/activateProcess.do';
-  	  		}
   	  		layer.open({
   			    content: '确定要'+state+'？',
   			    btn:['确认', '取消'],
   			    shadeClose: false,
   			    title:'提示',
+  			    icon:3,
   			    yes: function(index, layero){
   			    	layer.close(index);
   			    	$.ajax({
-  			    		url:url,
+  			    		url:'service/bpm/processDefinition/suspOrActiProcess.do',
   			    		type:'get',
-  			    		data:{id:id},
+  			    		data:{
+  			    			suspended:isSuspended,
+  			    			processDefinitionId:rows[0].id,
+  			    			suspensionDate:$('#suspensionDate').val(),
+  			    			suspendProcessInstances:$('#suspendProcessInstances').val()
+  			    		},
   			    		dataType:'json',
   			    		success: function(ret) {
   			    			if(ret == '200'){
-  			    				layer.alert(state+'成功！', {icon: 6});
-  			    				$('#model_table').bootstrapTable('refresh');
+  			    				layer.alert(state+'成功！', {icon: 1});
+  			    				layer.close(win);
+  			    				$('#procDef_table').bootstrapTable('refresh');
   			    			}else{
-  			    				layer.alert(state+'失败！', {icon: 5});
+  			    				layer.alert(state+'失败！', {icon: 2});
   			    			}
   						},
   						error: function(xhr, textStatus, errorThrown){
-  							layer.alert(state+'出错啦！', {icon: 5});
+  							layer.alert(state+'出错啦！', {icon: 2});
   					    }
   			    	});
   			    },cancel: function(index){
@@ -271,37 +341,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		 	});
   		});
   	}
-  	//部署模型
-  	function deployModel(){
-  		layer.open({
-		    content: '确定要部署？',
-		    btn:['确认', '取消'],
-		    shadeClose: false,
-		    title:'提示',
-		    yes: function(index, layero){
-		    	layer.close(index);
-		    	$.ajax({
-		    		url:'service/bpm/model/deployment.do',
-		    		type:'get',
-		    		data:{id:id},
-		    		dataType:'json',
-		    		success: function(ret) {
-		    			if(ret == '200'){
-		    				layer.alert('部署成功！', {icon: 6});
-		    				$('#model_table').bootstrapTable('refresh');
-		    			}else{
-		    				layer.alert('部署失败！', {icon: 5});
-		    			}
-					},
-					error: function(xhr, textStatus, errorThrown){
-						layer.alert('部署出错啦！', {icon: 5});
-				    }
-		    	});
-		    },cancel: function(index){
-		    	
-		    }
-	 	});
-  	}
   	//删除模型
   	function removeDeploye(deploymentId){
   		layer.open({
@@ -309,6 +348,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    btn:['确认', '取消'],
 		    shadeClose: false,
 		    title:'提示',
+		    icon:3,
 		    yes: function(index, layero){
 		    	layer.close(index);
 		    	$.ajax({
@@ -318,14 +358,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    		dataType:'json',
 		    		success: function(ret) {
 		    			if(ret == '200'){
-		    				layer.alert('删除成功！', {icon: 6});
-		    				$('#model_table').bootstrapTable('refresh');
+		    				layer.alert('删除成功！', {icon: 1});
+		    				$('#procDef_table').bootstrapTable('refresh');
 		    			}else{
-		    				layer.alert('删除失败！', {icon: 5});
+		    				layer.alert('删除失败！', {icon: 2});
 		    			}
 					},
 					error: function(xhr, textStatus, errorThrown){
-						layer.alert('删除出错啦！', {icon: 5});
+						layer.alert('删除出错啦！', {icon: 2});
 				    }
 		    	});
 		    },cancel: function(index){

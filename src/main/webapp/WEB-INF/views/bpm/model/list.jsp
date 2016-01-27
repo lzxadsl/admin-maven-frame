@@ -69,6 +69,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	<a href="javascript:void(0)" id="new_model" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-plus"></span> 创建模型
 	                </a>
+	                <a href="javascript:void(0)" class="btn btn-info" id="import">
+	                    <span class="glyphicon glyphicon-open"></span> 导 入
+	                </a>
 	                <%--
 	                <a href="#" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-pencil"></span> 编辑模型
@@ -163,6 +166,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    btn:['确认', '取消'],
 		    shadeClose: false,
 		    title:'提示',
+		    icon:3,
 		    yes: function(index, layero){
 		    	layer.close(index);
 		    	var tipMsg = layer.msg('正在部署，请稍等...', {icon: 16,shade:[0.1,'#000'],time:0,offset:'250px'});
@@ -197,6 +201,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    btn:['确认', '取消'],
 		    shadeClose: false,
 		    title:'提示',
+		    icon:3,
 		    yes: function(index, layero){
 		    	layer.close(index);
 		    	var tipMsg = layer.msg('正在删除，请稍等...', {icon: 16,shade:[0.1,'#000'],time:0,offset:'250px'});

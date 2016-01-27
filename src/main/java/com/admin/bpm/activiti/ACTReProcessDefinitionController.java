@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,9 +21,11 @@ import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.admin.basic.model.PageData;
 
 /**流程定义
@@ -163,7 +166,7 @@ public class ACTReProcessDefinitionController {
 	}
 	
 	/**
-	 * 挂起流程
+	 * 挂起或激活流程
 	 * @author LiZhiXian
 	 * @version 1.0
 	 * @date 2016-1-25 下午5:09:28
@@ -172,8 +175,8 @@ public class ACTReProcessDefinitionController {
 	 * @param suspensionDate 挂起生效日期,为空立即生效
 	 * @return status
 	 */
-	@RequestMapping("suspendProcess.do")
-	public @ResponseBody String suspendProcess(String processDefinitionId,boolean suspendProcessInstances,String date){
+	@RequestMapping("suspOrActiProcess.do")
+	public @ResponseBody String suspOrActiProcess(boolean suspended,String processDefinitionId,boolean suspendProcessInstances,String date){
 		String status = "200";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
@@ -181,7 +184,11 @@ public class ACTReProcessDefinitionController {
 			if(StringUtils.isNotEmpty(date)){
 				sdf.parse(date);
 			}
-			repositoryService.suspendProcessDefinitionById(processDefinitionId, suspendProcessInstances, suspensionDate);
+			if(suspended){
+				repositoryService.suspendProcessDefinitionById(processDefinitionId, suspendProcessInstances, suspensionDate);
+			}else{
+				repositoryService.activateProcessDefinitionById(processDefinitionId, suspendProcessInstances, suspensionDate);
+			}
 		} catch (ParseException e) {
 			status = "500";
 			e.printStackTrace();
@@ -189,32 +196,27 @@ public class ACTReProcessDefinitionController {
 		return status;
 	}
 	/**
-	 * 激活流程
+	 * 导入流程定义
 	 * @author LiZhiXian
 	 * @version 1.0
-	 * @date 2016-1-25 下午5:09:28
-	 * @param processDefinitionId 流程定义ID
-	 * @param suspendProcessInstances 是否同时激活该流程下的实例
-	 * @param suspensionDate 激活生效日期,为空立即生效
-	 * @return status
+	 * @date 2016-1-27 下午2:39:05
 	 */
-	@RequestMapping("activateProcess.do")
-	public @ResponseBody String activateProcess(String processDefinitionId,boolean suspendProcessInstances,String date){
-		String status = "200";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	@RequestMapping("uploadProcDef.do")
+	public @ResponseBody String uploadProcDef(@RequestPart MultipartFile Filedata){
+		String state = "200";
 		try {
-			Date suspensionDate = null;
-			if(StringUtils.isNotEmpty(date)){
-				sdf.parse(date);
-			}
-			repositoryService.suspendProcessDefinitionById(processDefinitionId, suspendProcessInstances, suspensionDate);
-		} catch (ParseException e) {
-			status = "500";
+			InputStream in = Filedata.getInputStream();
+			ZipInputStream zipInputStream = new ZipInputStream(in);
+			System.out.println(Filedata.getOriginalFilename());
+			repositoryService.createDeployment()
+						.name(Filedata.getOriginalFilename())
+						.addZipInputStream(zipInputStream).deploy();
+		} catch (Exception e) {
 			e.printStackTrace();
+			state = "500";
 		}
-		return status;
+		return state;
 	}
-	
 	/**启动流程审批
 	 * @author LiZhiXian
 	 * @date 2015-11-14 上午11:50:09

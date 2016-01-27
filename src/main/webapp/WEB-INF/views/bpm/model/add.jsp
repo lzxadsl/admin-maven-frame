@@ -36,15 +36,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<div class="panel-body">
 			<form class="form-horizontal" role="form" >
 			   <div class="form-group">
-			      <label for="name" class="col-sm-3 control-label">流程名称：</label>
+			      <label for="name" class="col-sm-3 control-label"><span style="color: red;">* </span>流程名称：</label>
 			      <div class="col-sm-9">
-			         <input type="text" class="form-control" id="name" name="name" datatype="*2-16" nullmsg="流程名称不能为空" placeholder="请输入流程名称">
+			         <input type="text" class="form-control" id="name" name="name" datatype="*2-16" nullmsg="请输入2-16个字的名称" placeholder="请输入流程名称">
 			      </div>
 			   </div>
 			   <div class="form-group">
-			      <label for="key" class="col-sm-3 control-label">关键字：</label>
+			      <label for="key" class="col-sm-3 control-label"><span style="color: red;">* </span>关键字：</label>
 			      <div class="col-sm-9">
-			         <input type="text" class="form-control" id="key" name="key" datatype="*2-16" nullmsg="关键字不能为空" placeholder="流程的唯一标识">
+			         <input type="text" class="form-control" id="key" name="key" datatype="*2-16" nullmsg="请输入2-16个字的关键字" placeholder="流程的唯一标识">
 			      </div>
 			   </div>
 			   <div class="form-group">
