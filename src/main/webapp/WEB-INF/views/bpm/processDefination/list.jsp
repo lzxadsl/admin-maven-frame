@@ -123,17 +123,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        </div>
     	</div>
     	<!-- 文件上传 -->
-    	<div style="display:none;padding:10px;width:400px;" class="container" id="layerImport">
+    	<div style="display:none;padding:10px 10px 0px 10px;width:400px;" class="container" id="layerImport">
     		<div class="form-group">
     			<span for="name">请选择包含图片和 (.bpmn20.xml或.bpmn)的zip或bar文件。</span>
     		</div>
-    		<div id="dlgFile" style="margin:5px;">
+    		<div class="form-group">
+    			<input type="file" name="uploadify" id="uploadify" />
+    		</div>
+    		<div style="height:150px;overflow:auto;">
 			  <div id="fileQueue"></div>
-			  <input type="file" name="uploadify" id="uploadify" />
 			</div>
 			<div class="form-group">
-		   		<button type="button" id="uploadBtn" class="btn btn-info"><span class="glyphicon glyphicon-cloud"></span> 上 传</button>
-		   		<button type="button" id="upcancel"  class="btn btn-info"><span class="glyphicon glyphicon-remove-circle"></span> 取 消</button>
+				<button type="button" id="uploadBtn" class="btn btn-info"><span class="glyphicon glyphicon-cloud"></span> 上 传</button>
+				<button type="button" id="upcancel"  class="btn btn-info"><span class="glyphicon glyphicon-remove-circle"></span> 取 消</button>
 	        </div>
     	</div>
     </div>
@@ -237,38 +239,48 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			var uploadwin = layer.open({
   	  		    type: 1,
   	  		    title:'流程定义导入',
-  	  		    area: ['420px', '280px'], //宽高
+  	  		    area: ['420px', '340px'], //宽高
   	  		    content: $('#layerImport')
   	  		});
-  			$('#uploadify').uploadify({
-			    'swf': 'dist/lib/uploadify/uploadify.swf', 
-			    'cancelImg': 'dist/lib/uploadify/uploadify-cancel.png',
-			    'uploader': '<%=path%>/service/bpm/processDefinition/uploadProcDef.do',
-			  	'queueID': 'fileQueue',
-			  	'fileSizeLimit':'10MB',
-			  	'fileTypeDesc':'请选择图片文件',
-			  	'buttonText':'选择文件', 
-			  	'fileTypeExts':'*.zip;*.bar;',
-			  	'auto': false,
-			  	onUploadSuccess:function(file, data, response){
-				  	if(data == '200'){
-				  		layer.alert('导入成功！', {icon: 1});
-	    				layer.close(uploadwin);
-	    				$('#procDef_table').bootstrapTable('refresh');
-				  	}else{
-	    				layer.alert('导入失败！', {icon: 2});
-	    			}
-			    }
-		    });
+  			$('#fileQueue').html('');
+  			
   			//上传
-  			$('#uploadBtn').click(function(){
+  			$('#uploadBtn').unbind('click').click(function(){
+  				if($('#fileQueue').html() == ''){
+  					layer.alert('请选择文件！', {icon: 2});
+  				}
 				$('#uploadify').uploadify("upload");
 		  	});
   			//取消
-  			$('#upcancel').click(function(){
+  			$('#upcancel').unbind('click').click(function(){
   				layer.close(uploadwin);
   			});
   		});
+		var buttonText = '<button type="button" class="btn btn-info">'
+							+'<span class="glyphicon glyphicon-folder-open"></span> 选择文件'
+						+'</button>';
+  		$('#uploadify').uploadify({
+		    swf: 'dist/lib/uploadify/uploadify.swf', 
+		    cancelImg: 'dist/lib/uploadify/uploadify-cancel.png',
+		    uploader: '<%=path%>/service/bpm/processDefinition/uploadProcDef.do',
+		  	queueID: 'fileQueue',
+		  	fileSizeLimit:'10MB',
+		  	fileTypeDesc:'请选择图片文件',
+		  	buttonText:buttonText, 
+		  	fileTypeExts:'*.zip;*.bar;',
+		  	auto: false,
+		  	debug:true,
+		  	onUploadSuccess:function(file, data, response){
+			  	if(data == '200'){
+			  		//console.log($('#uploadify').uploadify('queueSize'));
+			  		layer.alert('导入成功！', {icon: 1});
+			  		//layer.closeAll();
+    				$('#procDef_table').bootstrapTable('refresh');
+			  	}else{
+    				layer.alert('导入失败！', {icon: 2});
+    			}
+		    }
+	    });
   	});
   	//查看流程图片
   	function showResource(deploymentId,sourceName){
@@ -299,11 +311,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		    area: ['420px', '280px'], //宽高
   		    content: $('#layerContent')
   		});
-  		$('#cancel').click(function(){
+  		$('#cancel').unbind('click').click(function(){
 			layer.close(win);
 		});
   		//提交
-  		$('#submit').click(function(){
+  		$('#submit').unbind('click').click(function(){
   	  		layer.open({
   			    content: '确定要'+state+'？',
   			    btn:['确认', '取消'],

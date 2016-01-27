@@ -207,9 +207,10 @@ public class ACTReProcessDefinitionController {
 		try {
 			InputStream in = Filedata.getInputStream();
 			ZipInputStream zipInputStream = new ZipInputStream(in);
-			System.out.println(Filedata.getOriginalFilename());
+			//流程名称，取文件的名称
+			String processName = Filedata.getOriginalFilename().substring(0,Filedata.getOriginalFilename().indexOf("."));
 			repositoryService.createDeployment()
-						.name(Filedata.getOriginalFilename())
+						.name(processName)
 						.addZipInputStream(zipInputStream).deploy();
 		} catch (Exception e) {
 			e.printStackTrace();
