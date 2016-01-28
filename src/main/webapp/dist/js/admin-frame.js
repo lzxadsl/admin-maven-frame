@@ -6,6 +6,7 @@
 $(function(){
 	$('input[type="text"]').attr('autocomplete','off');
 });
+var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 (function($){
 	$.extend({
 		getBrowserMsg:function(){
@@ -317,7 +318,89 @@ $(function(){
 		}
 	});
 })(jQuery);
-
+/*------------------------uploadify文件上传，扩展插件---------------------------*/
+(function($){
+	$.fn.uploadFile = function(option){
+		var options = $.extend({},$.fn.uploadFile.defaults,
+                typeof option === 'object' && option);
+		
+		/*if($('script[src*="jquery.uploadify"]').length == 0){
+			//jQuery.getScript(BASE_LIB_PATH+'uploadify/jquery.uploadify.min.js');
+			//$("<script type='text/javascript' src='"+BASE_LIB_PATH+"uploadify/jquery.uploadify.min.js'></script>").appendTo('head');
+		}*/
+		var html = '<div style="display:none;padding:10px 10px 0px 10px;width:400px;" class="container" id="layeruploadify">'
+				   		+'<div class="form-group">'
+				   			+'<span for="name">'+options.headText+'</span>'
+				   		+'</div>'
+				   		+'<div class="form-group">'
+				   			+'<input type="file" name="uploadify" id="uploadify" />'
+						+'</div>'
+						+'<div style="height:150px;overflow:auto;">'
+						+'<div id="uploadifyFileQueue"></div>'
+						+'</div>'
+						+'<div class="form-group">'
+							+'<button type="button" id="uploadifySubmit" class="btn btn-info"><span class="glyphicon glyphicon-cloud"></span> 上 传</button> '
+							+'<button type="button" id="uploadifyCancel"  class="btn btn-info"><span class="glyphicon glyphicon-remove-circle"></span> 取 消</button>'
+						+'</div>'
+				   +'</div>';
+		if($('#layeruploadify').length == 0){
+			$(html).appendTo(this);
+		}
+		var uploadwin = layer.open({
+	  		    type: 1,
+	  		    title:options.winTitle,
+	  		    area: [options.winWidth+'px', options.winHeight+'px'], //宽高
+	  		    content:$('#layeruploadify')
+	  	});
+		//初始化上传控件
+		options['onUploadSuccess'] = function(file, data, response){
+			var queueSize = $('#uploadify').data('uploadify').queueData.queueLength;
+			options.onSuccess.call(this,file, data, response,queueSize);
+		};
+		var uploadify = $('#uploadify').uploadify(options);
+		//上传
+		$('#uploadifySubmit').unbind('click').click(function(){
+			if($('#uploadify').data('uploadify').queueData.queueLength == 0){
+				layer.alert('请选择文件！', {icon: 2});
+			}
+			$('#uploadify').uploadify('upload');
+	  	});
+		//取消
+		$('#uploadifyCancel').unbind('click').click(function(){
+			//$('#uploadify').uploadify('destroy');
+			layer.close(uploadwin);
+		});
+		return uploadify;
+	};
+	var buttonText = '<button type="button" class="btn btn-info">'
+						+'<span class="glyphicon glyphicon-folder-open"></span> 选择文件'
+					+'</button>';
+	//默认配置
+	$.fn.uploadFile.defaults = {
+		winWidth:420,
+		winHeight:340,
+		winTitle:'文件上传',
+		swf: 'dist/lib/uploadify/uploadify.swf', 
+		cancelImg: 'dist/lib/uploadify/uploadify-cancel.png',
+		uploader: '',
+		queueID: 'uploadifyFileQueue',
+		fileSizeLimit:'10MB',
+		fileTypeDesc:'请选择文件',
+		buttonText:buttonText, 
+		fileTypeExts:'*.zip;*.bar;',
+		auto: false,
+		simUploadLimit:2,
+		onSelect: function (fileObj){
+            if(fileObj.size == 0){
+                alert(runicode("不能上传一个大小为 0 字节的文件！"));
+                return false;
+            }
+        }, 
+		onSuccess:function(file, data, response,queueSize){},
+		onUploadError:function(){}
+	};
+})(jQuery);
+/*-----------------------uploadify文件上传，扩展插件end-------------------------*/
 /*placeholder兼容性处理*/
 (function(window, document, $) {
 	var isInputSupported = 'placeholder' in document.createElement('input');

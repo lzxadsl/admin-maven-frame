@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.admin.basic.model.PageData;
 
@@ -209,12 +210,23 @@ public class ACTReProcessDefinitionController {
 			ZipInputStream zipInputStream = new ZipInputStream(in);
 			//流程名称，取文件的名称
 			String processName = Filedata.getOriginalFilename().substring(0,Filedata.getOriginalFilename().indexOf("."));
+			System.out.println("------------------------:"+processName);
 			repositoryService.createDeployment()
 						.name(processName)
 						.addZipInputStream(zipInputStream).deploy();
 		} catch (Exception e) {
 			e.printStackTrace();
 			state = "500";
+		}
+		return state;
+	}
+	@RequestMapping("batchUpload.do")
+	public @ResponseBody String batchUpload(MultipartHttpServletRequest request){
+		String state = "200";
+		List<MultipartFile> list = request.getFiles("Filedata");
+		for(MultipartFile file : list){
+			String processName = file.getOriginalFilename().substring(0,file.getOriginalFilename().indexOf("."));
+			System.out.println("------------------------:"+processName);
 		}
 		return state;
 	}

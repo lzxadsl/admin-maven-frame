@@ -122,22 +122,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		   		<button type="button" id="cancel" class="btn btn-info">取 消</button>
 	        </div>
     	</div>
-    	<!-- 文件上传 -->
-    	<div style="display:none;padding:10px 10px 0px 10px;width:400px;" class="container" id="layerImport">
-    		<div class="form-group">
-    			<span for="name">请选择包含图片和 (.bpmn20.xml或.bpmn)的zip或bar文件。</span>
-    		</div>
-    		<div class="form-group">
-    			<input type="file" name="uploadify" id="uploadify" />
-    		</div>
-    		<div style="height:150px;overflow:auto;">
-			  <div id="fileQueue"></div>
-			</div>
-			<div class="form-group">
-				<button type="button" id="uploadBtn" class="btn btn-info"><span class="glyphicon glyphicon-cloud"></span> 上 传</button>
-				<button type="button" id="upcancel"  class="btn btn-info"><span class="glyphicon glyphicon-remove-circle"></span> 取 消</button>
-	        </div>
-    	</div>
+    	
     </div>
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -236,51 +221,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		
 		//导入
   		$('#import').click(function(){
-  			var uploadwin = layer.open({
-  	  		    type: 1,
-  	  		    title:'流程定义导入',
-  	  		    area: ['420px', '340px'], //宽高
-  	  		    content: $('#layerImport')
-  	  		});
-  			$('#fileQueue').html('');
-  			
-  			//上传
-  			$('#uploadBtn').unbind('click').click(function(){
-  				if($('#fileQueue').html() == ''){
-  					layer.alert('请选择文件！', {icon: 2});
+  			$('body').uploadFile({
+  				winTitle:'流程定义导入',
+  				headText:'请选择包含图片和 (.bpmn20.xml或.bpmn)的zip或bar文件。',
+  				uploader:'<%=path%>/service/bpm/processDefinition/batchUpload.do',
+  				onSuccess:function(file, data, response,queueSize){
+  					if(data == '200'){
+  						console.log(queueSize);
+  						if(queueSize > 1){
+  							$('#uploadify').uploadify('upload');
+  						}else{
+  							layer.alert('导入成功！', {icon: 1});
+  	  						//layer.closeAll();
+  	  						//$('#procDef_table').bootstrapTable('refresh');
+  						}
+  						
+  					}else{
+  						layer.alert('导入失败！', {icon: 2});
+  					}
   				}
-				$('#uploadify').uploadify("upload");
-		  	});
-  			//取消
-  			$('#upcancel').unbind('click').click(function(){
-  				layer.close(uploadwin);
   			});
+  			
   		});
-		var buttonText = '<button type="button" class="btn btn-info">'
-							+'<span class="glyphicon glyphicon-folder-open"></span> 选择文件'
-						+'</button>';
-  		$('#uploadify').uploadify({
-		    swf: 'dist/lib/uploadify/uploadify.swf', 
-		    cancelImg: 'dist/lib/uploadify/uploadify-cancel.png',
-		    uploader: '<%=path%>/service/bpm/processDefinition/uploadProcDef.do',
-		  	queueID: 'fileQueue',
-		  	fileSizeLimit:'10MB',
-		  	fileTypeDesc:'请选择图片文件',
-		  	buttonText:buttonText, 
-		  	fileTypeExts:'*.zip;*.bar;',
-		  	auto: false,
-		  	debug:true,
-		  	onUploadSuccess:function(file, data, response){
-			  	if(data == '200'){
-			  		//console.log($('#uploadify').uploadify('queueSize'));
-			  		layer.alert('导入成功！', {icon: 1});
-			  		//layer.closeAll();
-    				$('#procDef_table').bootstrapTable('refresh');
-			  	}else{
-    				layer.alert('导入失败！', {icon: 2});
-    			}
-		    }
-	    });
+		
   	});
   	//查看流程图片
   	function showResource(deploymentId,sourceName){
