@@ -1,5 +1,7 @@
 package com.admin.junit;
 
+import org.apache.commons.io.FilenameUtils;
+
 /**
  * 
  * @author LiZhiXian
@@ -10,6 +12,7 @@ public class MainTest {
 
 	public static void main(String[] args) {
 		String str = "brrow.zip";
-		System.out.println(str.substring(0, str.indexOf(".")));
+		String extension = FilenameUtils.getExtension(str);
+		System.out.println(extension);
 	}
 }

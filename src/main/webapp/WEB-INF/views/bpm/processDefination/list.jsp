@@ -22,6 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<![endif]-->
 	<link href="dist/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<link href="dist/lib/bootstrap/extend/table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+	<link href="dist/lib/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
 	<link href="dist/css/style.css" rel="stylesheet" type="text/css" />
 	<!--[if IE 6]>
 	<script>alert('请升级浏览器版本');</script>
@@ -84,7 +85,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                    <span class="glyphicon glyphicon-ok-sign"></span> 激 活
 	                </a>
 	                <a href="javascript:void(0)" class="btn btn-info" id="import">
-	                    <span class="glyphicon glyphicon-open"></span> 导 入
+	                    <span class="glyphicon glyphicon-cloud-upload"></span> 导 入
 	                </a>
 			    </div>
 			    <!-- 表格 -->
@@ -126,9 +127,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
-  <script type="text/javascript" src="dist/lib/bootstrap/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
-  <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="dist/lib/uploadify/jquery.uploadify.min.js"></script> 
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
@@ -142,6 +141,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        pageSize: 10,
 	        sidePagination:'server',
 			//pageNumber:1,
+			singleSelect:true,
 			pageList: [10, 20, 50, 100, 200, 500],
 		    queryParamsType: 'limit', 
 		    queryParams: function (params){
@@ -150,7 +150,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return params;
 			},
 			columns: [
-				{field:'',title:'复选框',width:50,checkbox:true},
+				{field:'',title:'选择',width:50,checkbox:true},
 				{field:"name",title:"流程名称",align:"center",valign:"middle",sortable:"true"},
 				{field:"key",title:"关键字",align:"center",valign:"middle",sortable:"true"},
 				{field:"sourceName",title:"文件名",align:"center",valign:"middle",sortable:"true",
@@ -224,16 +224,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			$('body').uploadFile({
   				winTitle:'流程定义导入',
   				headText:'请选择包含图片和 (.bpmn20.xml或.bpmn)的zip或bar文件。',
-  				uploader:'<%=path%>/service/bpm/processDefinition/batchUpload.do',
+  				fileTypeExts:'*.zip;*.bar;',
+  				uploader:'<%=path%>/service/bpm/processDefinition/uploadProcDef.do',
   				onSuccess:function(file, data, response,queueSize){
   					if(data == '200'){
-  						console.log(queueSize);
   						if(queueSize > 1){
   							$('#uploadify').uploadify('upload');
   						}else{
-  							layer.alert('导入成功！', {icon: 1});
-  	  						//layer.closeAll();
-  	  						//$('#procDef_table').bootstrapTable('refresh');
+  							layer.alert('导入成功！', {icon: 1},function(index){
+  								layer.closeAll();
+  							});
+  	  						$('#procDef_table').bootstrapTable('refresh');
   						}
   						
   					}else{
@@ -241,9 +242,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   					}
   				}
   			});
-  			
   		});
-		
   	});
   	//查看流程图片
   	function showResource(deploymentId,sourceName){

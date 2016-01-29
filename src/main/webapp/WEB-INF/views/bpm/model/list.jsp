@@ -22,6 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<![endif]-->
 	<link href="dist/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 	<link href="dist/lib/bootstrap/extend/table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
+	<link href="dist/lib/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
 	<link href="dist/css/style.css" rel="stylesheet" type="text/css" />
 	<!--[if IE 6]>
 	<script>alert('请升级浏览器版本');</script>
@@ -70,16 +71,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                    <span class="glyphicon glyphicon-plus"></span> 创建模型
 	                </a>
 	                <a href="javascript:void(0)" class="btn btn-info" id="import">
-	                    <span class="glyphicon glyphicon-open"></span> 导 入
+	                    <span class="glyphicon glyphicon-cloud-upload"></span> 导 入
 	                </a>
 	                <%--
 	                <a href="#" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-pencil"></span> 编辑模型
 	                </a>
-	                <a href="#" class="btn btn-info">
-	                    <span class="glyphicon glyphicon-trash"></span> 删除模型
+	                --%>
+	                <a href="javascript:void(0)" class="btn btn-info disabled" id="export">
+	                    <span class="glyphicon glyphicon-cloud-download"></span> 导出XML
 	                </a>
-			    	--%>
+			    	
 			    </div>
 			    <!-- 表格 -->
 			    <div class="col-sm-12 sys-padding-0">
@@ -92,8 +94,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
-  <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
+  <script type="text/javascript" src="dist/lib/uploadify/jquery.uploadify.min.js"></script> 
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
   	$(function(){
@@ -103,6 +105,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        clickToSelect: true,
 	        pagination: true,
 	        pageSize: 10,
+	        singleSelect:true,
 	        sidePagination:'server',
 			//pageNumber:1,
 			pageList: [10, 20, 50, 100, 200, 500],
@@ -113,7 +116,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return params;
 			},
 			columns: [
-				{field:'',title:'复选框',width:50,checkbox:true},
+				{field:'',title:"选择",width:50,checkbox:true},
 				{field:"name",title:"流程名称",align:"center",valign:"middle",sortable:"true"},
 				{field:"key",title:"关键字",align:"center",valign:"middle",sortable:"true"},
 				{field:"createTime",title:"创建时间",align:"center",valign:"middle",sortable:"true",
@@ -126,7 +129,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				{field:"detail",title:"操作",align:"center",sortable:"true",
 					formatter:function(value,row,rowIndex){
 						var strHtml = '<a href="javascript:void(0);" onclick="editModel('+row.id+')">编辑</a>&nbsp;|&nbsp;';
-						if(row.editorSourceExtraValueId != null){
+						if(row.editorSourceExtraValueId){
 							strHtml += '<a href="javascript:void(0);" onclick="deployModel('+row.id+')">部署</a>&nbsp;|&nbsp;';
 						}
 						strHtml +='<a href="javascript:void(0);" onclick="removeModel('+row.id+')">删除</a>';
@@ -135,6 +138,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				}
 				
 			],
+			onCheck:function(row){
+				if(row.editorSourceExtraValueId){
+					$('#export').removeClass('disabled');
+				}else{
+					$('#export').addClass('disabled');
+				}
+			},
 			onPageChange: function (size, number) {
 	        },
 	        formatNoMatches: function(){
@@ -153,6 +163,39 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
   		$('#new_model').click(function(){
   			$.layer_show('创建模型','service/bpm/model/add.htm',600,510);
+  		});
+  		//导出XML
+  		$('#export').click(function(){
+  			var rows = $('#model_table').bootstrapTable('getSelections');
+  			if(rows.length != 1){
+  				layer.alert('请选择要操作的项！',{title:'提示',icon:2});
+  				return;
+  			}
+  			window.open('service/bpm/model/export/'+rows[0].id);
+  		});
+  		//导入
+  		$('#import').click(function(){
+  			$('body').uploadFile({
+  				winTitle:'流程模型导入',
+  				headText:'请选择(.bpmn20.xml或.bpmn)的文件。',
+  				fileTypeExts:'*.bpmn20.xml;*.bpmn;',
+  				uploader:'<%=path%>/service/bpm/model/uploadProcModel.do',
+  				onSuccess:function(file, data, response,queueSize){
+  					if(data == '200'){
+  						if(queueSize > 1){
+  							$('#uploadify').uploadify('upload');
+  						}else{
+  							layer.alert('导入成功！', {icon: 1},function(index){
+  								layer.closeAll();
+  							});
+  	  						$('#model_table').bootstrapTable('refresh');
+  						}
+  						
+  					}else{
+  						layer.alert('导入失败！', {icon: 2});
+  					}
+  				}
+  			});
   		});
   	});
   	//编辑
@@ -177,15 +220,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    		dataType:'json',
 		    		success: function(ret) {
 		    			if(ret == '200'){
-		    				layer.alert('部署成功！', {icon: 6,title:'提示'});
+		    				layer.alert('部署成功！', {icon: 1,title:'提示'});
 		    				$('#model_table').bootstrapTable('refresh');
 		    			}else{
-		    				layer.alert('部署失败！', {icon: 5,title:'提示'});
+		    				layer.alert('部署失败！', {icon: 2,title:'提示'});
 		    			}
 		    			layer.close(tipMsg);
 					},
 					error: function(xhr, textStatus, errorThrown){
-						layer.alert('部署出错啦！', {icon: 5,title:'提示'});
+						layer.alert('部署出错啦！', {icon: 2,title:'提示'});
 						layer.close(tipMsg);
 				    }
 		    	});
@@ -212,15 +255,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    		dataType:'json',
 		    		success: function(ret) {
 		    			if(ret == '200'){
-		    				layer.alert('删除成功！', {icon: 6});
+		    				layer.alert('删除成功！', {icon: 1});
 		    				$('#model_table').bootstrapTable('refresh');
 		    			}else{
-		    				layer.alert('删除失败！', {icon: 5});
+		    				layer.alert('删除失败！', {icon: 2});
 		    			}
 		    			layer.close(tipMsg);
 					},
 					error: function(xhr, textStatus, errorThrown){
-						layer.alert('删除出错啦！', {icon: 5});
+						layer.alert('删除出错啦！', {icon: 2});
 				    }
 		    	});
 		    },cancel: function(index){

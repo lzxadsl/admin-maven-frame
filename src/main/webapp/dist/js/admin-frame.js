@@ -202,6 +202,7 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 				    btn: options.btn,
 				    shadeClose: false,
 				    title:options.title,
+				    icon:3,
 				    yes: function(index, layero){
 				    	layer.close(index);
 				    	submitServer(options,formData);
@@ -339,8 +340,8 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 						+'<div id="uploadifyFileQueue"></div>'
 						+'</div>'
 						+'<div class="form-group">'
-							+'<button type="button" id="uploadifySubmit" class="btn btn-info"><span class="glyphicon glyphicon-cloud"></span> 上 传</button> '
-							+'<button type="button" id="uploadifyCancel"  class="btn btn-info"><span class="glyphicon glyphicon-remove-circle"></span> 取 消</button>'
+							+'<button type="button" id="uploadifySubmit" class="btn btn-info"><span class="glyphicon glyphicon-cloud-upload"></span> 上 传</button> '
+							+'<button type="button" id="uploadifyCancel" class="btn btn-info"><span class="glyphicon glyphicon-remove-circle"></span> 取 消</button>'
 						+'</div>'
 				   +'</div>';
 		if($('#layeruploadify').length == 0){
@@ -367,14 +368,15 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 	  	});
 		//取消
 		$('#uploadifyCancel').unbind('click').click(function(){
-			//$('#uploadify').uploadify('destroy');
+			$('#uploadify').uploadify('cancel','*');
+			$('#uploadify').uploadify('destroy');
 			layer.close(uploadwin);
 		});
 		return uploadify;
 	};
-	var buttonText = '<button type="button" class="btn btn-info">'
+	/*var buttonText = '<button type="button" class="btn btn-info">'
 						+'<span class="glyphicon glyphicon-folder-open"></span> 选择文件'
-					+'</button>';
+					+'</button>';*/
 	//默认配置
 	$.fn.uploadFile.defaults = {
 		winWidth:420,
@@ -386,10 +388,10 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 		queueID: 'uploadifyFileQueue',
 		fileSizeLimit:'10MB',
 		fileTypeDesc:'请选择文件',
-		buttonText:buttonText, 
-		fileTypeExts:'*.zip;*.bar;',
+		buttonText:'选择文件', 
+		fileTypeExts:'*.*;',
 		auto: false,
-		simUploadLimit:2,
+		queueSizeLimit:5,
 		onSelect: function (fileObj){
             if(fileObj.size == 0){
                 alert(runicode("不能上传一个大小为 0 字节的文件！"));
@@ -727,3 +729,13 @@ Date.prototype.format = function(format) {
 };
 
 /*-----------------------------------日期公共方法end-------------------------------------*/
+/**防止按删除键时返回上个页面*/
+document.onkeydown = backSpaceDown;
+function backSpaceDown(e){
+	if(((event.keyCode == 8) && ((event.srcElement.type != "text" && event.srcElement.type != "textarea" && event.srcElement.type != "password")||
+	event.srcElement.readOnly == true))||((event.ctrlKey) && ((event.keyCode == 78) || (event.keyCode == 82))) || (event.keyCode == 116)) {
+		event.keyCode = 0;
+		event.returnValue = false;
+	}
+	return true;
+}

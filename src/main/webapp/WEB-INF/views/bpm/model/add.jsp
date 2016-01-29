@@ -80,15 +80,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    		url:'service/bpm/model/create.do',
 		    		onSubmitSuccess:function(data){
 		    			if(data.status=='200'){
+		    				parent.$('#model_table').bootstrapTable('refresh');
 		    				window.top.creatIframe('process-editor/modeler.html?modelId='+data.modelId,'流程设计');
 							var index = parent.layer.getFrameIndex(window.name);
 							parent.layer.close(index);
 		    			}else{
-		    				layer.alert('保存失败！', {icon: 5,title:'提示'});
+		    				layer.alert('保存失败！', {icon: 2,title:'提示'});
 		    			}
 		    		},
 		    		onSubmitError:function(xhr, textStatus, errorThrown){
-		    			layer.alert('出错啦！', {icon: 5,title:'提示'});
+		    			layer.alert('出错啦！', {icon: 2,title:'提示'});
 		    		}
 		    	});
 				return false;

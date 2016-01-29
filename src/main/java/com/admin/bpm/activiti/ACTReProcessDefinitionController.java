@@ -18,11 +18,11 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -203,17 +203,28 @@ public class ACTReProcessDefinitionController {
 	 * @date 2016-1-27 下午2:39:05
 	 */
 	@RequestMapping("uploadProcDef.do")
-	public @ResponseBody String uploadProcDef(@RequestPart MultipartFile Filedata){
+	public @ResponseBody String uploadProcDef(MultipartHttpServletRequest request){
 		String state = "200";
 		try {
-			InputStream in = Filedata.getInputStream();
-			ZipInputStream zipInputStream = new ZipInputStream(in);
-			//流程名称，取文件的名称
-			String processName = Filedata.getOriginalFilename().substring(0,Filedata.getOriginalFilename().indexOf("."));
-			System.out.println("------------------------:"+processName);
-			repositoryService.createDeployment()
-						.name(processName)
-						.addZipInputStream(zipInputStream).deploy();
+			List<MultipartFile> list = request.getFiles("Filedata");
+			for(MultipartFile file : list){
+				InputStream in = file.getInputStream();
+				String fileName = file.getOriginalFilename();
+				String extension = FilenameUtils.getExtension(fileName);
+				//流程名称，取文件的名称
+				String processName = fileName.substring(0,fileName.indexOf("."));
+				if (extension.equals("zip") || extension.equals("bar")){
+					ZipInputStream zipInputStream = new ZipInputStream(in);
+					repositoryService.createDeployment()
+								.name(processName)
+								.addZipInputStream(zipInputStream).deploy();
+				}
+				else{
+					state = "500";
+					//repositoryService.createDeployment().addInputStream(processName, in).deploy();
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			state = "500";

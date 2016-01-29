@@ -61,7 +61,7 @@ public class ActivitiTest {
 			/*Deployment deployment = deploymentbuilder.name("请假申请")//部署名称
 							.addZipInputStream(new ZipInputStream(new FileInputStream(new File(path))))
 							.deploy();//完成部署
-			 */			
+*/			
 			Deployment deployment = deploymentbuilder.name("HelloWord流程")//部署名称
 					.addClasspathResource("diagrams/helloword.bpmn")
 					.addClasspathResource("diagrams/helloword.png")
