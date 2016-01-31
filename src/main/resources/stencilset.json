@@ -8,7 +8,7 @@
       "id" : "process_id",
       "type" : "String",
       "title" : "流程标识符",
-      "value" : "process",
+      "value" : "",
       "description" : "流程定义的唯一标识符.",
       "popular" : true
     } ]
@@ -27,7 +27,7 @@
     "properties" : [ {
       "id" : "name",
       "type" : "String",
-      "title" : "名称",
+      "title" : "流程名称",
       "value" : "",
       "description" : "在BPMN元素的描述性名称.",
       "popular" : true,

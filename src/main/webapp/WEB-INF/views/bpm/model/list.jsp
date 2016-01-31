@@ -117,7 +117,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			},
 			columns: [
 				{field:'',title:"选择",width:50,checkbox:true},
-				{field:"name",title:"流程名称",align:"center",valign:"middle",sortable:"true"},
+				{field:"name",title:"模型名称",align:"center",valign:"middle",sortable:"true"},
 				{field:"key",title:"关键字",align:"center",valign:"middle",sortable:"true"},
 				{field:"createTime",title:"创建时间",align:"center",valign:"middle",sortable:"true",
 					formatter:function(value){
