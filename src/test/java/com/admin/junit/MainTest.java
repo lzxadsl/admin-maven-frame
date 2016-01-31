@@ -1,9 +1,9 @@
 package com.admin.junit;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * 
@@ -13,17 +13,47 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class MainTest {
 
-	private int x = 0;
-	Lock lock = new ReentrantLock();
+	private static int x = 0;
+	private final static MainTest main = new MainTest();
+	private static Lock lock = new ReentrantLock();
+	public static MainTest getMain(){
+		return main;
+	}
 	public static void main(String[] args) {
-		String str = "brrow.zip";
-		String extension = FilenameUtils.getExtension(str);
-		System.out.println(extension);
+		//String str = "brrow.zip";
+		//String extension = FilenameUtils.getExtension(str);
+		//System.out.println(extension);
+		
+		for(int i=0;i<10;i++){
+			Thread t = new Thread(){
+				public void run() {
+					MainTest.getMain().add();
+				};
+			};
+			t.start();
+		}
 	}
 	
 	public void add(){
-		
-		x++;
-		System.out.println("结果："+x);
+		//lock.lock();
+		try {
+			//lock.lockInterruptibly();
+			if(lock.tryLock(2,TimeUnit.SECONDS)){//获取锁成功,（等待5秒时间，如果还获取不到锁就会走else）
+				x++;
+				System.out.println("结果："+x);
+				
+				//Thread.sleep(100000);
+				/*synchronized (test) {
+					System.out.println(Thread.currentThread().getName()+"进入");
+					test.wait();
+				}*/
+				lock.unlock();
+			}else{
+				System.out.println(Thread.currentThread().getName()+"获取锁失败。。。");
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.out.println("------------------");
+		}
 	}
 }
