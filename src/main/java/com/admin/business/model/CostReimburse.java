@@ -1,6 +1,7 @@
 package com.admin.business.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * 费用报销单实体
@@ -17,7 +18,8 @@ public class CostReimburse {
 	private Timestamp createTime;//报销时间
 	private String state;//任务状态
 	private String description;//报销说明
-
+	private List<CostItem> itemList;//报销项
+	
 	public Integer getId() {
 		return id;
 	}
@@ -59,6 +61,12 @@ public class CostReimburse {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public List<CostItem> getItemList() {
+		return itemList;
+	}
+	public void setItemList(List<CostItem> itemList) {
+		this.itemList = itemList;
 	}
 	
 }

@@ -3,7 +3,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.admin.business.dao.ICostReimburseDao">
 	
-	<select id="selectPageList" resultType="map" parameterType="map">  
+	<select id="selectPageList" resultMap="CostReimburseMap" parameterType="map">  
         SELECT 
 			a.*
 			,b.name
@@ -24,7 +24,7 @@
  		</if>
 	</select> 
 	
-	<select id="get" parameterType="string" resultType="CostReimburse">
+	<select id="get" parameterType="string" resultMap="CostReimburseMap">
 	    SELECT 
 			a.*
 			,b.name
@@ -74,5 +74,19 @@
 	        select max(id) from cost_reimburse
 	    </selectKey> 
 	</insert>
-	
+	<resultMap type="CostReimburse" id="CostReimburseMap">
+		<result property="id" column="id"/>
+		<result property="costName" column="cost_name"/>
+		<result property="userId" column="user_id"/>
+		<result property="amount" column="amount"/>
+		<result property="createTime" column="createTime"/>
+		<result property="state" column="state"/>
+		<result property="description" column="description"/>
+		<collection property="itemList" column="item_id" ofType="com.admin.business.model.CostReimburse">
+			<id property="id" column="item_id"/>
+			<result property="itemName" column="item_name"/>
+			<result property="category" column="category"/>
+			<result property="amount" column="amount"/>
+		</collection>
+	</resultMap>
 </mapper>	

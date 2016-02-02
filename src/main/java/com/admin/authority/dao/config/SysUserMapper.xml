@@ -17,19 +17,19 @@
 			</collection>
 	    </collection>
 	</resultMap>
-	<select id="selectList" resultType="SysUser" parameterType="map">  
+	<select id="selectList" resultMap="sysUserMap" parameterType="map">  
         SELECT 
 			*
  		FROM sys_user where 1=1 ${where}
 	</select> 
 	
-	<select id="selectPageList" resultType="SysUser">  
+	<select id="selectPageList" resultMap="sysUserMap">  
         SELECT 
 			*
  		FROM sys_user  
 	</select> 
 	
-	<select id="get" parameterType="int" resultType="SysUser">
+	<select id="get" parameterType="int" resultMap="sysUserMap">
 	    select * from sys_user where id = #{id}
 	</select>
 	
@@ -68,5 +68,10 @@
 	        select max(id) from sys_user
 	    </selectKey> 
 	</insert>
-	
+	<resultMap type="SysUser" id="sysUserMap">
+        <result property="id" column="id" />
+        <result property="userName" column="user_name" />
+        <result property="password" column="password" />
+        <result property="salt" column="salt" />
+    </resultMap>
 </mapper>	

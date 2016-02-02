@@ -30,4 +30,12 @@
 	    </selectKey> 
 	</insert>
 	
+	<resultMap type="SysRole" id="SysRoleMap">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<collection property="permissionSet" column="permission_id" ofType="com.admin.authority.model.SysPermission">
+			<id property="id" column="permission_id"/>
+			<result property="name" column="permission_name"/>
+		</collection>
+	</resultMap>
 </mapper>	
