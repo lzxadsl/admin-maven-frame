@@ -43,7 +43,7 @@ import com.admin.basic.model.PageData;
 @SuppressWarnings("deprecation")
 @Controller
 @RequestMapping(value="/bpm/model/*")
-public class ACTReModelController {
+public class ActReModelController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -215,28 +215,28 @@ public class ACTReModelController {
 		return "200";
 	}
 	
-	 /**
-	   * 导出model的xml文件
-	   */
-	  @RequestMapping(value = "export/{modelId}")
-	  public void export(@PathVariable("modelId") String modelId, HttpServletResponse response) {
-	    try {
-	      Model modelData = repositoryService.getModel(modelId);
-	      BpmnJsonConverter jsonConverter = new BpmnJsonConverter();
-	      JsonNode editorNode = new ObjectMapper().readTree(repositoryService.getModelEditorSource(modelData.getId()));
-	      BpmnModel bpmnModel = jsonConverter.convertToBpmnModel(editorNode);
-	      BpmnXMLConverter xmlConverter = new BpmnXMLConverter();
-	      byte[] bpmnBytes = xmlConverter.convertToXML(bpmnModel);
+    /**
+	 * 导出model的xml文件
+	 */
+	@RequestMapping(value = "export/{modelId}")
+	public void export(@PathVariable("modelId") String modelId, HttpServletResponse response) {
+		try {
+			Model modelData = repositoryService.getModel(modelId);
+			BpmnJsonConverter jsonConverter = new BpmnJsonConverter();
+			JsonNode editorNode = new ObjectMapper().readTree(repositoryService.getModelEditorSource(modelData.getId()));
+			BpmnModel bpmnModel = jsonConverter.convertToBpmnModel(editorNode);
+	      	BpmnXMLConverter xmlConverter = new BpmnXMLConverter();
+	      	byte[] bpmnBytes = xmlConverter.convertToXML(bpmnModel);
 
-	      ByteArrayInputStream in = new ByteArrayInputStream(bpmnBytes);
-	      IOUtils.copy(in, response.getOutputStream());
-	      String filename = bpmnModel.getMainProcess().getId() + ".bpmn20.xml";
-	      response.setHeader("Content-Disposition", "attachment; filename=" + filename);
-	      response.flushBuffer();
+	      	ByteArrayInputStream in = new ByteArrayInputStream(bpmnBytes);
+	      	IOUtils.copy(in, response.getOutputStream());
+	      	String filename = bpmnModel.getMainProcess().getId() + ".bpmn20.xml";
+	      	response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+	      	response.flushBuffer();
 	    } catch (Exception e) {
-	      logger.error("导出model的xml文件失败：modelId={}", modelId, e);
+	    	logger.error("导出model的xml文件失败：modelId={}", modelId, e);
 	    }
-	  }
+	}
 	  
 	/**弹出框编辑内容
 	 * @author LiZhiXian

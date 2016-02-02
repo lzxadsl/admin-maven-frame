@@ -21,7 +21,7 @@ import com.admin.basic.model.PageData;
  */
 @Controller
 @RequestMapping(value = "/bpm/processInstance/*")
-public class ACTProcessInstanceController {
+public class ActProcInstController {
 	@Autowired
 	private RuntimeService runtimeService;
 	

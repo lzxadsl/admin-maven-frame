@@ -36,7 +36,7 @@ import com.admin.basic.model.PageData;
  */
 @Controller
 @RequestMapping(value = "/bpm/processDefinition/*")
-public class ACTReProcessDefinitionController {
+public class ActReProcDefController {
 	@Autowired
 	private RepositoryService repositoryService;
 	@Autowired

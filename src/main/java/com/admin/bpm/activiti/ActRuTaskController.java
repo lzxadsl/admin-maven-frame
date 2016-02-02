@@ -26,7 +26,7 @@ import com.admin.basic.model.PageData;
  */
 @Controller
 @RequestMapping(value = "/bpm/task/*")
-public class ACTRuTaskController {
+public class ActRuTaskController {
 	@Autowired
 	private TaskService taskService;
 	@Autowired

@@ -76,7 +76,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                    </button>
 	                </div>
 		        </div>
-			    <!-- 功能按钮 -->
+			    <!-- 功能按钮 -->pt=='驳回
 			    <div class="col-sm-12 sys-btn-bar">
 			    	<a href="javascript:void(0)" id="suspend" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-remove-sign"></span> 挂 起
@@ -169,8 +169,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				},
 				{field:"detail",title:"操作",align:"center",sortable:"true",
 					formatter:function(value,row,rowIndex){
-						var strHtml = '<a href="process-editor/modeler.html?modelId='+row.id+'" target="_blank">启动流程</a>&nbsp;|&nbsp;'
-										+'<a href="javascript:void(0);" onclick="showResource('+row.deploymentId+',\''+row.diagramResourceName+'\')">流程图片</a>&nbsp;|&nbsp;'			 
+						//'<a href="process-editor/modeler.html?modelId='+row.id+'" target="_blank">启动流程</a>&nbsp;|&nbsp;'
+						var strHtml = '<a href="javascript:void(0);" onclick="showResource('+row.deploymentId+',\''+row.diagramResourceName+'\')">流程图片</a>&nbsp;|&nbsp;'			 
 										+'<a href="javascript:void(0);" onclick="removeDeploye('+row.deploymentId+')">删除</a>';
 						return strHtml;
 					}

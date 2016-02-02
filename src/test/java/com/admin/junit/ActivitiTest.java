@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 import org.activiti.editor.constants.ModelDataJsonConstants;
@@ -106,7 +108,9 @@ public class ActivitiTest {
 	}
 	@Test
 	public void startProcess(){
-		ProcessInstance procInst = runtimeService.startProcessInstanceByKey("helloword");
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("apply", "张三");//申请人
+		ProcessInstance procInst = runtimeService.startProcessInstanceByKey("helloword",variables);
 		procInst.getName();
 		System.out.println("流程启动成功");
 		System.out.println("实例ID："+procInst.getProcessInstanceId());
@@ -115,27 +119,29 @@ public class ActivitiTest {
 	
 	@Test
 	public void findMyTask(){
-		/*List<Task> list = taskService.createTaskQuery().taskAssignee("张三").list();
+		//List<Task> list = taskService.createTaskQuery().taskAssignee("lzx").list();
+		List<Task> list = taskService.createTaskQuery().taskCandidateUser("lsl").list();
 		for(Task t:list){
 			System.out.println("任务ID："+t.getId());
 			System.out.println("任务名称："+t.getName());
 			System.out.println("创建时间："+t.getCreateTime());
 			System.out.println("办理人："+t.getAssignee());
-		}*/
-		ProcessDefinitionQuery procDefinQuery = repositoryService.createProcessDefinitionQuery();
+		}
+		/*ProcessDefinitionQuery procDefinQuery = repositoryService.createProcessDefinitionQuery();
 		procDefinQuery.suspended();
-		//procDefinQuery.processDefinitionName("HelloWord流程");
 		List<ProcessDefinition>  listProDef = procDefinQuery.orderByDeploymentId().desc().list();
-		System.out.println(listProDef.size());
+		System.out.println(listProDef.size());*/
 	}
 	
 	@Test
 	public void complete(){
 		//runtimeService.suspendProcessInstanceById("30001");
-		String taskId = "50002";//25004,27502,32502 30004,47502
-		taskService.complete(taskId);
-		
-		
+		String taskId = "110002";//25004,27502,32502 30004,47502
+		Map<String, Object> variables = new HashMap<String, Object>();
+		variables.put("users", "lzx,lsl");//申请人
+		taskService.claim(taskId,"lzx");
+		taskService.complete(taskId,variables);
+		System.out.println("审核通过。。。。");
 	}
 	
 	@Test
