@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.admin.authority.model.Role;
-import com.admin.authority.model.User;
+import com.admin.authority.model.SysRole;
+import com.admin.authority.model.SysUser;
 import com.admin.authority.service.IRoleService;
 import com.admin.authority.service.IUserService;
 
@@ -27,7 +27,7 @@ public class TestQuartz {
 	@Transactional
 	public void method1(int i){
 		System.out.println("-------------------------------方法1请求角色更新---------------------------------");
-		Role role = new Role();
+		SysRole role = new SysRole();
 		role.setId(3);
 		role.setName("vip"+i);
 		roleService.updateRole(role);
@@ -37,9 +37,9 @@ public class TestQuartz {
 			e.printStackTrace();
 		}
 		System.out.println("-------------------------------方法1请求用户更新---------------------------------");
-		User user = new User();
+		SysUser user = new SysUser();
 		user.setId(1);
-		user.setUsername("lzx"+i);
+		user.setUserName("lzx"+i);
 		userService.updateUser(user);
 		System.out.println("-------------------------------方法1执行完毕---------------------------------");
 	}
@@ -47,12 +47,12 @@ public class TestQuartz {
 	@Transactional
 	public void method2(int i){
 		System.out.println("-------------------------------方法2请求用户更新---------------------------------");
-		User user = new User();
+		SysUser user = new SysUser();
 		user.setId(1);
-		user.setUsername("lzx"+i);
+		user.setUserName("lzx"+i);
 		userService.updateUser(user);
 		System.out.println("-------------------------------方法2请求角色更新---------------------------------");
-		Role role = new Role();
+		SysRole role = new SysRole();
 		role.setId(3);
 		role.setName("vip"+i);
 		roleService.updateRole(role);

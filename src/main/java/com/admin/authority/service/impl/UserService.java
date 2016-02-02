@@ -4,8 +4,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.admin.authority.dao.IUserDao;
-import com.admin.authority.model.User;
+import com.admin.authority.dao.ISysUserDao;
+import com.admin.authority.model.SysUser;
 import com.admin.authority.service.IUserService;
 import com.admin.basic.service.impl.BaseService;
 
@@ -16,7 +16,7 @@ import com.admin.basic.service.impl.BaseService;
  * @date 2015-9-18 上午10:11:48
  */
 @Service
-public class UserService extends BaseService<User, Integer> implements IUserService {
+public class UserService extends BaseService<SysUser, Integer> implements IUserService {
 
 	/**
 	 * @param sqlSessionFactory
@@ -24,23 +24,23 @@ public class UserService extends BaseService<User, Integer> implements IUserServ
 	@Autowired
 	public UserService(SqlSessionFactory sqlSessionFactory) {
 		super(sqlSessionFactory);
-		this.setDaoClass(IUserDao.class);
+		this.setDaoClass(ISysUserDao.class);
 	}
 
 	@Override
-	public User getUser(Integer id) {
+	public SysUser getUser(Integer id) {
 		return getDao().get(id);
 	}
 
 	@Override
 	@Transactional
-	public void saveUser(User user) {
+	public void saveUser(SysUser user) {
 		getDao().insert(user);
 	}
 
 	@Override
 	@Transactional
-	public void updateUser(User user){
+	public void updateUser(SysUser user){
 		System.out.println("执行更新操作...........");
 		getDao().update(user);
 		//getDao().insert(user);
@@ -49,15 +49,15 @@ public class UserService extends BaseService<User, Integer> implements IUserServ
 
 	@Override
 	@Transactional
-	public void transation(User user,String newName){
+	public void transation(SysUser user,String newName){
 		getDao().insert(user);
-		user.setUsername(newName);
+		user.setUserName(newName);
 		//updateUser(user);
 		//throw new Error("...........");
 	}
 
 	@Override
-	public User getUserByName(String username) {
-		return this.getMapper(IUserDao.class).selectUserByName(username);
+	public SysUser getUserByName(String username) {
+		return this.getMapper(ISysUserDao.class).selectUserByName(username);
 	}
 }

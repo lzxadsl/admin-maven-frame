@@ -18,8 +18,21 @@ public interface IBaseService<T,K> {
 	public int saveList(List<T> list);
 	public void delete(K id);
 	public void deleteList(Map<String, Object> params);
+	/**
+	 * 更新指定字段
+	 */
+	public void updateField(Map<String, Object> params);
+	/**
+	 * 更新全部字段
+	 */
 	public T update(T entity);
+	/**
+	 * 通过ID获取
+	 */
 	public T get(K id);
+	/**
+	 * 通过制定参数获取
+	 */
 	public T get(Map<String, Object> params);
 	/**
 	 * 列表查询

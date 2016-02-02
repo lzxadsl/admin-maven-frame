@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.admin.authority.model.User;
+import com.admin.authority.model.SysUser;
 import com.admin.authority.service.IUserService;
 
 
@@ -26,7 +26,7 @@ public class JunitTest {
 	@Test
 	public void userTest(){
 		//userService.getUserByName("lzx");
-		User user = userService.get(1);
-		System.out.println(user.getUsername());
+		SysUser user = userService.get(1);
+		System.out.println(user.getUserName());
 	}
 }

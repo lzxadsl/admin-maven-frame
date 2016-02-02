@@ -77,7 +77,11 @@ public class BaseService<T,K> extends SqlSessionTemplate implements IBaseService
 	@Override
 	public T get(Map<String, Object> params) {
 		if(params == null)params = new HashMap<String, Object>();
-		return getDao().get(params);
+		List<T> list = getDao().selectList(params);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return null;
 	}
 
 	@Override
@@ -104,6 +108,17 @@ public class BaseService<T,K> extends SqlSessionTemplate implements IBaseService
 		if(params == null)params = new HashMap<String, Object>();
 		params.put("pageData", pageData);
 		return getDao().selectPageList(params);
+	}
+
+	/**
+	 * 
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-2 下午1:18:04
+	 */
+	@Override
+	public void updateField(Map<String, Object> params) {
+		getDao().updateField(params);
 	}
 
 	

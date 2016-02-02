@@ -53,6 +53,7 @@ public class ShiroLoginController {
 	 */
 	@RequestMapping(value="doLogin.htm",method=RequestMethod.POST)
 	public String doLogin(Model model,@ModelAttribute Login login,BindingResult errors){
+		
 		UsernamePasswordToken token = new UsernamePasswordToken(login.getUsername(),login.getPassword());
 		Subject subject = null;
 		try{

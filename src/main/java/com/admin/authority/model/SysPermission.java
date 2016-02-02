@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @version 1.0
  * @date 2015-12-4 下午4:31:30
  */
-public class Permission implements Serializable{
+public class SysPermission implements Serializable{
 
 	private static final long serialVersionUID = 1624774962681257787L;
 	

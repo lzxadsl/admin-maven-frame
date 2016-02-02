@@ -1,6 +1,6 @@
 package com.admin.authority.dao;
 
-import com.admin.authority.model.User;
+import com.admin.authority.model.SysUser;
 import com.admin.basic.dao.IBaseDao;
 
 /**
@@ -9,7 +9,7 @@ import com.admin.basic.dao.IBaseDao;
  * @version 1.0
  * @date 2015-9-18 下午1:42:23
  */
-public interface IUserDao extends IBaseDao<User, Integer>{
+public interface ISysUserDao extends IBaseDao<SysUser, Integer>{
 
 	/**
 	 * 根据用户名查询用户
@@ -17,5 +17,5 @@ public interface IUserDao extends IBaseDao<User, Integer>{
 	 * @version 1.0
 	 * @date 2015-12-6 下午11:07:26
 	 */
-	public User selectUserByName(String username);
+	public SysUser selectUserByName(String username);
 }

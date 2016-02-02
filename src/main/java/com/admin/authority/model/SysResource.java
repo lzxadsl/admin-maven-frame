@@ -6,7 +6,7 @@ package com.admin.authority.model;
  * @version 1.0
  * @date 2015-12-4 下午4:12:48
  */
-public class Resource {
+public class SysResource {
 
     private String id; //主键id 
     

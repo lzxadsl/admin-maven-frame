@@ -17,8 +17,9 @@ public interface IBaseDao<T,K> {
 	public void delete(K id);
 	public void deleteList(Map<String, Object> params);
 	public void update(T entity);
+	public void updateField(Map<String, Object> params);
 	public T get(K id);
-	public T get(Map<String, Object> params);
+	//public T get(Map<String, Object> params);
 	public List<T> selectList(Map<String, Object> params);
 	public List<T> selectPageList(Map<String, Object> params);
 }

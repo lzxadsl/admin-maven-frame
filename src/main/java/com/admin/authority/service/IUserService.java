@@ -1,6 +1,6 @@
 package com.admin.authority.service;
 
-import com.admin.authority.model.User;
+import com.admin.authority.model.SysUser;
 import com.admin.basic.service.IBaseService;
 
 /**
@@ -9,15 +9,15 @@ import com.admin.basic.service.IBaseService;
  * @version 1.0
  * @date 2015-9-18 上午10:10:38
  */
-public interface IUserService extends IBaseService<User, Integer>{
+public interface IUserService extends IBaseService<SysUser, Integer>{
 
-	public User getUser(Integer id);
+	public SysUser getUser(Integer id);
 	
-	public void saveUser(User user);
+	public void saveUser(SysUser user);
 	
-	public void updateUser(User user);
+	public void updateUser(SysUser user);
 	
-	public void transation(User user,String newName);
+	public void transation(SysUser user,String newName);
 	
-	public User getUserByName(String username);
+	public SysUser getUserByName(String username);
 }

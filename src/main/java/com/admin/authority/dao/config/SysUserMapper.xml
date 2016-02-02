@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.admin.authority.dao.IUserDao">
+<mapper namespace="com.admin.authority.dao.ISysUserDao">
 	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/> -->
-	<resultMap type="com.admin.authority.model.User" id="powerMapper">
+	<resultMap type="com.admin.authority.model.SysUser" id="powerMapper">
 		<id property="id" column="id"/>
-	    <result property="username" column="username"/>
+	    <result property="userName" column="user_name"/>
 	    <result property="password" column="password"/>
 	    <result property="salt" column="salt"/>
-	    <collection property="roleSet" column="role_id" ofType="com.admin.authority.model.Role">
+	    <collection property="roleSet" column="role_id" ofType="com.admin.authority.model.SysRole">
 	    	<id property="id" column="role_id"/>
 	    	<result property="name" column="role_name"/>
-	    	<collection property="permissionSet" column="permission_id" ofType="com.admin.authority.model.Permission">
+	    	<collection property="permissionSet" column="permission_id" ofType="com.admin.authority.model.SysPermission">
 				<id property="id" column="permission_id"/>
 				<result property="name" column="permission_name"/>
 			</collection>
 	    </collection>
 	</resultMap>
-	<select id="selectList" resultType="User" parameterType="map">  
+	<select id="selectList" resultType="SysUser" parameterType="map">  
         SELECT 
 			*
  		FROM sys_user where 1=1 ${where}
 	</select> 
 	
-	<select id="selectPageList" resultType="User">  
+	<select id="selectPageList" resultType="SysUser">  
         SELECT 
 			*
  		FROM sys_user  
 	</select> 
 	
-	<select id="get" parameterType="int" resultType="User">
+	<select id="get" parameterType="int" resultType="SysUser">
 	    select * from sys_user where id = #{id}
 	</select>
 	
 	<select id="selectUserByName" parameterType="string" resultMap="powerMapper">
 	    select 
 	    	a.id,
-	    	a.username,
+	    	a.user_name,
 	    	a.password,
 	    	a.salt,
 	    	c.id as role_id,
@@ -48,18 +48,18 @@
 	    left join sys_role c on b.role_id = c.id
 	    left join sys_role_permission d on d.role_id = c.id
 	    left join sys_permission e on e.id = d.permission_id 
-	    where a.username = #{username}
+	    where a.user_name = #{username}
 	</select>
 	
 	<update id="update">
 	    update sys_user 
-		    set username = #{username}
+		    set user_name = #{username}
 		where id = #{id}
 	</update>
 	
-	<insert id="insert" parameterType="User" keyProperty="id">
+	<insert id="insert" parameterType="SysUser" keyProperty="id">
 	    insert into sys_user(
-	    	username,password
+	    	user_name,password
 	    )  values(
 	    	#{username},#{password}
 	    )

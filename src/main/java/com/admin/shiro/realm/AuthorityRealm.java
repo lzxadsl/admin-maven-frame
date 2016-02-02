@@ -20,9 +20,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.admin.authority.model.Permission;
-import com.admin.authority.model.Role;
-import com.admin.authority.model.User;
+import com.admin.authority.model.SysPermission;
+import com.admin.authority.model.SysRole;
+import com.admin.authority.model.SysUser;
 import com.admin.authority.service.IUserService;
 
 public class AuthorityRealm extends AuthorizingRealm{
@@ -53,19 +53,19 @@ public class AuthorityRealm extends AuthorizingRealm{
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals){  
         //获取当前登录的用户名  
         String username = (String) principals.getPrimaryPrincipal();
-        User user = userService.getUserByName(username);
+        SysUser user = userService.getUserByName(username);
         if(user != null){
-        	Set<Role> roleSet =  user.getRoleSet();
+        	Set<SysRole> roleSet =  user.getRoleSet();
             //角色名的集合
             Set<String> roles = new HashSet<String>();
             //权限名的集合
             Set<String> permissions = new HashSet<String>();
             
-            Iterator<Role> it = roleSet.iterator();
+            Iterator<SysRole> it = roleSet.iterator();
             while(it.hasNext()){
-            	Role role = it.next();
+            	SysRole role = it.next();
             	roles.add(role.getName());
-            	for(Permission per:role.getPermissionSet()){
+            	for(SysPermission per:role.getPermissionSet()){
             		permissions.add(per.getName());
             	}
             }
@@ -93,11 +93,11 @@ public class AuthorityRealm extends AuthorizingRealm{
         //两个token的引用都是一样的
         UsernamePasswordToken token = (UsernamePasswordToken)authcToken;  
         System.out.println("验证当前Subject时获取到token为" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));  
-        User user = userService.getUserByName(token.getUsername());  
+        SysUser user = userService.getUserByName(token.getUsername());  
       	if(null != user){ 
       		//根据数据库查询结果自动根界面输入比对
-      		SimpleAuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(),this.getName());  
-      		authcInfo.setCredentialsSalt(ByteSource.Util.bytes(user.getUsername()+user.getSalt()));
+      		SimpleAuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(),this.getName());  
+      		authcInfo.setCredentialsSalt(ByteSource.Util.bytes(user.getUserName()+user.getSalt()));
       		this.setSession("user", user);  
       		return authcInfo;  
       	}else{  

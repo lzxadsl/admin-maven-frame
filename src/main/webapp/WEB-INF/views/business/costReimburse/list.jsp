@@ -26,7 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--[if IE 6]>
 	<script>alert('请升级浏览器版本');</script>
 	<![endif]-->
-	<title>部署信息</title>
+	<title>费用报销申请列表</title>
 	<meta name="keywords" content="后台管理系统模版，功能齐全">
 	<meta name="description" content="工作流后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
   </head>
@@ -35,8 +35,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   	<!-- 面包屑 -->
   	<ol class="breadcrumb sys_breadcrumb">
 	  <li><a href="#"><span class="glyphicon glyphicon-home"></span>首页</a></li>
-	  <li><a href="#">工作流管理</a></li>
-	  <li class="active">部署信息</li>
+	  <li><a href="#">业务管理</a></li>
+	  <li class="active">费用报销</li>
 	</ol>
 	
     <div class="panel">
@@ -44,28 +44,33 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    	<!-- 搜索项 -->
 	        <div class="form-horizontal sys-padding-0" id="serachForm">
 	            <div class="form-group col-sm-6">
-                    <label class="col-sm-3 control-label right" for="name">流程名称：</label>
+                    <label class="col-sm-3 control-label right" for="name">申请人：</label>
                     <div class="col-sm-9">
-                        <input class="form-control" id="name" name="name" type="text" placeholder=""/>
+                        <input class="form-control" id="name" name="name" type="text"/>
                     </div>
                 </div>
-                
                 <div class="form-group col-sm-6">
-                    <button type="button" class="btn btn-success" id="search_btn">
+                    <label class="col-sm-3 control-label" for="state">任务状态：</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" id="stat" name="state" type="text" placeholder="192.168.1.161"/>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 sys_center">
+                    <button type="button" class="btn btn-success sys-margin-horizontal-10" id="search_btn">
                         <i class="glyphicon glyphicon-search"></i> 查  询
                     </button>
-                    <button type="button" class="btn btn-success" id="reset_btn">
+                    <button type="button" class="btn btn-success sys-margin-horizontal-10" id="reset_btn">
                         <i class="glyphicon glyphicon-refresh"></i> 重  置
                     </button>
                 </div>
 	        </div>
 	        <!-- 表格 -->
 		    <div>
-		        <table class="table table-striped table-hover" id="deployment_table"></table>
+		        <table class="table table-striped table-hover" id="bootstrap_table"></table>
 		    </div>
 		    <!-- 功能按钮 -->
 		    <div class="col-sm-12">
-		    	<%--<a href="#" class="btn btn-info">
+		    	<a href="#" class="btn btn-info">
                     <span class="glyphicon glyphicon-plus"></span> 新 增
                 </a>
                 <a href="#" class="btn btn-info">
@@ -74,7 +79,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <a href="#" class="btn btn-info">
                     <span class="glyphicon glyphicon-trash"></span> 删 除
                 </a>
-		    --%>
 		    </div>
 	    </div>
 	</div>
@@ -82,12 +86,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
-  <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
   	$(function(){
-  		$('#deployment_table').bootstrapTable({
-			url:'service/bpm/deployment/ajaxList.json',
+  		$('#model_table').bootstrapTable({
+			url:'service/business/costReimburse/ajaxList.json',
 			striped: true,
 	        clickToSelect: true,
 	        pagination: true,
@@ -102,19 +105,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return params;
 			},
 			columns: [
-				/*{field:"id",title:"ID",align:"center",valign:"middle",sortable:"true"},*/
-				{field:"name",title:"流程名称",align:"center",valign:"middle",sortable:"true"},
-				{field:"deploymentTime",title:"部署时间",align:"center",valign:"middle",sortable:"true",
-					formatter:function(value){
-						return (new Date(value)).format("yyyy-MM-dd hh:mm:ss");     
-					}	
-				},
-				{field:"version",title:"版本号",align:"center"},
+				{field:"cost_name",title:"报销单名称",align:"center",valign:"middle",sortable:"true"},
+				{field:"key",title:"报销人",align:"center",valign:"middle",sortable:"true"},
+				{field:"createTime",title:"报销日期",align:"center",valign:"middle",sortable:"true"},
+				{field:"version",title:"版本",align:"center"},
 				{field:"category",title:"分类",align:"center"},
 				{field:"detail",title:"操作",align:"center",sortable:"true",
 					formatter:function(value,row,rowIndex){
-						var strHtml = '<a href="javascript:void(0);" onclick="showResource('+row.id+',\''+row.diagramResourceName+'\')">流程图片</a>';			 
-						return strHtml;
+						//var strHtml = '<a href="javascript:void(0);" onclick="removeRow('+rowIndex+')">删除</a>';
+						return value;
 					}
 				}
 				
@@ -125,19 +124,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        	return '无符合条件的记录';
 	        }
 		});
-  		//查询
+	  	//查询
 		$('#search_btn').click(function(){
-			$('#deployment_table').bootstrapTable('refresh');
+			$('#bootstrap_table').bootstrapTable('refresh');
 		});
 		//重置查询条件
 		$('#reset_btn').click(function(){
 			$('#serachForm').reSet(false);
 		});
   	});
-  //查看流程图片
-  	function showResource(deploymentId,sourceName){
-  		var win = $.layer_show('流程图','service/bpm/processDefinition/processResource.htm?type=0&deploymentId='+deploymentId+'&resourceName='+sourceName,800,610);
-  		layer.full(win);
-  	}
   </script>
 </html>

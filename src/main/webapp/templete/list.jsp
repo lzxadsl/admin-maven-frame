@@ -101,7 +101,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    queryParamsType: 'limit', 
 		    queryParams: function (params){
 				//获取查询条件
-				
+				$('#serachForm').getSearchParams(params);
 				return params;
 			},
 			columns: [

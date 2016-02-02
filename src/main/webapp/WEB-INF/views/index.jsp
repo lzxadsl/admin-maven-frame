@@ -76,12 +76,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<input runat="server" id="divScrollValue" type="hidden" value="" />
 	<div class="menu_dropdown bk_2">
 		<dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe616;</i> 工作流管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe63c;</i> 工作流管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a _href="service/bpm/model/list.htm" data-title="模型管理" href="javascript:void(0)">模型管理</a></li>
 					<li><a _href="service/bpm/processDefinition/list.htm" data-title="流程定义" href="javascript:void(0)">流程定义</a></li>
 					<li><a _href="service/bpm/deployment/list.htm" data-title="部署信息" href="javascript:void(0)">部署信息</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu-picture">
+			<dt><i class="Hui-iconfont">&#xe637;</i> 业务管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a _href="service/business/costReimburse/list.htm" data-title="费用报销" href="javascript:void(0)">费用报销</a></li>
 				</ul>
 			</dd>
 		</dl>

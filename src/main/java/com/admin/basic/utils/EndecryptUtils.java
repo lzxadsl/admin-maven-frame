@@ -1,6 +1,6 @@
 package com.admin.basic.utils;
 
-import com.admin.authority.model.User;
+import com.admin.authority.model.SysUser;
 import com.google.common.base.Preconditions; 
 import com.google.common.base.Strings; 
 import org.apache.shiro.codec.Base64; 
@@ -79,7 +79,7 @@ public final class EndecryptUtils {
      * @param base64 是否采用base64加密，默认转换成16进制
      * @return 密文和salt 
      */ 
-    public static User md5Password(String username,String password,boolean base64){ 
+    public static SysUser md5Password(String username,String password,boolean base64){ 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(username),"username不能为空"); 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(password),"password不能为空"); 
         SecureRandomNumberGenerator secureRandomNumberGenerator=new SecureRandomNumberGenerator(); 
@@ -91,10 +91,10 @@ public final class EndecryptUtils {
         }else{
         	password_cipherText = new Md5Hash(password,username+salt,2).toHex(); 
         }
-        User user=new User(); 
+        SysUser user=new SysUser(); 
         user.setPassword(password_cipherText); 
         user.setSalt(salt); 
-        user.setUsername(username); 
+        user.setUserName(username); 
         return user; 
     } 
     /** 
