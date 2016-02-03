@@ -7,7 +7,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.admin.authority.model.SysUser;
-import com.admin.authority.service.IUserService;
+import com.admin.authority.model.SysUserInfo;
+import com.admin.authority.service.ISysUserInfoService;
+import com.admin.authority.service.ISysUserService;
 
 
 /**
@@ -21,12 +23,19 @@ import com.admin.authority.service.IUserService;
 public class JunitTest {
 
 	@Autowired
-	private IUserService userService;
+	private ISysUserService sysUserService;
+	
+	@Autowired
+	private ISysUserInfoService sysUserInfoService;
 	
 	@Test
 	public void userTest(){
-		//userService.getUserByName("lzx");
-		SysUser user = userService.get(1);
-		System.out.println(user.getUserName());
+		//SysUser user = sysUserService.getUserByName("lzx");
+		//System.out.println(user.getRoleSet().iterator().next());
+		SysUserInfo userInfo = sysUserInfoService.get(1);
+		System.out.println(userInfo.getChinaName());
+		SysUser user = sysUserService.get(1);
+		SysUserInfo userInfo1 = user.getUserInfo();
+		System.out.println(userInfo1.getChinaName());
 	}
 }

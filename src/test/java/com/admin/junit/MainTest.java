@@ -23,15 +23,15 @@ public class MainTest {
 		//String str = "brrow.zip";
 		//String extension = FilenameUtils.getExtension(str);
 		//System.out.println(extension);
-		
-		for(int i=0;i<10;i++){
+		System.out.println(Math.pow(2, 31));
+		/*for(int i=0;i<10;i++){
 			Thread t = new Thread(){
 				public void run() {
 					MainTest.getMain().add();
 				};
 			};
 			t.start();
-		}
+		}*/
 	}
 	
 	public void add(){

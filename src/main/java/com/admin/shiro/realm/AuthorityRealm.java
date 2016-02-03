@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.admin.authority.model.SysPermission;
 import com.admin.authority.model.SysRole;
 import com.admin.authority.model.SysUser;
-import com.admin.authority.service.IUserService;
+import com.admin.authority.service.ISysUserService;
 
 public class AuthorityRealm extends AuthorizingRealm{
 	/**
@@ -40,7 +40,7 @@ public class AuthorityRealm extends AuthorizingRealm{
 	 */
 	
 	@Autowired
-	private IUserService userService;
+	private ISysUserService sysUserService;
 	
 	/** 
      * 为当前登录的Subject授予角色和权限 
@@ -53,7 +53,7 @@ public class AuthorityRealm extends AuthorizingRealm{
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals){  
         //获取当前登录的用户名  
         String username = (String) principals.getPrimaryPrincipal();
-        SysUser user = userService.getUserByName(username);
+        SysUser user = sysUserService.getUserByName(username);
         if(user != null){
         	Set<SysRole> roleSet =  user.getRoleSet();
             //角色名的集合
@@ -93,7 +93,7 @@ public class AuthorityRealm extends AuthorizingRealm{
         //两个token的引用都是一样的
         UsernamePasswordToken token = (UsernamePasswordToken)authcToken;  
         System.out.println("验证当前Subject时获取到token为" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));  
-        SysUser user = userService.getUserByName(token.getUsername());  
+        SysUser user = sysUserService.getUserByName(token.getUsername());  
       	if(null != user){ 
       		//根据数据库查询结果自动根界面输入比对
       		SimpleAuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(),this.getName());  

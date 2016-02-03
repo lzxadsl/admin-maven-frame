@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.admin.authority.dao.ISysRoleDao;
 import com.admin.authority.model.SysRole;
-import com.admin.authority.service.IRoleService;
+import com.admin.authority.service.ISysRoleService;
 import com.admin.basic.service.impl.BaseService;
 
 /**
@@ -16,13 +16,13 @@ import com.admin.basic.service.impl.BaseService;
  * @date 2015-9-18 上午10:11:48
  */
 @Service
-public class RoleService extends BaseService<SysRole, Integer> implements IRoleService {
+public class SysRoleService extends BaseService<SysRole, Integer> implements ISysRoleService {
 
 	/**
 	 * @param sqlSessionFactory
 	 */
 	@Autowired
-	public RoleService(SqlSessionFactory sqlSessionFactory) {
+	public SysRoleService(SqlSessionFactory sqlSessionFactory) {
 		super(sqlSessionFactory);
 		this.setDaoClass(ISysRoleDao.class);
 	}

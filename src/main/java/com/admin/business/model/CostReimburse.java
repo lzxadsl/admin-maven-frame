@@ -14,6 +14,8 @@ public class CostReimburse {
 	private Integer id;//主键ID
 	private String costName;//报销单名称
 	private Integer userId;//报销人ID
+	private String chinaName;//报销人名称
+	private String deptmentName;//所属部门
 	private Double amount;//报销总金额
 	private Timestamp createTime;//报销时间
 	private String state;//任务状态
@@ -26,6 +28,7 @@ public class CostReimburse {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
 	public String getCostName() {
 		return costName;
 	}
@@ -34,6 +37,18 @@ public class CostReimburse {
 	}
 	public Integer getUserId() {
 		return userId;
+	}
+	public String getChinaName() {
+		return chinaName;
+	}
+	public void setChinaName(String chinaName) {
+		this.chinaName = chinaName;
+	}
+	public String getDeptmentName() {
+		return deptmentName;
+	}
+	public void setDeptmentName(String deptmentName) {
+		this.deptmentName = deptmentName;
 	}
 	public void setUserId(Integer userId) {
 		this.userId = userId;

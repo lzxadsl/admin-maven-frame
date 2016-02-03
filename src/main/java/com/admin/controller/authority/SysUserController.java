@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import com.admin.authority.model.SysUser;
-import com.admin.authority.service.IUserService;
+import com.admin.authority.service.ISysUserService;
 import com.admin.basic.model.PageData;
 import com.admin.system.service.IProducerService;
 
@@ -30,17 +30,17 @@ import com.admin.system.service.IProducerService;
 @Controller
 @SessionAttributes("username")//将ModelMap中show_msg属性添加到sessiong中
 @RequestMapping(value="/user/*")
-public class UserController {
+public class SysUserController {
 
 	/*@Reference
-	IUserService userService;//调用Dubbo暴露的接口
+	IUserService sysUserService;//调用Dubbo暴露的接口
 
 	@RequestMapping(value="getUser.htm")
 	public @ResponseBody String getUser(){
-		return userService.getUser();
+		return sysUserService.getUser();
 	}*/
 	@Autowired
-	private IUserService userService;
+	private ISysUserService sysUserService;
 	
 	@Autowired
 	private IProducerService pService;
@@ -55,7 +55,7 @@ public class UserController {
 			params.put("where","and UserName like '%"+user.getUserName()+"%'");
 		}
 		TestClass.test();
-		return userService.list(params);
+		return sysUserService.list(params);
 	}
 	
 	@RequestMapping(value="getUserList.htm")
@@ -69,9 +69,9 @@ public class UserController {
 		user1.setUserName("aop2");
 		user1.setSex("男");
 		user1.setNick("admin");
-		userService.saveUser(user1);
+		sysUserService.saveUser(user1);
 		System.out.println(user1);*/
-		List<SysUser> list = userService.listPage(params, pageData);
+		List<SysUser> list = sysUserService.listPage(params, pageData);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("rows",list);
 		map.put("total",pageData.getTotalSize());
@@ -106,7 +106,7 @@ public class UserController {
 	@RequestMapping(value="save.htm")
 	public @ResponseBody String save(){
 		//User user = new User();
-		//userService.transation(user,"更新名称");
+		//sysUserService.transation(user,"更新名称");
 		return "200";
 	}
 	private static String SESSION_ID = null;

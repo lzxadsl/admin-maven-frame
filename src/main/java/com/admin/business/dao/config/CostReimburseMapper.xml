@@ -6,7 +6,8 @@
 	<select id="selectPageList" resultMap="CostReimburseMap" parameterType="map">  
         SELECT 
 			a.*
-			,b.name
+			,b.china_name as chinaName
+			,b.deptment_id as deptmentName
  		FROM cost_reimburse a
  		left join sys_user_info b on a.user_id = b.user_id
  		where 1=1
@@ -27,7 +28,8 @@
 	<select id="get" parameterType="string" resultMap="CostReimburseMap">
 	    SELECT 
 			a.*
-			,b.name
+			,b.china_name as chinaName
+			,b.deptment_id as deptmentName
  		FROM cost_reimburse a
  		left join sys_user_info b on a.user_id = b.user_id where id = #{id}
 	</select>
@@ -78,6 +80,8 @@
 		<result property="id" column="id"/>
 		<result property="costName" column="cost_name"/>
 		<result property="userId" column="user_id"/>
+		<result property="chinaName" column="chinaName"/>
+		<result property="deptmentName" column="deptmentName"/>
 		<result property="amount" column="amount"/>
 		<result property="createTime" column="createTime"/>
 		<result property="state" column="state"/>

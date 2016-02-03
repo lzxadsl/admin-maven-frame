@@ -2,10 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.admin.authority.dao.ISysUserInfoDao">
+	<select id="get" parameterType="int" resultMap="SysUserInfoMap">
+		select * from sys_user_info where id = #{id}
+	</select>
 	<resultMap type="SysUserInfo" id="SysUserInfoMap">
 		<result property="id" column="id"/>
 		<result property="userId" column="user_id"/>
-		<result property="chinaName" column="chinaName"/>
+		<result property="chinaName" column="china_name"/>
 		<result property="simpleName" column="simple_name"/>
 		<result property="deptmentId" column="deptment_id"/>
 		<result property="birthday" column="birthday"/>

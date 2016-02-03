@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.admin.authority.model.SysRole;
 import com.admin.authority.model.SysUser;
-import com.admin.authority.service.IRoleService;
-import com.admin.authority.service.IUserService;
+import com.admin.authority.service.ISysRoleService;
+import com.admin.authority.service.ISysUserService;
 
 /**
  * 事务交叉访问死锁测试
@@ -19,9 +19,9 @@ import com.admin.authority.service.IUserService;
 public class TestQuartz {
 
 	@Autowired
-	private IRoleService roleService;
+	private ISysRoleService sysRoleService;
 	@Autowired
-	private IUserService userService;
+	private ISysUserService sysUserService;
 	
 	@SuppressWarnings("static-access")
 	@Transactional
@@ -30,7 +30,7 @@ public class TestQuartz {
 		SysRole role = new SysRole();
 		role.setId(3);
 		role.setName("vip"+i);
-		roleService.updateRole(role);
+		sysRoleService.updateRole(role);
 		try {
 			Thread.currentThread().sleep(10000);
 		} catch (InterruptedException e) {
@@ -40,7 +40,7 @@ public class TestQuartz {
 		SysUser user = new SysUser();
 		user.setId(1);
 		user.setUserName("lzx"+i);
-		userService.updateUser(user);
+		sysUserService.updateUser(user);
 		System.out.println("-------------------------------方法1执行完毕---------------------------------");
 	}
 	
@@ -50,12 +50,12 @@ public class TestQuartz {
 		SysUser user = new SysUser();
 		user.setId(1);
 		user.setUserName("lzx"+i);
-		userService.updateUser(user);
+		sysUserService.updateUser(user);
 		System.out.println("-------------------------------方法2请求角色更新---------------------------------");
 		SysRole role = new SysRole();
 		role.setId(3);
 		role.setName("vip"+i);
-		roleService.updateRole(role);
+		sysRoleService.updateRole(role);
 		System.out.println("-------------------------------方法2执行完毕---------------------------------");
 	}
 }

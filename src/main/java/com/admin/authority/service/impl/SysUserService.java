@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.admin.authority.dao.ISysUserDao;
 import com.admin.authority.model.SysUser;
-import com.admin.authority.service.IUserService;
+import com.admin.authority.service.ISysUserService;
 import com.admin.basic.service.impl.BaseService;
 
 /**
@@ -16,13 +16,13 @@ import com.admin.basic.service.impl.BaseService;
  * @date 2015-9-18 上午10:11:48
  */
 @Service
-public class UserService extends BaseService<SysUser, Integer> implements IUserService {
+public class SysUserService extends BaseService<SysUser, Integer> implements ISysUserService {
 
 	/**
 	 * @param sqlSessionFactory
 	 */
 	@Autowired
-	public UserService(SqlSessionFactory sqlSessionFactory) {
+	public SysUserService(SqlSessionFactory sqlSessionFactory) {
 		super(sqlSessionFactory);
 		this.setDaoClass(ISysUserDao.class);
 	}

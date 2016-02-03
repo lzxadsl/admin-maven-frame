@@ -19,6 +19,7 @@ public class SysUser implements Serializable{
 	private String password;//密码
 	private String salt;//盐 登入时采用盐+密码进行验证（盐的生成规则可以采用用户名+随机数）
 	private Set<SysRole> roleSet = new HashSet<SysRole>();//角色
+	private SysUserInfo userInfo;
 	
 	public Integer getId() {
 		return id;
@@ -49,5 +50,11 @@ public class SysUser implements Serializable{
 	}
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+	public SysUserInfo getUserInfo() {
+		return userInfo;
+	}
+	public void setUserInfo(SysUserInfo userInfo) {
+		this.userInfo = userInfo;
 	}
 }
