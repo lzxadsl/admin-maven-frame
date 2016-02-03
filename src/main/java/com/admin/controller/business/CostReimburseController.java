@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -77,5 +78,23 @@ public class CostReimburseController {
 		}
 		model.setViewName("business/costReimburse/"+page);
 		return model;
+	}
+	
+	/**
+	 * 保存操作
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-3 下午4:05:16
+	 */
+	@RequestMapping(value="save.do",method=RequestMethod.POST)
+	public @ResponseBody String save(CostReimburse entity){
+		String state = "200";
+		try {
+			costReimburseService.save(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+			state = "500";
+		}
+		return state;
 	}
 }

@@ -240,7 +240,7 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 	//默认配额制项
 	$.fn.ajaxSubmitForm.defaults = {
 			url:'',
-			method:'get',
+			method:'post',
 			paramType:'object',//提交的参数类型，默认是json对象，如果是string，则提交的数据是json字符串
 			paramField:'params',//提交数据为json字符串时，提交到后台的参数名
 			confirm:true,//提交前是否弹出提示，默认是

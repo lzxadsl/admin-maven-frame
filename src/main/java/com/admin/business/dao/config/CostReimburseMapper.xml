@@ -86,7 +86,7 @@
 		<result property="createTime" column="createTime"/>
 		<result property="state" column="state"/>
 		<result property="description" column="description"/>
-		<collection property="itemList" column="item_id" ofType="com.admin.business.model.CostReimburse">
+		<collection property="itemList" column="item_id" ofType="CostReimburse">
 			<id property="id" column="item_id"/>
 			<result property="itemName" column="item_name"/>
 			<result property="category" column="category"/>

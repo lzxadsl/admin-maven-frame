@@ -43,19 +43,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    <div class="panel-body">
 	    	<!-- 搜索项 -->
 	        <div class="form-horizontal sys-padding-0" id="serachForm">
-	            <div class="form-group col-sm-6">
-                    <label class="col-sm-3 control-label right" for="name">申请人：</label>
-                    <div class="col-sm-9">
-                        <input class="form-control" id="name" name="name" type="text"/>
+	            <div class="form-group">
+                    <label class="col-sm-2 control-label right" for="costName">报销单名称：</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="costName" name="costName" type="text"/>
                     </div>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label class="col-sm-3 control-label" for="state">任务状态：</label>
-                    <div class="col-sm-9">
-                        <input class="form-control" id="stat" name="state" type="text" placeholder="192.168.1.161"/>
+                    <div class="col-sm-1"></div>
+                    <label class="col-sm-2 control-label" for="chinaName">报销人：</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="chinaName" name="chinaName" type="text"/>
                     </div>
+                    <div class="col-sm-1"></div>
                 </div>
-                <div class="form-group col-sm-12 sys_center">
+                
+                <div class="form-group sys-center">
                     <button type="button" class="btn btn-success sys-margin-horizontal-10" id="search_btn">
                         <i class="glyphicon glyphicon-search"></i> 查  询
                     </button>
@@ -64,21 +65,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </button>
                 </div>
 	        </div>
-	        <!-- 表格 -->
-		    <div>
-		        <table class="table table-striped table-hover" id="bootstrap_table"></table>
-		    </div>
+	        
 		    <!-- 功能按钮 -->
-		    <div class="col-sm-12">
-		    	<a href="#" class="btn btn-info">
+		    <div class="col-sm-12 sys-btn-bar">
+		    	<a href="javascript:void(0)" class="btn btn-info" id="addBtn">
                     <span class="glyphicon glyphicon-plus"></span> 新 增
                 </a>
-                <a href="#" class="btn btn-info">
+                <a href="javascript:void(0)" class="btn btn-info" id="modiBtn">
                     <span class="glyphicon glyphicon-pencil"></span> 修 改
                 </a>
-                <a href="#" class="btn btn-info">
+                <a href="javascript:void(0)" class="btn btn-info" id="delBtn">
                     <span class="glyphicon glyphicon-trash"></span> 删 除
                 </a>
+		    </div>
+		    <!-- 表格 -->
+		    <div>
+		        <table class="table table-striped table-hover" id="bootstrap_table"></table>
 		    </div>
 	    </div>
 	</div>
@@ -86,10 +88,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
+  <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
   	$(function(){
-  		$('#model_table').bootstrapTable({
+  		$('#bootstrap_table').bootstrapTable({
 			url:'service/business/costReimburse/ajaxList.json',
 			striped: true,
 	        clickToSelect: true,
@@ -105,18 +108,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return params;
 			},
 			columns: [
-				{field:"cost_name",title:"报销单名称",align:"center",valign:"middle",sortable:"true"},
-				{field:"key",title:"报销人",align:"center",valign:"middle",sortable:"true"},
+				{field:"costName",title:"报销单名称",align:"center",valign:"middle",sortable:"true"},
+				{field:"chinaName",title:"报销人",align:"center",valign:"middle",sortable:"true"},
 				{field:"createTime",title:"报销日期",align:"center",valign:"middle",sortable:"true"},
-				{field:"version",title:"版本",align:"center"},
-				{field:"category",title:"分类",align:"center"},
-				{field:"detail",title:"操作",align:"center",sortable:"true",
-					formatter:function(value,row,rowIndex){
-						//var strHtml = '<a href="javascript:void(0);" onclick="removeRow('+rowIndex+')">删除</a>';
-						return value;
-					}
-				}
-				
+				{field:"amount",title:"报销金额",align:"center"},
+				{field:"state",title:"任务状态",align:"center"},
+				{field:"description",title:"报销说明",align:"center"}
 			],
 			onPageChange: function (size, number) {
 	        },
@@ -131,6 +128,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		//重置查询条件
 		$('#reset_btn').click(function(){
 			$('#serachForm').reSet(false);
+		});
+		$('#addBtn').click(function(){
+  			$.layer_show('费用报销申请','service/business/costReimburse/editnew.htm',600,510);
+  		});
+		//修改
+		$('#modiBtn').click(function(){
+			$.layer_show('费用报销修该','service/business/costReimburse/editnew.htm',600,510);
 		});
   	});
   </script>

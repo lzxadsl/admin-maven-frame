@@ -21,42 +21,43 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="dist/lib/PIE-2.0beta1/PIE_IE678.js"></script>
 	<![endif]-->
 	<link href="dist/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="dist/lib/bootstrap/extend/table/bootstrap-table.min.css" rel="stylesheet" type="text/css" />
 	<link href="dist/css/style.css" rel="stylesheet" type="text/css" />
 	<!--[if IE 6]>
 	<script>alert('请升级浏览器版本');</script>
 	<![endif]-->
-	<title>流程模板创建</title>
+	<title>费用报销申请</title>
 	<meta name="keywords" content="后台管理系统模版，功能齐全">
 	<meta name="description" content="工作流后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
   </head>
   
   <body>
-	<div class="panel">
+    <div class="panel">
 		<div class="panel-body">
 			<form class="form-horizontal" role="form" >
-			   <div class="form-group">
-			      <label for="name" class="col-sm-3 control-label"><span style="color: red;">* </span>模型名称：</label>
+			   <div class="form-group col-sm-6">
+			      <label for="name" class="col-sm-3 control-label"><span style="color: red;">* </span>报销单名称：</label>
 			      <div class="col-sm-9">
-			         <input type="text" class="form-control" id="name" name="name" datatype="*2-16" nullmsg="请输入2-16个字的名称" placeholder="请输入流程名称">
+			         <input type="text" class="form-control" id="costName" name="costName" datatype="*1-16" nullmsg="请输入报销单名称" placeholder="请输入报销单名称">
 			      </div>
 			   </div>
-			   <div class="form-group">
-			      <label for="key" class="col-sm-3 control-label">关键字：</label>
+			   <div class="form-group col-sm-6">
+			      <label for="key" class="col-sm-3 control-label"><span style="color: red;">* </span>报销金额：</label>
 			      <div class="col-sm-9">
-			         <input type="text" class="form-control" id="key" name="key" placeholder="流程的唯一标识">
+			         <input type="text" class="form-control" id="amount" name="amount" datatype="n1-16" nullmsg="请输入报销金额" errormsg="报销金额只能为数字类型" placeholder="请输入报销金额">
 			      </div>
 			   </div>
-			   <div class="form-group">
+			   <div class="form-group col-sm-6">
 			      <label for="description" class="col-sm-3 control-label">描述：</label>
 			      <div class="col-sm-9">
-			         <textarea class="form-control" name="description" rows="8"></textarea>
+			         <textarea class="form-control" name="description" rows="4"></textarea>
 			      </div>
 			   </div>
 			   
 			   <div class="form-group">
 			   	  <div class="col-sm-3"></div>
 			      <div class="col-sm-9">
-			         <button class="btn btn-info" type="button" id="create">创 建</button>
+			         <button class="btn btn-info" type="button" id="submit">提 交</button>
 			         <button class="btn btn-info" type="button" onclick="$.layer_close()">取 消</button>
 			      </div>
 			   </div>
@@ -72,11 +73,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript">
 	$(function(){
 		$("form").customValidform({
-    		btnSubmit:'#create',
+    		btnSubmit:'#submit',
     		showAllError:true,
     		beforeSubmit:function(form){
     			form.ajaxSubmitForm({
-		    		url:'service/bpm/model/create.do',
+		    		url:'service/business/costReimburse/save.do',
 		    		onSubmitSuccess:function(data){
 		    			if(data.status=='200'){
 		    				parent.$('#model_table').bootstrapTable('refresh');
@@ -96,7 +97,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		});
 		
 	});
-	
-	
   </script>
 </html>

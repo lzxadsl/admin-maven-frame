@@ -43,19 +43,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    <div class="panel-body">
 	    	<!-- 搜索项 -->
 	        <div class="form-horizontal sys-padding-0" id="serachForm">
-	            <div class="form-group col-sm-6">
-                    <label class="col-sm-3 control-label right" for="ds_host">流程名称：</label>
-                    <div class="col-sm-9">
-                        <input class="form-control" id="ds_host" type="text" placeholder="192.168.1.161"/>
+	            <div class="form-group">
+                    <label class="col-sm-2 control-label right" for="costName">报销单名称：</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="costName" name="costName" type="text"/>
                     </div>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label class="col-sm-3 control-label" for="ds_host">关键字：</label>
-                    <div class="col-sm-9">
-                        <input class="form-control" id="ds_host" type="text" placeholder="192.168.1.161"/>
+                    <div class="col-sm-1"></div>
+                    <label class="col-sm-2 control-label" for="chinaName">报销人：</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="chinaName" name="chinaName" type="text"/>
                     </div>
+                    <div class="col-sm-1"></div>
                 </div>
-                <div class="form-group col-sm-12 sys_center">
+                <div class="form-group sys-center">
                     <button type="button" class="btn btn-success sys-margin-horizontal-10" id="search_btn">
                         <i class="glyphicon glyphicon-search"></i> 查  询
                     </button>
@@ -64,21 +64,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </button>
                 </div>
 	        </div>
-	        <!-- 表格 -->
-		    <div>
-		        <table class="table table-striped table-hover" id="bootstrap_table"></table>
-		    </div>
+	        
 		    <!-- 功能按钮 -->
-		    <div class="col-sm-12">
-		    	<a href="#" class="btn btn-info">
+		    <div class="col-sm-12 sys-btn-bar">
+		    	<a href="javascript:void(0)" class="btn btn-info">
                     <span class="glyphicon glyphicon-plus"></span> 新 增
                 </a>
-                <a href="#" class="btn btn-info">
+                <a href="javascript:void(0)" class="btn btn-info">
                     <span class="glyphicon glyphicon-pencil"></span> 修 改
                 </a>
-                <a href="#" class="btn btn-info">
+                <a href="javascript:void(0)" class="btn btn-info">
                     <span class="glyphicon glyphicon-trash"></span> 删 除
                 </a>
+		    </div>
+		    <!-- 表格 -->
+		    <div>
+		        <table class="table table-striped table-hover" id="bootstrap_table"></table>
 		    </div>
 	    </div>
 	</div>
@@ -86,10 +87,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
+  <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
   	$(function(){
-  		$('#model_table').bootstrapTable({
+  		$('#bootstrap_table').bootstrapTable({
 			url:'service/bpm/model/ajaxList.json',
 			striped: true,
 	        clickToSelect: true,
