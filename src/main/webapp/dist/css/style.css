@@ -83,8 +83,23 @@
     top: -10px;
 }
 /*---------------------------表单验证样式end-------------------------*/
-
-
+/*---------------------------表单横向布局样式-------------------------*/
+/* 
+.form-group label{padding-left:0px;}
+.form-group div{padding-left:0px;}
+ */
+legend {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 16px;
+    line-height: inherit;
+    color: #333;
+    border: 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+/*---------------------------表单横向布局样式end-------------------------*/
 /*左右内间距*/
 .sys-padding-horizontal-10{padding:0px 10px;}
 /*上下内间距*/
