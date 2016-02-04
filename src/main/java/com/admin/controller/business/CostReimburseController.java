@@ -1,5 +1,6 @@
 package com.admin.controller.business;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import com.admin.authority.model.SysUser;
 import com.admin.basic.model.PageData;
+import com.admin.business.model.CostItem;
 import com.admin.business.model.CostReimburse;
 import com.admin.business.service.ICostReimburseService;
 
@@ -87,14 +90,31 @@ public class CostReimburseController {
 	 * @date 2016-2-3 下午4:05:16
 	 */
 	@RequestMapping(value="save.do",method=RequestMethod.POST)
-	public @ResponseBody String save(CostReimburse entity){
+	public @ResponseBody String save(@RequestBody CostReimburse entity,@ModelAttribute("user") SysUser user){
 		String state = "200";
 		try {
-			costReimburseService.save(entity);
+			Timestamp time = new Timestamp(System.currentTimeMillis()); 
+			entity.setCreateTime(time);
+			entity.setUserId(user.getId());
+			costReimburseService.saveCostReimburse(entity);
 		} catch (Exception e) {
 			e.printStackTrace();
 			state = "500";
 		}
 		return state;
+	}
+	/**
+	 * 获取费用项列表数据
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-4 下午1:38:38
+	 */
+	@RequestMapping("costItemList.json")
+	public @ResponseBody List<CostItem> costItemList(Integer costId){
+		List<CostItem> list = null;
+		if(costId != null){
+			list = costReimburseService.getCostItems(costId);
+		}
+		return list;
 	}
 }

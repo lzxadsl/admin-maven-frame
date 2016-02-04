@@ -130,11 +130,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			$('#serachForm').reSet(false);
 		});
 		$('#addBtn').click(function(){
-  			$.layer_show('费用报销申请','service/business/costReimburse/editnew.htm',800,510);
+  			$.layer_show('费用报销申请','service/business/costReimburse/editnew.htm',800,600,true);
   		});
 		//修改
 		$('#modiBtn').click(function(){
-			$.layer_show('费用报销修该','service/business/costReimburse/editnew.htm',600,510);
+			$.layer_show('费用报销修该','service/business/costReimburse/editnew.htm',800,600);
 		});
   	});
   </script>

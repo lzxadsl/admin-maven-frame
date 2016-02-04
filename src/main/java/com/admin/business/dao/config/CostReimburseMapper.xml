@@ -66,16 +66,39 @@
 		where id = #{id}
 	</update>
 	
-	<insert id="insert" parameterType="CostReimburse" keyProperty="id">
+	<insert id="insert" parameterType="CostReimburse" useGeneratedKeys="true" keyProperty="id">
 	    insert into cost_reimburse(
 	    	user_id,cost_name,amount,create_time,state,description
 	    )  values(
 	    	#{userId},#{costName},#{amount},#{createTime},#{state},#{description}
 	    )
-		<selectKey keyProperty="id" resultType="String" order="AFTER">  
+		<!-- <selectKey keyProperty="id" resultType="int" order="AFTER">  
 	        select max(id) from cost_reimburse
-	    </selectKey> 
+	    </selectKey>  -->
 	</insert>
+	<!-- 费用项 -->
+	<select id="selectCostItems" parameterType="int" resultMap="CostItemMap">
+		select * from cost_item where cost_id = #{costId}
+	</select>
+	<!-- java.util.List -->
+	<insert id="addCostItems" useGeneratedKeys="true" parameterType="map">  
+	    insert into cost_item (cost_id,item_name,category,amount)   
+	    values  
+	    <foreach collection="list" item="item" index="index" separator="," >  
+	        (#{costId},#{item.itemName},#{item.category},#{item.amount})  
+	    </foreach>  
+	</insert> 
+	<delete id="delCostItems" parameterType="int">
+		delete from cost_item where cost_id = #{costId}
+	</delete>
+	<resultMap type="CostItem" id="CostItemMap">
+		<result property="id" column="id"/>
+		<result property="costId" column="cost_id"/>
+		<result property="itemName" column="item_name"/>
+		<result property="category" column="category"/>
+		<result property="amount" column="amount"/>
+	</resultMap>
+	
 	<resultMap type="CostReimburse" id="CostReimburseMap">
 		<result property="id" column="id"/>
 		<result property="costName" column="cost_name"/>

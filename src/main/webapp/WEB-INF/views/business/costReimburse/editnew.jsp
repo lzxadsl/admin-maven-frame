@@ -35,24 +35,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   	<div class="panel">
   		<div class="panel-body">
   			<form class="form-horizontal" role="form">
+  				<input type="hidden" name="id" id="costId" value="${obj.id}"/>
   				<fieldset>
 					 <legend>基本信息</legend>
 					 <div class="form-group">
 	  					<label class="col-sm-2 control-label"><span style="color: red;">* </span>报销单名称：</label>
 					    <div class="col-sm-3">
-					       <input type="text" class="form-control" name="costName" datatype="*1-16" nullmsg="请输入报销单名称" placeholder="请输入报销单名称">
+					       <input type="text" class="form-control" name="costName" value="${obj.costName}" datatype="*1-16" nullmsg="请输入报销单名称" placeholder="请输入报销单名称">
 					    </div>
 					    <div class="col-sm-1"></div>
-					    <label class="col-sm-2 control-label"><span style="color: red;">* </span>报销金额：</label>
+					    <label class="col-sm-2 control-label"><span style="color: red;">* </span>报销总金额：</label>
 					    <div class="col-sm-3">
-					       <input type="text" class="form-control" name="amount" datatype="n1-16" nullmsg="请输入报销金额" errormsg="报销金额只能为数字类型" placeholder="请输入报销金额">
+					       <input type="text" class="form-control" name="amount" id="totalAmount" readonly="readonly" value="${obj.amount}" datatype="n1-16" nullmsg="请输入报销金额" errormsg="报销金额只能为数字类型" placeholder="请输入报销金额">
 					    </div>
 					    <div class="col-sm-1"></div>
 	  				</div>
 	  				<div class="form-group">
 	  					<label for="description" class="col-sm-2 control-label">描述：</label>
 				        <div class="col-sm-9">
-				           <textarea class="form-control" name="description" rows="4"></textarea>
+				           <textarea class="form-control" name="description" value="${obj.description}" rows="4"></textarea>
 				        </div>
 				        <div class="col-sm-1"></div>
 	  				</div>
@@ -60,12 +61,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</fieldset>
 				<fieldset>
 					 <legend>费用项</legend>
-					 <div class="form-group">
+					
+					 <div class="col-sm-12 sys-btn-bar">
+			            <button class="btn btn-info" type="button" id="addCostBtn">
+			           		<span class="glyphicon glyphicon-plus"></span> 添 加
+			            </button>
+			         </div>
+				     <!-- 表格 -->
+				     <div>
+				        <table class="table table-striped table-hover" id="costItemsTable"></table>
+				     </div>
+					 <div class="form-group" style="margin-top:10px;">
 				        <div class="col-sm-12 sys-center">
-				           <button class="btn btn-info sys-margin-horizontal-10" type="button" id="submit">提 交</button>
+				           <button class="btn btn-info sys-margin-horizontal-10" type="button" id="submitBtn">提 交</button>
 				           <button class="btn btn-info sys-margin-horizontal-10" type="button" onclick="$.layer_close()">取 消</button>
 				        </div>
-				    </div>
+				     </div>
 				</fieldset>
 	  		</form>
   		</div>
@@ -73,34 +84,90 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </body>
   <script type="text/javascript" src="dist/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="dist/lib/Validform/5.3.2/Validform.min.js"></script>
+  <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table.min.js"></script>
+  <script type="text/javascript" src="dist/lib/bootstrap/extend/table/bootstrap-table-edit.js"></script>
   <script type="text/javascript" src="dist/lib/layer/2.1/layer.js"></script>
   <script type="text/javascript" src="dist/js/admin-frame.js"></script>
   <script type="text/javascript">
 	$(function(){
+		//费用项表格
+		$('#costItemsTable').bootstrapTable({
+			method: 'get',
+			url:'service/business/costReimburse/costItemList.json',
+			queryParams:{costId:$('#costId').val()},
+			editable:true,
+			clickToSelect: true,
+			height:200,
+			columns: [
+				{field:'itemName',title:'费用项目',align:'center',width:'25%'},
+				{field:'category',title:'类别',align:'center',width:'25%'},
+				{field:'amount',title:'金额',align:'center',width:'25%',edit:{
+					blur:function(){
+						//总金额
+						var totalAmount = $('#costItemsTable').bootstrapTable('getColTotal',2);
+						$('#totalAmount').val(totalAmount);
+					}
+				}},
+				{field:'operation',title:'操作',align:'center',formatter:function(value,row,rowIndex){
+					var strHtml = '<a href="javascript:void(0);" onclick="removeItem('+rowIndex+')">删除</a>';
+					return strHtml;
+				},edit:false}
+				
+			]
+		});
 		$("form").customValidform({
-    		btnSubmit:'#submit',
+    		btnSubmit:'#submitBtn',
     		showAllError:true,
     		beforeSubmit:function(form){
-    			form.ajaxSubmitForm({
-		    		url:'service/business/costReimburse/save.do',
-		    		onSubmitSuccess:function(data){
-		    			if(data.status=='200'){
-		    				parent.$('#model_table').bootstrapTable('refresh');
-		    				window.top.creatIframe('process-editor/modeler.html?modelId='+data.modelId,'流程设计');
-							var index = parent.layer.getFrameIndex(window.name);
-							parent.layer.close(index);
-		    			}else{
-		    				layer.alert('保存失败！', {icon: 2,title:'提示'});
-		    			}
-		    		},
-		    		onSubmitError:function(xhr, textStatus, errorThrown){
-		    			layer.alert('出错啦！', {icon: 2,title:'提示'});
-		    		}
-		    	});
+    			var costItems = $('#costItemsTable').bootstrapTable('getData');
+    			var tipMsg = '';
+    			if(costItems.length < 1 ){
+    				tipMsg = '请填写费用项信息';
+    			}else{
+    				$.each(costItems,function(index,row){
+    					if(!row.itemName){
+    						tipMsg = '费用项列表第【'+(index+1)+'】行，费用项目不能为空，请检查！';
+    					}
+    					if(row.amount && !row.amount.match(/^[0-9].*$/)){
+    						tipMsg = '费用项列表第【'+(index+1)+'】行，金额必须为数字类型！';
+    					}
+    				});
+    			}
+    			if(tipMsg != ''){
+    				layer.alert(tipMsg, {icon: 2,title:'提示'});
+    			}else{
+    				form.ajaxSubmitForm({
+    		    		url:'service/business/costReimburse/save.do',
+    		    		params:{itemList:costItems},
+    		    		paramType:'string',
+    		    		onSubmitSuccess:function(data){
+    		    			if(data.status=='200'){
+    		    				parent.$('#bootstrap_table').bootstrapTable('refresh');
+    							var index = parent.layer.getFrameIndex(window.name);
+    							parent.layer.close(index);
+    		    			}else{
+    		    				layer.alert('保存失败！', {icon: 2,title:'提示'});
+    		    			}
+    		    		},
+    		    		onSubmitError:function(xhr, textStatus, errorThrown){
+    		    			layer.alert('出错啦！', {icon: 2,title:'提示'});
+    		    		}
+    		    	});
+    			}
 				return false;
     		}
 		});
-		
 	});
+	//添加费用项
+	$('#addCostBtn').click(function(){
+		$('#costItemsTable').bootstrapTable('append',{});
+	});
+	//删除费用项
+	function removeItem(rowIndex){
+		$('#costItemsTable').bootstrapTable('removeRow',rowIndex);
+		//总金额
+		var totalAmount = $('#costItemsTable').bootstrapTable('getColTotal',2);
+		$('#totalAmount').val(totalAmount);
+	}
   </script>
 </html>

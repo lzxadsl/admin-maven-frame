@@ -44,6 +44,13 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 		    exp.setTime(exp.getTime() - 10000);//为了删除指定名称的cookie，可以将其过期时间设定为一个过去的时间 
 		    document.cookie = name + "=''; expires=" + exp.toGMTString(); 
 		},
+		isInclude:function(name){//判断是否引入某个JS 或 CSS
+		    var js = /js$/i.test(name);
+		    var es = document.getElementsByTagName(js ? 'script' : 'link');
+		    for(var i = 0;i<es.length;i++) 
+		    if(es[i][js ? 'src' : 'href'].indexOf(name)!=-1) return true;
+		    return false;
+		},
 		/**
 		 * 序列化表单
 		 * @param form 表单对象
@@ -80,8 +87,9 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 			id		需要操作的数据id
 			w		弹出层宽度（缺省调默认值）
 			h		弹出层高度（缺省调默认值）
+			full    全屏展示
 		*/
-		layer_show:function(title,url,w,h){
+		layer_show:function(title,url,w,h,full){
 			if (title == null || title == '') {
 				title=false;
 			};
@@ -94,15 +102,23 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 			if (h == null || h == '') {
 				h=($(window).height() - 50);
 			};
-			return layer.open({
+			var _layer = layer.open({
 				type: 2,
 				area: [w+'px', h +'px'],
 				fix: false, //不固定
 				maxmin: true,
 				shade:0.4,
+				zIndex: layer.zIndex, //重点1
 				title: title,
-				content: url
+				content: url,
+				success: function(layero){//置顶
+			        layer.setTop(layero); //重点2
+			    }
 			});
+			if(full){
+				layer.full(_layer);
+			}
+			return _layer;
 		},
 		/*关闭弹出框口*/
 		layer_close:function(){
@@ -136,7 +152,7 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 				//var isPass = true;//是否验证通过
 				if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
 					var objtip = o.obj.parent().find(".Validform_checktip");
-					if(objtip.length==0){
+					if(objtip.length == 0){
 						var html = '<div class="Validform_info">'
 										+'<span class="Validform_checktip Validform_wrong" style="margin-left:0;">'+msg+'</span>'
 										+'<span class="Validform_dec">'
@@ -146,15 +162,17 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 									+'</div>';
 						o.obj.parent().append(html);
 						objtip = o.obj.parent().find(".Validform_checktip");
+					}else{
+						objtip.html(msg);
 					}
 					cssctl(objtip,o.type);
-					var infoObj=o.obj.parent().find(".Validform_info");
+					var infoObj = o.obj.parent().find(".Validform_info");
 					if(o.type==2){
 						infoObj.fadeOut(200);
 					}else{
 						//isPass = false;
 						if(infoObj.is(":visible")){return;}
-						var left=o.obj.offset().left;
+						//var left=o.obj.offset().left;
 							//top=o.obj.offset().top;
 						var top = o.obj.outerHeight(),
 							left = o.obj.outerWidth();
@@ -188,12 +206,19 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 		options = $.extend({},$.fn.ajaxSubmitForm.defaults,
                 typeof options === 'object' && options);
     	if(options.url){
-    		var formData = {};
+    		var formData;
+    		//默认提交参数类型为json对象
+    		formData = $.extend({},$.serializeForm($this),options.params);
     		//提交参数类型为json字符串
-    		if(options.paramType.toUpperCase() == 'STRING'){
-    			formData[options.paramField] = $.serializeForm($this,true);
-    		}else{//提交参数类型为json对象
-    			formData = $.serializeForm($this);
+    		if(options.paramField){//自己指定提交参数字段{paramField:json字符串}
+				//后台接收到的参数是 String
+				var newData = formData;
+				formData = {};
+    			formData[options.paramField] = newData;
+    		}else if(options.paramType.toUpperCase() == 'STRING'){//直接提交一个json字符串
+    			//后台使用@RequestBody Entity将该JSON字符串转成对应的对象
+    			formData = JSON.stringify(formData);
+    			options.contentType = 'application/json';
     		}
     		
     		if(options.confirm){
@@ -227,6 +252,7 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
     		type:options.method,
     		data: formData,
     		dataType:'json',
+    		contentType:options.contentType,
     		success: function(jsonLst) {
     			options.onSubmitSuccess.call(this,jsonLst);
     			layer.close(tipMsg);
@@ -242,12 +268,14 @@ var BASE_LIB_PATH = 'dist/lib/';//JS包根路径
 			url:'',
 			method:'post',
 			paramType:'object',//提交的参数类型，默认是json对象，如果是string，则提交的数据是json字符串
-			paramField:'params',//提交数据为json字符串时，提交到后台的参数名
+			paramField:'',//提交数据为json字符串时，提交到后台的参数名
 			confirm:true,//提交前是否弹出提示，默认是
 			confirmMsg:'确定提交保存？',
 			waitMsg:'正在保存，请稍等...',
 			btn: ['确认', '取消'],
 			title:'提示',
+			contentType:'application/x-www-form-urlencoded;charset=utf-8',
+			params:{},//要添加到表单一起提交的参数
 			onBeforeSubmit:function(data){},//表单数据
 			onSubmitSuccess:function(ret){},//ret是提交成功后的返回值
 			onSubmitError:function(xhr, textStatus, errorThrown){},

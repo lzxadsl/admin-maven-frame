@@ -32,6 +32,7 @@ public class MainTest {
 			};
 			t.start();
 		}*/
+		//String json = "{"id":"","costName":"出差报销","amount":"1500","description":"","itemList":[{"itemName":"车费","category":"车补","amount":"1000","operation":""},{"itemName":"住宿飞","category":"","amount":"500","operation":""}]}"
 	}
 	
 	public void add(){

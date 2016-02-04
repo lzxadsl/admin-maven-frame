@@ -382,3 +382,10 @@
     }
     
 })(jQuery);
+$(function(){
+	//引入bootstrap-select插件
+	var bootstrap_select = document.createElement("script");
+	bootstrap_select.src = "dist/lib/bootstrap/extend/bootstrap-select.js";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(bootstrap_select, s);
+});

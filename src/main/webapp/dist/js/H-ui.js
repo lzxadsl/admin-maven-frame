@@ -11,12 +11,12 @@
 *
 */
 if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-  var msViewportStyle = document.createElement("style")
+  var msViewportStyle = document.createElement("style");
   msViewportStyle.appendChild(
     document.createTextNode(
       "@-ms-viewport{width:auto!important}"
     )
-  )
+  );
   document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
 }
 
@@ -52,10 +52,10 @@ function marquee(height,speed,delay){
 	var pause = false;
 	var ScrollBox = document.getElementById("marquee");
 	if(document.getElementById("holder").offsetHeight <= height) return;
-	var _tmp = ScrollBox.innerHTML.replace('holder', 'holder2')
+	var _tmp = ScrollBox.innerHTML.replace('holder', 'holder2');
 	ScrollBox.innerHTML += _tmp;
-	ScrollBox.onmouseover = function(){pause = true}
-	ScrollBox.onmouseout = function(){pause = false}
+	ScrollBox.onmouseover = function(){pause = true};
+	ScrollBox.onmouseout = function(){pause = false};
 	ScrollBox.scrollTop = 0;
 	function start(){
 	    scrollT = setInterval(scrolling,speed);

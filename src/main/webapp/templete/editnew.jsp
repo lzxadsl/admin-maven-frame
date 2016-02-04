@@ -62,7 +62,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					 <legend>费用项</legend>
 					 <div class="form-group">
 				        <div class="col-sm-12 sys-center">
-				           <button class="btn btn-info sys-margin-horizontal-10" type="button" id="submit">提 交</button>
+				           <button class="btn btn-info sys-margin-horizontal-10" type="button" id="submitBtn">提 交</button>
 				           <button class="btn btn-info sys-margin-horizontal-10" type="button" onclick="$.layer_close()">取 消</button>
 				        </div>
 				    </div>
