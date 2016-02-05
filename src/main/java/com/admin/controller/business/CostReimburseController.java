@@ -75,8 +75,11 @@ public class CostReimburseController {
 	 * @date 2016-2-2 下午2:28:46
 	 */
 	@RequestMapping("{page}.htm")
-	public ModelAndView jumpPage(Integer id,ModelAndView model,@PathVariable String page){
+	public ModelAndView jumpPage(Integer id,ModelAndView model,@ModelAttribute("user") SysUser user,@PathVariable String page){
 		if(id != null){
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("id", id);
+			params.put("userId", user.getId());
 			model.addObject("obj",costReimburseService.get(id));
 		}
 		model.setViewName("business/costReimburse/"+page);

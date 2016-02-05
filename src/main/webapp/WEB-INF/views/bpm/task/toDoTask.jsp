@@ -115,7 +115,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						return (new Date(value)).format("yyyy-MM-dd hh:mm:ss");     
 					}	
 				},
-				{field:"own",title:"版本",align:"center"}
+				{filed:"opt",title:"操作",align:"center",
+					formatter:function(value,row,rowIndex){
+						return '<a href="javascript:void(0);" onclick="showTaskState('+row.id+')">查看</a>';
+					}	
+				}
 			],
 			onPageChange: function (size, number) {
 	        },
@@ -132,5 +136,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			$('#serachForm').reSet(false);
 		});
   	});
+    //查看流程进度
+	function showTaskState(id){
+		$.layer_show('当前任务进度','service/bpm/task/viewTaskState.htm?taskId='+id,800,600,true);
+	}
   </script>
 </html>

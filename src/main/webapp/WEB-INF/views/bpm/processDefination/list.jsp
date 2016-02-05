@@ -76,7 +76,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                    </button>
 	                </div>
 		        </div>
-			    <!-- 功能按钮 -->pt=='驳回
+			    <!-- 功能按钮 -->
 			    <div class="col-sm-12 sys-btn-bar">
 			    	<a href="javascript:void(0)" id="suspend" class="btn btn-info">
 	                    <span class="glyphicon glyphicon-remove-sign"></span> 挂 起

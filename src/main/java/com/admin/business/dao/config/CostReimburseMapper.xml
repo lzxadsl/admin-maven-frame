@@ -24,7 +24,30 @@
  			and a.state = #{state}
  		</if>
 	</select> 
-	
+	<select id="selectList" resultMap="CostReimburseMap" parameterType="map">  
+        SELECT 
+			a.*
+			,b.china_name as chinaName
+			,b.deptment_id as deptmentName
+ 		FROM cost_reimburse a
+ 		left join sys_user_info b on a.user_id = b.user_id
+ 		where 1=1
+ 		<if test="id != null">
+ 			and a.id = #{id}
+ 		</if>
+ 		<if test="userId != null">
+ 			and a.user_id = #{userId}
+ 		</if>
+ 		<if test="costName != null">
+ 			and a.name = like CONCAT('%',#{costName},'%')
+ 		</if>
+ 		<if test="chinaName">
+ 			and b.china_name like CONCAT('%',#{chinaName},'%')
+ 		</if>
+ 		<if test="state != null">
+ 			and a.state = #{state}
+ 		</if>
+	</select> 
 	<select id="get" parameterType="int" resultMap="CostReimburseMap">
 	    SELECT 
 			a.*

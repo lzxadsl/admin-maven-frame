@@ -119,12 +119,16 @@ public class ActReProcDefController {
 			in.close();
 	        stream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	@RequestMapping(value = "processDefResource")
+	/**
+	 * 查看流程任务状态
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-5 下午3:20:39
+	 */
+	@RequestMapping(value = "processStateResource.htm")
 	public void processDefResource(String proDefId,
 			HttpServletRequest request,HttpServletResponse response){
 		ProcessDefinition pd = repositoryService.createProcessDefinitionQuery().processDefinitionId(proDefId).singleResult();
@@ -143,7 +147,6 @@ public class ActReProcDefController {
 			in.close();
 	        stream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

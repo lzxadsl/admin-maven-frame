@@ -92,7 +92,7 @@ public class ActRuTaskController {
 	 * @param model 模块载体
 	 * @return 状态显示
 	 */
-	@RequestMapping(value = "viewTaskState")
+	@RequestMapping(value = "viewTaskState.htm")
 	public String viewTaskState(String taskId,ModelMap model){
 		Map<String, Object> taskImg = new HashMap<String, Object>();
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -106,7 +106,7 @@ public class ActRuTaskController {
 		taskImg.put("height", ai.getHeight());
 		taskImg.put("proDefId", task.getProcessDefinitionId());
 		model.put("taskImg", taskImg);
-		return "admin/task/viewTaskState";
+		return "bpm/task/viewTaskState";
 	}
 	
 	/**认领任务，任务一被认领，其他人将会看不到该任务
