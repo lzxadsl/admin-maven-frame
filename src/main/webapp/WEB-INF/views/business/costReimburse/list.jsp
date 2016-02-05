@@ -71,10 +71,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	<a href="javascript:void(0)" class="btn btn-info" id="addBtn">
                     <span class="glyphicon glyphicon-plus"></span> 新 增
                 </a>
-                <a href="javascript:void(0)" class="btn btn-info" id="modiBtn">
+                <a href="javascript:void(0)" class="btn btn-info disabled" id="modiBtn">
                     <span class="glyphicon glyphicon-pencil"></span> 修 改
                 </a>
-                <a href="javascript:void(0)" class="btn btn-info" id="delBtn">
+                <a href="javascript:void(0)" class="btn btn-info disabled" id="delBtn">
                     <span class="glyphicon glyphicon-trash"></span> 删 除
                 </a>
 		    </div>
@@ -111,13 +111,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				{field:'',title:'选择',width:50,checkbox:true},
 				{field:"costName",title:"报销单名称",align:"center"},
 				{field:"chinaName",title:"报销人",align:"center"},
+				{field:"amount",title:"报销金额",align:"center"},
+				{field:"state",title:"任务状态",align:"center"},
 				{field:"createTime",title:"申请时间",align:"center",
 					formatter:function(value){
 						return (new Date(value)).format("yyyy-MM-dd hh:mm:ss");     
 					}	
 				},
-				{field:"amount",title:"报销金额",align:"center"},
-				{field:"state",title:"任务状态",align:"center"},
 				{field:"description",title:"报销说明",align:"center"}
 			],
 			onPageChange: function (size, number) {
@@ -139,12 +139,46 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		});
 		//修改
 		$('#modiBtn').click(function(){
-			$.layer_show('费用报销修该','service/business/costReimburse/editnew.htm',800,600);
+			var rows = $('#bootstrap_table').bootstrapTable('getSelections');
+			if(rows.length != 1){
+				layer.alert('请选择要修改的报销单！',{title:'提示',icon:2});
+				return;
+			}
+			if(rows[0].state == '提交申请' || rows[0].state == '被驳回'){
+				$.layer_show('费用报销修该','service/business/costReimburse/editnew.htm?id='+rows[0].id,800,600,true);
+			}else{
+				layer.alert('当前状态不可修改！',{title:'提示',icon:2});
+			}
+			
 		});
+		//按钮控制
+		$('#bootstrap_table').on('check.bs.table uncheck.bs.table ' +
+                'check-all.bs.table uncheck-all.bs.table', function () {
+			var rows = $('#bootstrap_table').bootstrapTable('getSelections');
+			var delFlag = 'remove',modiFlag = 'remove';
+			if(rows.length > 0){
+				$.each(rows,function(index,row){
+					if(row.state != '被驳回'){
+						if(row.state != '完成'){
+							delFlag = 'add';
+						}
+						if(row.state != '提交申请' || rows.length != 1){
+							modiFlag = 'add';
+						}
+					}
+				});
+			}else{
+				delFlag = 'add';
+				modiFlag = 'add';
+			}
+			eval("$('#delBtn')."+delFlag+"Class('disabled');");
+			eval("$('#modiBtn')."+modiFlag+"Class('disabled');");
+			
+        });
 		//删除
 		$('#delBtn').click(function(){
 			var rows = $('#bootstrap_table').bootstrapTable('getSelections');
-			if(rows.length != 1){
+			if(rows.length < 1){
 				layer.alert('请选择要删除的报销单！',{title:'提示',icon:2});
 				return;
 			}

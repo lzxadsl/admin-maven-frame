@@ -118,4 +118,28 @@ public class CostReimburseService extends BaseService<CostReimburse, Integer> im
 			delCostItems(id);//删除对应的费用项
 		}
 	}
+
+	/**
+	 * 更新报销单
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-5 下午1:59:26
+	 */
+	@Override
+	@Transactional
+	public CostReimburse updateCostReimburse(CostReimburse entity,
+			Integer userId) {
+		entity.setState("提交申请");
+		update(entity);//更新基本信息
+		delCostItems(entity.getId());//删除对应的费用项
+		//添加对应的费用项
+		if(entity.getItemList() != null && entity.getItemList().size() > 0){
+			delCostItems(entity.getId());
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", entity.getItemList());
+			map.put("costId",entity.getId());
+			addCostItems(map);
+		}
+		return entity;
+	}
 }

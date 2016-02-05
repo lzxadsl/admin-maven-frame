@@ -41,7 +41,7 @@
 	        <value>  
 	             /service/forword/basic/*=anon  
 	             /service/shiro/*=anon
-	             /service/shiro/main.htm=authc
+	             /service/shiro/index.htm=authc
 	        </value>  
 	    </property> 
 	</bean> 

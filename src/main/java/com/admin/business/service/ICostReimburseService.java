@@ -47,6 +47,16 @@ public interface ICostReimburseService extends IBaseService<CostReimburse, Integ
 	public CostReimburse saveCostReimburse(CostReimburse entity,Integer userId);
 	
 	/**
+	 * 更新报销单
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-4 下午2:17:50
+	 * @param CostReimburse 费用报销单实体
+	 * @param userId 申请人ID
+	 */
+	public CostReimburse updateCostReimburse(CostReimburse entity,Integer userId);
+	
+	/**
 	 * 删除报销单
 	 * @author LiZhiXian
 	 * @version 1.0

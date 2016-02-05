@@ -55,7 +55,7 @@ public class CostReimburseController {
 	@RequestMapping("ajaxList.json")
 	public @ResponseBody Map<String, Object> ajaxList(String name,String state,@ModelAttribute("user") SysUser user,PageData pageData){
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("user_id", user.getId());//限制只能查自己
+		params.put("userId", user.getId());//限制只能查自己
 		if(StringUtils.isNotBlank(name)){//申请人名称
 			params.put("name",name);
 		}
@@ -93,7 +93,11 @@ public class CostReimburseController {
 	public @ResponseBody String save(@RequestBody CostReimburse entity,@ModelAttribute("user") SysUser user){
 		String state = "200";
 		try {
-			costReimburseService.saveCostReimburse(entity,user.getId());
+			if(entity.getId() != null && entity.getId() > 0){
+				costReimburseService.updateCostReimburse(entity, user.getId());
+			}else{
+				costReimburseService.saveCostReimburse(entity,user.getId());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			state = "500";

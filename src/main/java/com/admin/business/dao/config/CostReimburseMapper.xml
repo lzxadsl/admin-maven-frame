@@ -25,20 +25,19 @@
  		</if>
 	</select> 
 	
-	<select id="get" parameterType="string" resultMap="CostReimburseMap">
+	<select id="get" parameterType="int" resultMap="CostReimburseMap">
 	    SELECT 
 			a.*
 			,b.china_name as chinaName
 			,b.deptment_id as deptmentName
  		FROM cost_reimburse a
- 		left join sys_user_info b on a.user_id = b.user_id where id = #{id}
+ 		left join sys_user_info b on a.user_id = b.user_id where a.id = #{id}
 	</select>
 	
 	<update id="update">
 	    update cost_reimburse 
 		    set cost_name = #{costName}
 		    ,amount = #{amount}
-		    ,create_time = #{createTime}
 		    ,state = #{state}
 		    ,description = #{description}
 		where id = #{id}
@@ -52,9 +51,6 @@
 		    </if>
 		    <if test="amount != null">
 		    	,amount = #{amount}
-		    </if>
-		    <if test="createTime != null">
-		    	,create_time = #{createTime}
 		    </if>
 		    <if test="state != null">
 		    	,state = #{state}
