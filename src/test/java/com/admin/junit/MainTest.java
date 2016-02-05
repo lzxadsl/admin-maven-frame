@@ -23,7 +23,9 @@ public class MainTest {
 		//String str = "brrow.zip";
 		//String extension = FilenameUtils.getExtension(str);
 		//System.out.println(extension);
-		System.out.println(Math.pow(2, 31));
+		//System.out.println(Math.pow(2, 31));
+		MainTest main = new MainTest();
+		System.out.println(main.getClass().getSimpleName());
 		/*for(int i=0;i<10;i++){
 			Thread t = new Thread(){
 				public void run() {

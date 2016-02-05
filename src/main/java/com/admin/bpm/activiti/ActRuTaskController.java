@@ -15,8 +15,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import com.admin.authority.model.SysUser;
 import com.admin.basic.model.PageData;
 
 /**用户任务
@@ -25,6 +28,7 @@ import com.admin.basic.model.PageData;
  * @date 2015-11-14 下午12:03:40
  */
 @Controller
+@SessionAttributes("user")
 @RequestMapping(value = "/bpm/task/*")
 public class ActRuTaskController {
 	@Autowired
@@ -34,15 +38,38 @@ public class ActRuTaskController {
 	@Autowired
 	private RepositoryService repositoryService;
 	
-	@RequestMapping("query")
-	public String query(){
-		return "admin/task/query";
+	/**
+	 * 跳转待办任务类表
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-5 上午8:50:22
+	 */
+	@RequestMapping("toDoTask.htm")
+	public String toDoTask(){
+		return "bpm/task/toDoTask";
 	}
 	
-	@RequestMapping(value = "ajaxList",produces = "application/json")
-	public @ResponseBody Map<String, Object> ajaxList(ModelMap model, PageData pageData){
+	/**
+	 * 跳转已办任务类表
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-5 上午8:50:22
+	 */
+	@RequestMapping("haveToDoTask.htm")
+	public String haveToDoTask(){
+		return "bpm/task/haveToDoTask";
+	}
+	
+	/**
+	 * 获取个人待办任务列表数据
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-5 上午8:52:45
+	 */
+	@RequestMapping(value = "myTaskAjaxList.json",produces = "application/json")
+	public @ResponseBody Map<String, Object> myTaskAjaxList(@ModelAttribute("user") SysUser user, PageData pageData){
 		Map<String, Object> data = new HashMap<String, Object>();
-		List<Task>  listTask = taskService.createTaskQuery().list();
+		List<Task>  listTask = taskService.createTaskQuery().taskAssignee(user.getId().toString()).list();
 		List<Map<String, Object>> listData = new ArrayList<Map<String,Object>>();
 		for (Task task : listTask) {
 			Map<String, Object> itm = new HashMap<String, Object>();
@@ -50,30 +77,7 @@ public class ActRuTaskController {
 			itm.put("name", task.getName());
 			itm.put("owner", task.getOwner());
 			itm.put("assignee", task.getAssignee());
-			listData.add(itm);
-		}
-		data.put("rows", listData);
-		data.put("total", listTask.size());
-		return data;
-	}
-	
-	@RequestMapping("myTaskQuery")
-	public String myTaskQuery(ModelMap model,String userId){
-		model.put("userId", userId);
-		return "admin/task/myTaskQuery";
-	}
-	
-	@RequestMapping(value = "ajaxMyTask",produces = "application/json")
-	public @ResponseBody Map<String, Object> ajaxMyTask(ModelMap model,String userId,PageData pageData){
-		Map<String, Object> data = new HashMap<String, Object>();
-		List<Task>  listTask = taskService.createTaskQuery().taskAssignee(userId).list();
-		List<Map<String, Object>> listData = new ArrayList<Map<String,Object>>();
-		for (Task task : listTask) {
-			Map<String, Object> itm = new HashMap<String, Object>();
-			itm.put("id", task.getId());
-			itm.put("name", task.getName());
-			itm.put("owner", task.getOwner());
-			itm.put("assignee", task.getAssignee());
+			itm.put("createTime", task.getCreateTime());
 			listData.add(itm);
 		}
 		data.put("rows", listData);

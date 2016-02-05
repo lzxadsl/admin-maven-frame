@@ -35,16 +35,7 @@ public class ShiroLoginController {
     public String showLoginForm(Model model,@ModelAttribute Login login){
         return "authority/login/login";
     }
-	/**
-	 * 跳转主页面
-	 * @author LiZhiXian
-	 * @version 1.0
-	 * @date 2015-12-7 下午2:50:14
-	 */
-	@RequestMapping(value="main.htm")
-    public String main(){
-        return "main";
-    }
+
 	/**
 	 * 登入验证
 	 * @author LiZhiXian

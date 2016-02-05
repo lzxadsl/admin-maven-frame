@@ -141,7 +141,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     		    		params:{itemList:costItems},
     		    		paramType:'string',
     		    		onSubmitSuccess:function(data){
-    		    			if(data.status=='200'){
+    		    			if(data=='200'){
     		    				parent.$('#bootstrap_table').bootstrapTable('refresh');
     							var index = parent.layer.getFrameIndex(window.name);
     							parent.layer.close(index);

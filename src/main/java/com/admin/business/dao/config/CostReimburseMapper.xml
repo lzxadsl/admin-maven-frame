@@ -65,7 +65,9 @@
 		    </set>
 		where id = #{id}
 	</update>
-	
+	<delete id="delete" parameterType="int">
+		delete from cost_reimburse where id = #{id}
+	</delete>
 	<insert id="insert" parameterType="CostReimburse" useGeneratedKeys="true" keyProperty="id">
 	    insert into cost_reimburse(
 	    	user_id,cost_name,amount,create_time,state,description
@@ -106,7 +108,7 @@
 		<result property="chinaName" column="chinaName"/>
 		<result property="deptmentName" column="deptmentName"/>
 		<result property="amount" column="amount"/>
-		<result property="createTime" column="createTime"/>
+		<result property="createTime" column="create_time"/>
 		<result property="state" column="state"/>
 		<result property="description" column="description"/>
 		<collection property="itemList" column="item_id" ofType="CostReimburse">

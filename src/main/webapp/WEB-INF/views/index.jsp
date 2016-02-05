@@ -82,6 +82,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<li><a _href="service/bpm/model/list.htm" data-title="模型管理" href="javascript:void(0)">模型管理</a></li>
 					<li><a _href="service/bpm/processDefinition/list.htm" data-title="流程定义" href="javascript:void(0)">流程定义</a></li>
 					<li><a _href="service/bpm/deployment/list.htm" data-title="部署信息" href="javascript:void(0)">部署信息</a></li>
+					<li><a _href="service/bpm/task/toDoTask.htm" data-title="待办任务" href="javascript:void(0)">待办任务</a></li>
+					<li><a _href="service/bpm/task/haveToDoTask.htm" data-title="已办任务" href="javascript:void(0)">已办任务</a></li>
 				</ul>
 			</dd>
 		</dl>

@@ -2,7 +2,6 @@ package com.admin.business.service;
 
 import java.util.List;
 import java.util.Map;
-
 import com.admin.basic.service.IBaseService;
 import com.admin.business.model.CostItem;
 import com.admin.business.model.CostReimburse;
@@ -42,6 +41,17 @@ public interface ICostReimburseService extends IBaseService<CostReimburse, Integ
 	 * @author LiZhiXian
 	 * @version 1.0
 	 * @date 2016-2-4 下午2:17:50
+	 * @param CostReimburse 费用报销单实体
+	 * @param userId 申请人ID
 	 */
-	public CostReimburse saveCostReimburse(CostReimburse entity);
+	public CostReimburse saveCostReimburse(CostReimburse entity,Integer userId);
+	
+	/**
+	 * 删除报销单
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-5 上午9:24:41
+	 */
+	public void deleteCostReimburse(Integer[] costId);
+	
 }

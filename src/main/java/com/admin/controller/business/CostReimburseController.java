@@ -1,6 +1,5 @@
 package com.admin.controller.business;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -93,10 +93,24 @@ public class CostReimburseController {
 	public @ResponseBody String save(@RequestBody CostReimburse entity,@ModelAttribute("user") SysUser user){
 		String state = "200";
 		try {
-			Timestamp time = new Timestamp(System.currentTimeMillis()); 
-			entity.setCreateTime(time);
-			entity.setUserId(user.getId());
-			costReimburseService.saveCostReimburse(entity);
+			costReimburseService.saveCostReimburse(entity,user.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+			state = "500";
+		}
+		return state;
+	}
+	/**
+	 * 删除报销单
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-2-5 上午9:23:12
+	 */
+	@RequestMapping("delete.do")
+	public @ResponseBody String delete(@RequestParam("costId[]") Integer[] costId){
+		String state = "200";
+		try {
+			costReimburseService.deleteCostReimburse(costId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			state = "500";

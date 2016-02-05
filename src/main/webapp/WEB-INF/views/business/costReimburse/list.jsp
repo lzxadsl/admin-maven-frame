@@ -108,9 +108,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return params;
 			},
 			columns: [
-				{field:"costName",title:"报销单名称",align:"center",valign:"middle",sortable:"true"},
-				{field:"chinaName",title:"报销人",align:"center",valign:"middle",sortable:"true"},
-				{field:"createTime",title:"报销日期",align:"center",valign:"middle",sortable:"true"},
+				{field:'',title:'选择',width:50,checkbox:true},
+				{field:"costName",title:"报销单名称",align:"center"},
+				{field:"chinaName",title:"报销人",align:"center"},
+				{field:"createTime",title:"申请时间",align:"center",
+					formatter:function(value){
+						return (new Date(value)).format("yyyy-MM-dd hh:mm:ss");     
+					}	
+				},
 				{field:"amount",title:"报销金额",align:"center"},
 				{field:"state",title:"任务状态",align:"center"},
 				{field:"description",title:"报销说明",align:"center"}
@@ -135,6 +140,56 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		//修改
 		$('#modiBtn').click(function(){
 			$.layer_show('费用报销修该','service/business/costReimburse/editnew.htm',800,600);
+		});
+		//删除
+		$('#delBtn').click(function(){
+			var rows = $('#bootstrap_table').bootstrapTable('getSelections');
+			if(rows.length != 1){
+				layer.alert('请选择要删除的报销单！',{title:'提示',icon:2});
+				return;
+			}
+			var ids = [];
+			$.each(rows,function(index,row){
+				if(row.state != '完成'){
+					ids = [];
+					layer.alert('无法删除状态为'+row.state+'的任务！',{title:'提示',icon:2});
+					return false;//break
+				}
+				ids.push(row.id);
+			});
+			if(ids.length > 0){
+				layer.open({
+				    content: '确定要删除？',
+				    btn:['确认', '取消'],
+				    shadeClose: false,
+				    title:'提示',
+				    icon:3,
+				    yes: function(index, layero){
+				    	layer.close(index);
+				    	var tipMsg = layer.msg('正在删除，请稍等...', {icon: 16,shade:[0.1,'#000'],time:0,offset:'250px'});
+				    	$.ajax({
+				    		url:'service/business/costReimburse/delete.do',
+				    		type:'get',
+				    		data:{costId:ids},
+				    		dataType:'json',
+				    		success: function(ret) {
+				    			if(ret == '200'){
+				    				layer.alert('删除成功！', {icon: 1});
+				    				$('#bootstrap_table').bootstrapTable('refresh');
+				    			}else{
+				    				layer.alert('删除失败！', {icon: 2});
+				    			}
+				    			layer.close(tipMsg);
+							},
+							error: function(xhr, textStatus, errorThrown){
+								layer.alert('删除出错啦！', {icon: 2});
+						    }
+				    	});
+				    },cancel: function(index){
+				    	
+				    }
+			 	});
+			}
 		});
   	});
   </script>

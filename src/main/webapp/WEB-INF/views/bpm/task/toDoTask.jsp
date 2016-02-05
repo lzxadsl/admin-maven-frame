@@ -26,7 +26,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--[if IE 6]>
 	<script>alert('请升级浏览器版本');</script>
 	<![endif]-->
-	<title>流程模版列表</title>
+	<title>代办任务列表</title>
 	<meta name="keywords" content="后台管理系统模版，功能齐全">
 	<meta name="description" content="工作流后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
   </head>
@@ -36,12 +36,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   	<ol class="breadcrumb sys_breadcrumb">
 	  <li><a href="#"><span class="glyphicon glyphicon-home"></span>首页</a></li>
 	  <li><a href="#">工作流管理</a></li>
-	  <li class="active">模板管理</li>
+	  <li class="active">代办任务</li>
 	</ol>
 	
     <div class="panel">
 	    <div class="panel-body">
-	    	<!-- 搜索项 -->
+	    	<!-- 搜索项 
 	        <div class="form-horizontal sys-padding-0" id="serachForm">
 	            <div class="form-group">
                     <label class="col-sm-2 control-label right" for="costName">报销单名称：</label>
@@ -64,7 +64,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </button>
                 </div>
 	        </div>
-	        
+	        -->
 		    <!-- 功能按钮 -->
 		    <div class="col-sm-12 sys-btn-bar">
 		    	<a href="javascript:void(0)" class="btn btn-info">
@@ -92,7 +92,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript">
   	$(function(){
   		$('#bootstrap_table').bootstrapTable({
-			url:'service/bpm/model/ajaxList.json',
+			url:'service/bpm/task/myTaskAjaxList.json',
 			striped: true,
 	        clickToSelect: true,
 	        pagination: true,
@@ -107,18 +107,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				return params;
 			},
 			columns: [
-				{field:"name",title:"流程名称",align:"center"},
-				{field:"key",title:"关键字",align:"center"},
-				{field:"createTime",title:"创建时间",align:"center"},
-				{field:"version",title:"版本",align:"center"},
-				{field:"category",title:"分类",align:"center"},
-				{field:"detail",title:"操作",align:"center",
-					formatter:function(value,row,rowIndex){
-						//var strHtml = '<a href="javascript:void(0);" onclick="removeRow('+rowIndex+')">删除</a>';
-						return value;
-					}
-				}
-				
+				{field:"id",title:"任务ID",align:"center"},
+				{field:"name",title:"当前任务",align:"center"},
+				{field:"assignee",title:"办理人",align:"center"},
+				{field:"createTime",title:"操作时间",align:"center",
+					formatter:function(value){
+						return (new Date(value)).format("yyyy-MM-dd hh:mm:ss");     
+					}	
+				},
+				{field:"own",title:"版本",align:"center"}
 			],
 			onPageChange: function (size, number) {
 	        },
