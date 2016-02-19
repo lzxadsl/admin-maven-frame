@@ -24,8 +24,16 @@ public class MainTest {
 		//String extension = FilenameUtils.getExtension(str);
 		//System.out.println(extension);
 		//System.out.println(Math.pow(2, 31));
-		MainTest main = new MainTest();
-		System.out.println(main.getClass().getSimpleName());
+		//MainTest main = new MainTest();
+		//System.out.println(main.getClass().getSimpleName());
+		String str[] = {"nihao","hao"};
+		String type = "STRING";
+		try {
+			type = str[3];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			
+		}
+		System.out.println(type);
 		/*for(int i=0;i<10;i++){
 			Thread t = new Thread(){
 				public void run() {

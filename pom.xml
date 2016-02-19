@@ -347,6 +347,11 @@
 		<version>2.6.3</version>
 	</dependency>
 	<!-- commons -->
+	<dependency>
+		<groupId>com.alibaba</groupId>
+		<artifactId>druid</artifactId>
+		<version>1.0.15</version>
+	</dependency>
     <dependency>
 		<groupId>commons-dbcp</groupId>
 		<artifactId>commons-dbcp</artifactId>
