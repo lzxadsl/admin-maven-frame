@@ -32,7 +32,10 @@
 	<select id="get" parameterType="int" resultMap="sysUserMap">
 	    select * from sys_user where id = #{id}
 	</select>
-	
+	<!-- 从库查询测试 -->
+	<select id="getSlave" parameterType="int" resultType="map">
+	    select * from sys_user where id = #{id}
+	</select>
 	<select id="selectUserByName" parameterType="string" resultMap="powerMapper">
 	    select 
 	    	a.id,

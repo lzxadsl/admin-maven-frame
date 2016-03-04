@@ -14,20 +14,20 @@
 		<property name="location" value="classpath:config/db.properties"></property>
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
-	
-	<bean id="slavedataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	<!-- 
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		scope="singleton">
 		<property name="driverClassName">
-			<value>${slave_driver}</value>
+			<value>${driverClass}</value>
 		</property>
 		<property name="url">
-			<value>${slave_url}</value>
+			<value>${jdbcUrl}</value>
 		</property>
 		<property name="username">
-			<value>${slave_user}</value>
+			<value>${user}</value>
 		</property>
 		<property name="password">
-			<value>${slave_password}</value>
+			<value>${password}</value>
 		</property>
 		<property name="initialSize">
 			<value>3</value>
@@ -36,8 +36,8 @@
 			<value>${maxActive}</value>
 		</property>
 	</bean>
-	 
-	<bean id="masterdataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">   
+	 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">   
 	    <!-- 基本属性 url、user、password -->  
 	    <property name="url" value="${jdbcUrl}" />  
 	    <property name="username" value="${user}" />  
@@ -69,17 +69,7 @@
 	    <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->  
 	    <property name="filters" value="stat" />   
 	</bean>  
-	<bean id="dataSource" class="com.admin.extend.sql.DynamicDataSource">
-		<property name="targetDataSources">
-			<map key-type="java.lang.String">  
-                 <!-- write -->
-                 <entry key="master" value-ref="masterdataSource"/>  
-                 <!-- read -->
-                 <entry key="slave" value-ref="slavedataSource"/>  
-              </map>  
-		</property>
-		<property name="defaultTargetDataSource" ref="masterdataSource"/>  
-	</bean>
+	
 	<!-- mybatis配置 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
@@ -107,18 +97,7 @@
 	
 	<!-- 激活自动代理功能 ,使用aop注解时必须开启，使用springmvc是在mvc配置文件中配置，否则controller层扫描不到-->
 	<aop:aspectj-autoproxy/>
-	<!-- 配置数据库注解aop -->
-    <bean id="manyDataSourceAspect" class="com.admin.extend.sql.DataSourceAspect" />
-    <aop:config>
-        <aop:aspect id="c" ref="manyDataSourceAspect">
-            <aop:pointcut id="tx" expression="execution(* com.admin.authority.service.*.*(..))"/>
-            <aop:before pointcut-ref="tx" method="before"/>
-            <aop:after pointcut-ref="tx" method="after"/>
-        </aop:aspect>
-    </aop:config>
 	<context:component-scan base-package="com.admin.">
 	    <context:exclude-filter type="regex" expression=".*.*Controller$" />
 	</context:component-scan>
-	
-	
 </beans>

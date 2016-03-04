@@ -1,4 +1,4 @@
-package com.admin.async;
+package com.admin.extend.async;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

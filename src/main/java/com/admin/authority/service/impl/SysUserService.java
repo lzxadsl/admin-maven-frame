@@ -1,5 +1,7 @@
 package com.admin.authority.service.impl;
 
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +61,16 @@ public class SysUserService extends BaseService<SysUser, Integer> implements ISy
 	@Override
 	public SysUser getUserByName(String username) {
 		return this.getMapper(ISysUserDao.class).selectUserByName(username);
+	}
+
+	/**
+	 * 从库查询测试
+	 * @author LiZhiXian
+	 * @version 1.0
+	 * @date 2016-3-4 上午10:49:06
+	 */
+	@Override
+	public Map<String, Object> getSlave(Integer id) {
+		return this.getMapper(ISysUserDao.class).getSlave(id);
 	}
 }
