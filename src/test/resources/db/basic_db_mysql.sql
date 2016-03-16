@@ -60,12 +60,12 @@ COMMIT;
 DROP TABLE IF EXISTS sys_user;
 CREATE TABLE sys_user (
 id integer primary key not null auto_increment,
-username varchar(32) not null,
+user_name varchar(32) not null,
 password varchar(32) not null,
 salt varchar(255)
 );
 ALTER TABLE `sys_user`
-ADD UNIQUE INDEX `unique_username` (`username`) USING BTREE ;
+ADD UNIQUE INDEX `unique_user_name` (`user_name`) USING BTREE ;
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------

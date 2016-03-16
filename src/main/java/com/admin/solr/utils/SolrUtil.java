@@ -22,7 +22,7 @@ import com.admin.solr.model.SolrPage;
 public class SolrUtil {
 
 	//solr服务器地址
-	private static String SOLR_SERVICE_URL = "http://127.0.0.1:8081/solr/core2";
+	private static String SOLR_SERVICE_URL = "http://127.0.0.1:8080/solr/userDoc";
 		
 	/** 
      * 为多个文档对象的，所以属性建立索引 
