@@ -1,4 +1,4 @@
-
+系统用户 lzx 密码：123456
 包名全部为小写字母
 
 接口类：采用 I+实体名+Dao/Service (ISysUserService)

@@ -3,6 +3,7 @@
 	<name>admin-maven-frame</name>
 	<comment></comment>
 	<projects>
+		<project>admin-maven-es</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

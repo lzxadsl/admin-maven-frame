@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>admin-maven-frame</artifactId>
+    <groupId>com.lzx.admin</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.lzx.admin</groupId>
+  <artifactId>admin-maven-es</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>admin-maven-es</name>
+  <description>elasticsearch</description>
+  <dependencies>
+  	<dependency>
+	    <groupId>org.elasticsearch</groupId>
+	    <artifactId>elasticsearch</artifactId>
+	    <version>2.3.1</version>
+	</dependency>
+	<!-- http://mvnrepository.com/artifact/io.searchbox/jest -->
+	<dependency>
+	    <groupId>io.searchbox</groupId>
+	    <artifactId>jest</artifactId>
+	    <version>2.0.2</version>
+	</dependency>
+	<!-- http://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+	<dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpcore</artifactId>
+	    <version>4.4.4</version>
+	</dependency>
+	
+  </dependencies>
+</project>

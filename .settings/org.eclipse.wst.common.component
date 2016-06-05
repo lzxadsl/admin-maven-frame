@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="admin-maven-frame">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <dependent-module archiveName="admin-maven-es.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/admin-maven-es/admin-maven-es">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="/admin-maven-frame"/>
         <property name="java-output-path" value="/admin-maven-frame/src/main/webapp/WEB-INF/classes"/>
     </wb-module>
