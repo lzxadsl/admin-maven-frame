@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.lzx.elasticsearch.entity.EsResult;
+import com.lzx.elasticsearch.entity.EsQueryResult;
 
 /**
  * 操作工具类
@@ -266,8 +266,8 @@ public class JestUtil {
      * @return
      */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static EsResult wrapSearchResult(String json, boolean withIndexAndType){
-        EsResult esResult = new EsResult();
+	public static EsQueryResult wrapSearchResult(String json, boolean withIndexAndType){
+        EsQueryResult esResult = new EsQueryResult();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         Map<String, Object> jsonMap = gson.fromJson(json, Map.class);

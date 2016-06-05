@@ -406,8 +406,8 @@
 	<dependency>
 		<groupId>mysql</groupId>
 		<artifactId>mysql-connector-java</artifactId>
-		<version>5.1.18</version>
-		<!-- <version>5.1.36</version> -->
+		<version>5.1.18</version><!-- 5.5.19的数据库 -->
+		<!-- <version>5.1.36</version> 5.6的数据库-->
 	</dependency>
 	<!-- <dependency>
 	<groupId>org.postgresql</groupId>

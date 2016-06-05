@@ -5,15 +5,14 @@ import java.util.Map;
 
 /**
  * ElasticSearch返回内容<br/>
- * 
+ * 查询结果
  * @author lizx
  * @data 2016-5-27下午2:14:05
  */
-public class EsResult {
+public class EsQueryResult {
     private long hit = 0L;
-    private List<Map<String, String>> datas;
     private List<Map<String, Object>> buckets;//分组统计数据
-    private List<Map<String, Object>> list;//跟datas一样，主要是扩展出来满足map中值不是字符串类型
+    private List<Map<String, Object>> list;//数据列表
     
     public long getHit() {
         return hit;
@@ -21,14 +20,6 @@ public class EsResult {
 
     public void setHit(long hit) {
         this.hit = hit;
-    }
-
-    public List<Map<String, String>> getDatas() {
-        return datas;
-    }
-
-    public void setDatas(List<Map<String, String>> datas) {
-        this.datas = datas;
     }
 
 	public List<Map<String, Object>> getBuckets() {
