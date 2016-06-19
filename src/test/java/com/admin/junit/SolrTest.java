@@ -16,6 +16,7 @@ import org.apache.solr.common.SolrDocumentList;
 import com.admin.solr.model.OrderForm;
 import com.admin.solr.model.SolrPage;
 import com.admin.solr.utils.SolrUtil;
+import com.admin.basic.model.TypeToken;
 import com.admin.basic.utils.BeanUtil;
 
 /**

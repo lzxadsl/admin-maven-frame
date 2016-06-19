@@ -77,6 +77,13 @@
         p:ignoreDefaultModelOnRedirect="true" >
             <property name="messageConverters">  
                 <list>  
+                	<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	                    <property name="supportedMediaTypes">
+	                        <list>
+	                            <value>text/plain;charset=UTF-8</value>
+	                        </list>
+	                    </property>
+	                </bean>
                 	<!-- spring4.x 使用的是MappingJackson2HttpMessageConverter -->
                     <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"> 
                 		<property name="supportedMediaTypes">    
@@ -85,8 +92,15 @@
 					            <value>text/json;charset=UTF-8</value>    
 					       </list>    
 					    </property>
-					    
                 	</bean>
+                	<bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+	                    <property name="supportedMediaTypes">
+	                        <list>
+	                            <value>text/xml;charset=UTF-8</value>
+	                            <value>application/xml;charset=UTF-8</value>
+	                        </list>
+	                    </property>
+	                </bean>
                 </list>  
             </property>  
     </bean>

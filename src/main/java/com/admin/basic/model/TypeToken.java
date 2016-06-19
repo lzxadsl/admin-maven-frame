@@ -1,4 +1,4 @@
-package com.admin.junit;
+package com.admin.basic.model;
 
 
 /**

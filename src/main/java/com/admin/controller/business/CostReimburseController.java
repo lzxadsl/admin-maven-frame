@@ -53,14 +53,14 @@ public class CostReimburseController {
 	 * @date 2016-2-2 下午1:59:56
 	 */
 	@RequestMapping("ajaxList.json")
-	public @ResponseBody Map<String, Object> ajaxList(String name,String state,@ModelAttribute("user") SysUser user,PageData pageData){
+	public @ResponseBody Map<String, Object> ajaxList(String costName,String chinaName,@ModelAttribute("user") SysUser user,PageData pageData){
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("userId", user.getId());//限制只能查自己
-		if(StringUtils.isNotBlank(name)){//申请人名称
-			params.put("name",name);
+		if(StringUtils.isNotBlank(costName)){//报销单名称
+			params.put("costName",costName);
 		}
-		if(StringUtils.isNotBlank(state)){//任务状态
-			params.put("state",state);
+		if(StringUtils.isNotBlank(chinaName)){//报销人
+			params.put("chinaName",chinaName);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<CostReimburse> list = costReimburseService.listPage(params, pageData);

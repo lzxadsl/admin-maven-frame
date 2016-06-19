@@ -11,5 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin-maven-es"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

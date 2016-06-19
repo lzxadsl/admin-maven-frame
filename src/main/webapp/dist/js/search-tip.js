@@ -94,6 +94,7 @@
 	        editable   : true,//是否可编辑
 	        multiple : false,//多选开关
 	        disabled : false,//禁用
+	        sildUp : false,//为true时当下拉框顶到底部时会向上弹出
 	        //downBorder : false,//下拉按钮是否带边框
 	        filterRemote:{
 	        	field:'keyword'//过滤的参数字段名称
@@ -189,7 +190,7 @@
         this.$el_ = this.$el.clone();
         this.timeoutId_ = 0;
         this.icoUrl = 'dist/images/icon_search.png';//搜索图标路径
-        this.clearicoUrl = '/dist/images/clear.png';//清除图标路径
+        this.clearicoUrl = 'dist/images/clear.png';//清除图标路径
         //键盘上功能键键值数组
         this.functionalKeyArray = [9,20,13,16,17,18,91,92,93,45,36,33,34,35,37,39,112,113,114,115,116,117,118,119,120,121,122,123,144,19,145,40,38,27];
         this.$contentDownList = null;//下拉框
@@ -271,7 +272,6 @@
     	$input.addClass(options.cls.replace(/,/g,' '));
     	//获取元素宽、高
     	var width = $input.outerWidth() - 1;
-    	alert(width);
     	var height = $input.outerHeight();
     	var browserV = getBrowserMsg();
     	if(browserV.ie != undefined && parseFloat(getBrowserMsg().ie) > 8){
@@ -360,6 +360,7 @@
     	});
     	//文本框得到焦点
     	$input.unbind('focus').focus(function(){
+    		$(this).css('box-shadow','rgba(0, 0, 0, 0.0745098) 0px 1px 1px inset');
     		$this.showDownList();
 		});
     	//文本框失去焦点
@@ -388,7 +389,7 @@
     	if(data){
     		$this.options['data'] = data;
     	}
-    	var width = $this.$el.outerWidth();
+    	//var width = $this.$el.outerWidth();
     	var height = $this.$el.outerHeight();
     	var spanWidth = $this.$el.parent().outerWidth();//整个下拉框宽度
     	var style = 'display: none;'
@@ -715,11 +716,11 @@
 		var cdTop = $contentDownList.parent().offset().top - $(document).scrollTop();
 		var winHeight = $(document.body).height();
 		var cdHeight = $contentDownList.height();
-		if((cdTop + cdHeight +10) >= winHeight){
+		if((cdTop + cdHeight +10) >= winHeight && $this.options.sildUp){
 			$contentDownList.css('margin-top',(-cdHeight + 2)+'px');
 		}else{
 			var height = $this.$el.outerHeight();
-			$contentDownList.css('margin-top',height+'px');
+			$contentDownList.css('margin-top',(-5)+'px');
 		}
 		if($contentDownList.children().length > 0){//有下拉节点，才显示
 			$contentDownList.show();

@@ -11,7 +11,7 @@ public class JestTest {
 	public static void main(String[] args) {
 		String index = "lzxes";
 		String query = "";
-		String searchIndex = JestUtil.searchIndex(index, null, query);
+		String searchIndex = JestUtil.searchIndex(index, "", query);
 		System.out.println(searchIndex);
 	}
 }

@@ -88,7 +88,7 @@ public class JestClientTools {
 	
 	public static void main(String[] args) {
 		String query = "{\"query\":{\"filtered\":{\"query\": {\"bool\": {\"must\": [{\"query_string\": {\"query\": \"**\"}},{\"term\": {\"ityc\": {\"value\": \"14000\"}}}]}}}},\"aggs\":{\"data\": {\"terms\": {\"field\": \"dsco\"}}}}";
-		String searchIndex = JestUtil.searchIndex("esdb", null, query);
+		String searchIndex = JestUtil.searchIndex("esdb", "", query);
 		System.out.println(searchIndex);
 	}
 }

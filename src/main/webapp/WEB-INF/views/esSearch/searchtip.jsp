@@ -39,7 +39,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	  <li class="active">搜索控件</li>
 	</ol>
 	
-    <div class="panel">
+    <div class="panel" style="top: 40px;bottom: 0;position: absolute;width: 100%;">
 	    <div class="panel-body">
 	    	<!-- 搜索项 -->
 	        <div class="form-horizontal sys-padding-0" id="serachForm">
@@ -63,8 +63,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript">
   	$(function(){
   		$('#search').search_tip({
-    		url:'es/esFullSearch.json',
-    		textField:'resourceName',
+    		url:'service/es/esFullSearch.json',
+    		textField:'ilab',
+    		/* formatter:function(rec){
+    			if(rec && rec.ilab && rec.ilab.length > 10){
+    				
+    			}
+    		}, */
     		onSelect : function(keyword,rec){
     			console.log(keyword);
     		},

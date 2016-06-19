@@ -10,12 +10,15 @@ import io.searchbox.core.Search;
 import io.searchbox.core.Search.Builder;
 import io.searchbox.core.SearchResult;
 import io.searchbox.indices.CreateIndex;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -33,10 +36,49 @@ public class JestUtil {
 	 * @author lizx
 	 * @data 2016-5-2下午4:02:38
 	 * @param index 索引名称
+	 * @param query 查询语句，DSL风格的
+	 */
+	public static String searchIndex(String index,String query){
+		return searchIndex(index,"",query);
+	}
+	
+	/**
+	 * 查询索引
+	 * @author lizx
+	 * @data 2016-5-2下午4:02:38
+	 * @param index 索引名称
 	 * @param type 类型，为空默认是查全部
 	 * @param query 查询语句，DSL风格的
 	 */
+	public static String searchIndex(String index,String type,String query){
+		List<String> types = new ArrayList<String>();
+		if(StringUtils.isNotBlank(type))
+			types.add(type);
+		return searchIndex(index,types,query);
+	}
+	
+	/**
+	 * 查询索引
+	 * @author lizx
+	 * @data 2016-5-2下午4:02:38
+	 * @param index 索引名称
+	 * @param types 类型(多个)，为空默认是查全部
+	 * @param query 查询语句，DSL风格的
+	 */
 	public static String searchIndex(String index,List<String> types,String query){
+		SearchResult execute = searchIndexHandle(index,types,query);
+		return execute.getJsonString();
+	}
+	
+	/**
+	 * 查询索引处理
+	 * @author lizx
+	 * @data 2016-5-2下午4:02:38
+	 * @param index 索引名称
+	 * @param type 类型，为空默认是查全部
+	 * @param query 查询语句，DSL风格的
+	 */
+	public static SearchResult searchIndexHandle(String index,List<String> types,String query){
 		JestClient client = JestClientTools.getClient(index);
 		Builder build = new Search.Builder(query).addIndex(index);
 		if(types != null && types.size() > 0){
@@ -45,7 +87,7 @@ public class JestUtil {
 		Search search = build.build();
 		try {
 			SearchResult execute = client.execute(search);
-			return execute.getJsonString();
+			return execute;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
