@@ -96,10 +96,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</dd>
 		</dl>
 		<dl id="menu-picture">
-			<dt><i class="Hui-iconfont">&#xe613;</i> 图片管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
+			<dt class="selected"><i class="Hui-iconfont">&#xe665;</i> 搜索引擎<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd style="display: block;">
 				<ul>
-					<li><a _href="picture-list.html" data-title="图片管理" href="javascript:void(0)">图片管理</a></li>
+					<li><a _href="service/es/esSearch.htm" data-title="ES实例" href="javascript:void(0)">ES实例</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -188,6 +188,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<li><a _href="system-data.html" data-title="数据字典" href="javascript:void(0)">数据字典</a></li>
 					<li><a _href="system-shielding.html" data-title="屏蔽词" href="javascript:void(0)">屏蔽词</a></li>
 					<li><a _href="system-log.html" data-title="系统日志" href="javascript:void(0)">系统日志</a></li>
+				</ul>
+			</dd>
+		</dl>
+		<dl id="menu_3">
+			<dt>基础<i class="Hui-iconfont menu_dropdown-arrow"></i></dt>
+			<dd>
+				<ul>
+					<li><a href="http://www.h-ui.net/Hui-3.1-typography.shtml">3.1 排版</a></li>
+					<li><a href="http://www.h-ui.net/Hui-3.2-code.shtml">3.2 代码</a></li>
+					<li><a href="http://www.h-ui.net/Hui-3.3-table.shtml">3.3 表格</a></li>
+					<li><a href="http://www.h-ui.net/Hui-3.4-form.shtml">3.4 表单</a></li>
+					<li><a href="http://www.h-ui.net/Hui-3.5-button.shtml">3.5 按钮</a></li>
+					<li><a href="http://www.h-ui.net/Hui-3.6-images.shtml">3.6 图片</a></li>
+					<li class="current"><a href="http://www.h-ui.net/Hui-3.7-Hui-iconfont.shtml">3.7 图标</a></li>
+					<li><a href="http://www.h-ui.net/Hui-3.8-animation.shtml">3.8 动画</a></li>
 				</ul>
 			</dd>
 		</dl>

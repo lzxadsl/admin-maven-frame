@@ -9,7 +9,7 @@
 	 * 调用例子，页面中放一个input，然后在JS中初始化，没制定width默认是100%
 	 * <input id="search" style="width:350px;"/>
 	 $(function(){
-    	$('#search').ol3_search({
+    	$('#search').search_tip({
     		url:'${ctx}/lizx/ajaxSearchList.html',
     		textField:'resourceName',
     		onSelect : function(keyword,rec){
@@ -21,23 +21,23 @@
     	});
      });*/
 	 /**
-	  * 调用入口:$('#search').ol3_search({});
+	  * 调用入口:$('#search').search_tip({});
 	  * options 为对象时是属性设置参数，为字符串时，是调用具体方法，
 	  * agrs 为调用方法时的参数
 	  */
-	 $.fn.ol3_search = function(option,agrs){
+	 $.fn.search_tip = function(option,agrs){
 		 var value = null;
 		 this.each(function () {
              var $this = $(this),
              data = $this.data('bootstrap.select'),
-             options = $.extend({},$.fn.ol3_search.defaults,$this.data(),
+             options = $.extend({},$.fn.search_tip.defaults,$this.data(),
                     typeof option === 'object' && option);
              
              if (typeof option === 'string') {
             	 if (!data) {
                      return;
                  }
-            	 value = $.fn.ol3_search.methods[option](this,data.options,agrs);
+            	 value = $.fn.search_tip.methods[option](this,data.options,agrs);
             	 //value = data[option](agrs);
             	 if (option === 'destroy') {
                      $this.removeData('bootstrap.select');
@@ -80,7 +80,7 @@
 	 * url和data参数只有一个生效，url优先
 	 * 如果有option选项，则它的优先级低于data
 	 */
-	$.fn.ol3_search.defaults = {
+	$.fn.search_tip.defaults = {
 			url    : null, //请求路径
 			params : {},   //请求参数
 			paramsType : '',//参数默认是以表单形势传递，为json时是以json格式传递到后台
@@ -113,7 +113,7 @@
 	/**
 	 * 控件方法属性
 	 */
-	$.fn.ol3_search.methods = {
+	$.fn.search_tip.methods = {
 			/**
 			 * 获取下拉框选中值,多选的时候返回的是按指定分割符分割的字符串
 			 */
@@ -245,6 +245,7 @@
 		  +'background-color: #fff;'
 		  +'background-image: none;'
 		  +'border: 1px solid #ccc;'
+		  +'border-radius: 0;'
 		  +'outline:none;'
 		  //+'border-bottom-left-radius:4px !important;'
 		  //+'border-top-left-radius:4px !important;'
@@ -270,6 +271,7 @@
     	$input.addClass(options.cls.replace(/,/g,' '));
     	//获取元素宽、高
     	var width = $input.outerWidth() - 1;
+    	alert(width);
     	var height = $input.outerHeight();
     	var browserV = getBrowserMsg();
     	if(browserV.ie != undefined && parseFloat(getBrowserMsg().ie) > 8){
@@ -282,7 +284,7 @@
     	var cleanBtnWidth = 20;//打叉图标宽度
     	var name = $input.attr('name')?$input.attr('name'):'';//name属性
     	$input.removeAttr('name');//删除name属性，最终把name属性移到隐藏域上
-    	$input.wrap('<span style="height:'+height+'px;display:block;overflow:hidden;width:'+(width + aWidth + cleanBtnWidth)+'px;"></span>');
+    	$input.wrap('<span style="height:'+height+'px;display:block;overflow:hidden;width:'+(width)+'px;"></span>');
     	$input.attr('autocomplete','off');
     	$input.prop('type','text');
     	if(!$input.attr('placeholder')){
@@ -293,7 +295,7 @@
     		$input.val(options.emptyText);
     	}
     	
-		$input.css('width',(width-aWidth)+'px');
+		$input.css('width',(width-aWidth-cleanBtnWidth-aWidth)+'px');
 		//20151012 修改a高度-1，改变属性position 为 relative，增加float
 		$input.css('border-right',0);
 		//下拉按钮按钮
@@ -306,7 +308,7 @@
 				+'</span>'
 			+'</a>').insertBefore($input);
 		//搜索按钮
-		var astyle = 'float:right;position:relative;display:inline-block;'
+		var astyle = 'position:relative;display:inline-block;'
 			+'width:'+aWidth+'px;height:'+(height)+'px;border:solid 0px #ccc;'
 			+'border-left:0; ';
 		astyle += 'background:#3385ff url('+$this.icoUrl+') no-repeat center;';
